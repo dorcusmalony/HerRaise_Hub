@@ -1,0 +1,11 @@
+{
+  "name": "herraise-hub-root",
+  "private": true,
+  "scripts": {
+    "dev": "cd herconnect && npm run dev",
+    "build": "cd herconnect && npm run build",
+    "install-sub": "cd herconnect && npm install",
+    "lint": "cd herconnect && npm run lint",
+    "start": "npm run dev"
+  }
+}

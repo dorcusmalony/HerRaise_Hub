@@ -1,0 +1,15 @@
+:root {
+  --brand-magenta: #E84393;
+  --lavender-hover: #E6E6FA;
+  --footer-purple: #6A0DAD;
+  --bg-white: #FFFFFF;
+  --light-gray: #e6e6e6;
+  --text-dark: #222;
+
+  /* added variables */
+  --nav-purple: #6A0DAD;
+  --nav-hover-blue: #4C8BF5;
+  --border-blue: #4C8BF5;
+  --footer-bg: #4b0f77;
+  --muted-text: #666;
+}
