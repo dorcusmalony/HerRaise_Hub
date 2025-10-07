@@ -64,6 +64,8 @@ Project structure (high level)
   - main.jsx, App.jsx — application entry and routing
 - index.html, package.json, vite.config.js — build and project configuration
 
+- https://github.com/dorcusmalony/HerRaise_Hub/blob/41da76b8ec5f33da0aa3e20d6d26bc17674485b7/herconnect/src/images/Screenshot%20(418).png
+
 Developer notes
 - CSS variables are declared in src/styles/variables.css and consumed across components for consistent theming.
 - The UI uses Bootstrap utilities together with custom classes for layout and responsiveness.
