@@ -1,9 +1,39 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Header() {
 	// compute URL for image placed in src/images; update filename if different
 	const logoUrl = new URL('../../images/her logo.jpg', import.meta.url).href
+	const navigate = useNavigate()
+	const API = import.meta.env.VITE_API_URL || '/api'
+
+	// call backend logout, then clear token and redirect to login
+	const handleLogout = async (e) => {
+		e?.preventDefault?.()
+		const token = localStorage.getItem('token') || localStorage.getItem('authToken')
+		try {
+			const res = await fetch(`${API}/logout`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					...(token ? { Authorization: `Bearer ${token}` } : {})
+				},
+				credentials: 'include'
+			})
+			const data = await res.json().catch(() => null)
+			if (res.ok && data?.success) {
+				console.log('Logout successful:', data.message)
+			} else {
+				console.warn('Logout response:', data)
+			}
+		} catch (err) {
+			console.warn('Logout request failed', err)
+		} finally {
+			// always clear client state and redirect
+			try { localStorage.removeItem('token'); localStorage.removeItem('authToken') } catch (_) {}
+			navigate('/login', { replace: true })
+		}
+	}
 
 	return (
 		<header
@@ -30,10 +60,12 @@ export default function Header() {
 					<Link to="/" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Home</Link>
 					<Link to="/about" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>About</Link>
 					<Link to="/contact" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Contact</Link>
-
 					<Link to="/resources" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Resources</Link>
 					<Link to="/login" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Login</Link>
-					<Link to="/logout" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Logout</Link>
+
+					{/* replaced <Link to="/logout"> with an API-backed action */}
+					<button type="button" onClick={handleLogout} className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Logout</button>
+
 					<Link to="/register" className="btn btn-sm text-white" style={{background: 'var(--brand-magenta)', border: `1px solid var(--border-blue)`}}>Register</Link>
 				</nav>
 			</div>

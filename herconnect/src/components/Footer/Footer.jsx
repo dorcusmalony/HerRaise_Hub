@@ -1,7 +1,38 @@
 import React from 'react'
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 export default function Footer(){
+  const navigate = useNavigate()
+  const API = import.meta.env.VITE_API_URL || '/api'
+  const isLoggedIn = !!localStorage.getItem('token') || !!localStorage.getItem('authToken')
+
+  const handleLogout = async (e) => {
+    e?.preventDefault?.()
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken')
+    try {
+      const res = await fetch(`${API}/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        credentials: 'include'
+      })
+      const data = await res.json().catch(() => null)
+      if (res.ok && data?.success) {
+        console.log('Logout:', data.message)
+      } else {
+        console.warn('Logout response:', data)
+      }
+    } catch (err) {
+      console.warn('Logout error', err)
+    } finally {
+      try { localStorage.removeItem('token'); localStorage.removeItem('authToken') } catch (_) {}
+      navigate('/login', { replace: true })
+    }
+  }
+
   return (
     <footer
       className="site-footer"
@@ -24,6 +55,11 @@ export default function Footer(){
               <li><a href="/forum" className="text-white">Forum</a></li>
               <li><a href="/reports" className="text-white">Reports</a></li>
               <li><a href="/about" className="text-white">About</a></li>
+              {isLoggedIn ? (
+                <li><button type="button" onClick={handleLogout} className="btn btn-link p-0 text-white">Logout</button></li>
+              ) : (
+                <li><a href="/login" className="text-white">Login</a></li>
+              )}
             </ul>
           </div>
 

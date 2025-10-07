@@ -1,6 +1,6 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Header from './components/Header/Header'
+import Header from './components/Header/header.jsx'
 import Footer from './components/Footer/Footer'
 import HomePage from './pages/HomePage/HomePage'
 import About from './pages/About/About'
@@ -8,6 +8,7 @@ import Contact from './pages/Contact/Contact'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import ResourcePage from './pages/ResourcePage/ResourcePage'
+import ResetPassword from './pages/Auth/ResetPassword'
 import './App.css'
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/resources" element={<ResourcePage />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </main>
       <Footer />

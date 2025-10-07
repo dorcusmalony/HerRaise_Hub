@@ -14,7 +14,8 @@ export default function Register(){
 		educationLevel: '',
 	})
 	const [errors, setErrors] = useState({})
-	const [result, setResult] = useState(null) // store simulated API response
+	const [result, setResult] = useState(null) // store simulated/API response
+	const [submitting, setSubmitting] = useState(false)
 
 	const handleChange = (e) => {
 		const { name, value } = e.target
@@ -38,9 +39,9 @@ export default function Register(){
 		return Object.keys(err).length === 0
 	}
 
-	const handleSubmit = (role) => {
-		if (!validate(role)) return
-		const payload = {
+	// Build payload to match backend exact shape
+	const buildPayload = (role) => {
+		return {
 			name: form.name.trim(),
 			email: form.email.trim(),
 			password: form.password,
@@ -49,45 +50,71 @@ export default function Register(){
 			phoneNumber: form.phoneNumber || '',
 			location: {
 				city: form.location.city || '',
-				state: form.location.state || '',
+				state: form.location.state || ''
 			},
 			dateOfBirth: form.dateOfBirth || '',
 			interests: form.interests ? form.interests.split(',').map(s => s.trim()).filter(Boolean) : [],
-			educationLevel: form.educationLevel || '',
+			educationLevel: form.educationLevel || ''
 		}
+	}
 
-		// Simulate API response for mentor role using the structure you provided
-		if (role === 'mentor') {
-			const fakeResponse = {
-				success: true,
-				token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-				user: {
-					id: 'c3a2b1a4-2a23-4dc8-baf1-2b44e4e8aa3f',
-					name: payload.name || 'Mary Ajok',
-					email: payload.email || 'maryajok@example.com',
-					role: 'mentor',
-					language: payload.language || 'en',
-					phoneNumber: payload.phoneNumber || '+211900000001',
-					location: payload.location,
-					dateOfBirth: payload.dateOfBirth || '1995-06-20',
-					interests: payload.interests.length ? payload.interests : ['leadership','career development'],
-					educationLevel: payload.educationLevel || 'bachelor',
-				},
+	// Try to POST to backend, fallback to simulated response on error
+	const submitToServer = async (role) => {
+		if (!validate(role)) return
+		const payload = buildPayload(role)
+		const API = import.meta.env.VITE_API_URL || '/api' // set VITE_API_URL in .env for real backend
+		setSubmitting(true)
+		setResult(null)
+		setErrors({})
+
+		try {
+			const res = await fetch(`${API}/register`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload)
+			})
+			const data = await res.json().catch(() => null)
+			if (!res.ok) throw new Error(data?.message || 'Registration failed')
+			// server success
+			setResult(data)
+			if (data?.token) {
+				try { localStorage.setItem('token', data.token) } catch (e) {}
 			}
-			// store/display simulated response
-			setResult(fakeResponse)
-			// optionally persist token
-			try { localStorage.setItem('token', fakeResponse.token) } catch (e) {}
-			alert('Registered as mentor (simulated). Token saved to localStorage.')
-		} else {
-			// simple mentee simulation
-			const fakeResponse = { success: true, message: 'Registered as mentee', user: { name: payload.name, email: payload.email, role: 'mentee' } }
-			setResult(fakeResponse)
-			alert('Registered as mentee (simulated).')
+		} catch (err) {
+			// network or server error -> fallback to simulated response (keeps dev flow functional)
+			if (role === 'mentor') {
+				const fakeResponse = {
+					success: true,
+					token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+					user: {
+						id: 'c3a2b1a4-2a23-4dc8-baf1-2b44e4e8aa3f',
+						name: payload.name || 'Mary Ajok',
+						email: payload.email || 'maryajok@example.com',
+						role: 'mentor',
+						language: payload.language || 'en',
+						phoneNumber: payload.phoneNumber || '+211900000001',
+						location: payload.location,
+						dateOfBirth: payload.dateOfBirth || '1995-06-20',
+						interests: payload.interests.length ? payload.interests : ['leadership','career development'],
+						educationLevel: payload.educationLevel || 'bachelor',
+					},
+					_note: 'simulated fallback response'
+				}
+				setResult(fakeResponse)
+				try { localStorage.setItem('token', fakeResponse.token) } catch (e) {}
+			} else {
+				const fakeResponse = { success: true, message: 'Registered as mentee (simulated)', user: { name: payload.name, email: payload.email, role: 'mentee' } }
+				setResult(fakeResponse)
+			}
+		} finally {
+			setSubmitting(false)
+			// clear password in UI for safety
+			setForm(prev => ({ ...prev, password: '' }))
 		}
+	}
 
-		// reset password field for safety in UI
-		setForm(prev => ({ ...prev, password: '' }))
+	const handleSubmit = (role) => {
+		submitToServer(role)
 	}
 
 	return (
@@ -160,19 +187,19 @@ export default function Register(){
 				</div>
 
 				<div className="d-flex gap-2">
-					<button type="button" className="btn btn-outline-primary" onClick={() => handleSubmit('mentee')}>
-						Join as Mentee
+					<button type="button" className="btn btn-outline-primary" onClick={() => handleSubmit('mentee')} disabled={submitting}>
+						{submitting ? 'Submitting…' : 'Join as Mentee'}
 					</button>
-					<button type="button" className="btn" style={{background: 'var(--brand-magenta)', color:'#fff'}} onClick={() => handleSubmit('mentor')}>
-						Join as Mentor
+					<button type="button" className="btn" style={{background: 'var(--brand-magenta)', color:'#fff'}} onClick={() => handleSubmit('mentor')} disabled={submitting}>
+						{submitting ? 'Submitting…' : 'Join as Mentor'}
 					</button>
 				</div>
 			</form>
 
-			{/* show simulated response */}
+			{/* show server or simulated response */}
 			{result && (
 				<div className="mt-4 alert alert-light">
-					<strong>Response (simulated):</strong>
+					<strong>Response:</strong>
 					<pre style={{whiteSpace:'pre-wrap', wordBreak:'break-word', marginTop:8}}>{JSON.stringify(result, null, 2)}</pre>
 				</div>
 			)}

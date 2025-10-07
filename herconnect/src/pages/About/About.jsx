@@ -3,7 +3,7 @@ import React from 'react'
 // image assets from src/images
 const heroImg = new URL('../../images/girl2.jpg', import.meta.url).href
 const teamImg1 = new URL('../../images/adich pic.jpg', import.meta.url).href
-const teamImg2 = new URL('../../images/peter.jpg', import.meta.url).href
+const teamImg2 = new URL('../../images/adich pic.jpg', import.meta.url).href
 const teamImg3 = new URL('../../images/adich pic.jpg', import.meta.url).href
 
 export default function About() {
@@ -69,7 +69,7 @@ export default function About() {
 
       {/* Team */}
       <section className="mb-5">
-        <h3>Our team</h3>
+        <h3>Alumai</h3>
         <div className="row align-items-center">
           <div className="col-12 col-sm-4 text-center mb-4">
             <img
@@ -79,7 +79,7 @@ export default function About() {
               style={{ width: 120, height: 120, objectFit: 'cover' }}
             />
             <h5 className="mb-0">Dorcus Alier</h5>
-            <small className="text-muted">Developer</small>
+            <small className="text-muted">student</small>
           </div>
           <div className="col-12 col-sm-4 text-center mb-4">
             <img
@@ -89,7 +89,7 @@ export default function About() {
               style={{ width: 120, height: 120, objectFit: 'cover' }}
             />
             <h5 className="mb-0">Kur Peter</h5>
-            <small className="text-muted">UX Designer</small>
+            <small className="text-muted">student</small>
           </div>
           <div className="col-12 col-sm-4 text-center mb-4">
             <img
@@ -99,7 +99,7 @@ export default function About() {
               style={{ width: 120, height: 120, objectFit: 'cover' }}
             />
             <h5 className="mb-0">Abuk Mayen</h5>
-            <small className="text-muted">Program Manager</small>
+            <small className="text-muted">student</small>
           </div>
         </div>
       </section>
