@@ -9,7 +9,6 @@ import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import ResourcePage from './pages/ResourcePage/ResourcePage'
 import ResetPassword from './pages/Auth/ResetPassword'
-import ForumPage from './pages/forumpage/forumpage' // adjust path if different
 import './App.css'
 
 export default function App() {
@@ -25,7 +24,6 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/resources" element={<ResourcePage />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/forum" element={<ForumPage />} />
         </Routes>
       </main>
       <Footer />
