@@ -1,0 +1,11 @@
+:global {
+	/* Import Bootstrap globally (bundler resolves from node_modules) */
+	@import "bootstrap/dist/css/bootstrap.min.css";
+
+	/* global CSS variables accessible in CSS modules via var(--name) */
+	:root {
+		--brand-magenta: #c33764;
+		--footer-bg: #333333;
+		/* add other global variables here */
+	}
+}

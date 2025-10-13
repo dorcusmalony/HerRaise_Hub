@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import styles from '../../styles/Pages.module.css'
 
 export default function Login(){
   const navigate = useNavigate()
@@ -72,7 +73,7 @@ export default function Login(){
   }
 
   return (
-    <div className="mx-auto" style={{maxWidth:420}}>
+    <div className={`mx-auto ${styles.container}`}>
       <h3>Login</h3>
 
       <form onSubmit={handleLogin}>
