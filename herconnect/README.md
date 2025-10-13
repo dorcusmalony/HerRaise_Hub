@@ -15,6 +15,7 @@ Features
 
 ## Link to video
 -https://drive.google.com/file/d/1O0W1Qh7WrgFVeE3qEiZB22gGLgpSJ4pR/view?usp=sharing
+
 ## Getting started
 
 ### Prerequisites
@@ -52,6 +53,16 @@ When `VITE_API_URL` is not set (or equals `/api`), the app uses a local mock tha
 Create a `.env` file in the project root (same folder as package.json) to configure:
 - `VITE_API_URL` — Base URL for your real backend (e.g. http://localhost:4000). When set, the mock is disabled and requests go to this backend.
 - `VITE_LOGOUT_DELAY` — Optional. Logout redirect delay in milliseconds (default used by the app is 600 ms).
+
+### Vercel deployment checklist
+- Build command: `npm run build`
+- Output directory: (Vite defaults to `dist`) — leave blank or set to `dist`.
+- Set environment variables in Vercel dashboard:
+  - VITE_API_URL = https://api.yourdomain.com (or leave unset to use the built-in mock during dev)
+- Set Node version to 18+ in Vercel project settings (match `engines.node`).
+- If you rely on the mock API for local testing, remember the mock is disabled when you set VITE_API_URL.
+- Recommendation: avoid spaces in image filenames (e.g. rename `adich pic.jpg` to `adich-pic.jpg`) — spaces can cause subtle asset resolution issues on some hosting/CDN setups. If you rename images, update their imports in the source code accordingly.
+- Check Vercel logs if the build fails — common causes: incompatible package versions, missing env vars, or Node version mismatch.
 
 ### Local testing tips
 - Use the browser DevTools → Application/Storage to inspect sessionStorage and localStorage keys used by the mock (e.g. `__mock_users__`, `token`, `authToken`).

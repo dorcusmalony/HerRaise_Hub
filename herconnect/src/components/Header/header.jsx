@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 export default function Header() {
 	// compute URL for image placed in src/images; update filename if different
-	const logoUrl = new URL('../../images/her logo.jpg', import.meta.url).href
+	const logoUrl = new URL('../../images/her-logo.jpg', import.meta.url).href
 	const navigate = useNavigate()
 	const API = import.meta.env.VITE_API_URL || '/api'
 

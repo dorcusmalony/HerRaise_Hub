@@ -3,9 +3,9 @@ import ReportButton from '../../components/ReportsButton/ReportButton'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import heroImg from '../../images/girl.jpg' // import image from src/images
 
-// added image URLs (use exact filenames present in src/images)
-const alum1 = new URL('../../images/adich pic.jpg', import.meta.url).href
-const alum2 = new URL('../../images/adich pic.jpg', import.meta.url).href
+// updated image URLs to match new filenames
+const alum1 = new URL('../../images/adich-pic.jpg', import.meta.url).href
+const alum2 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 const alum3 = new URL('../../images/peter.jpg', import.meta.url).href
 
 export default function HomePage(){

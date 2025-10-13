@@ -5,9 +5,9 @@ import styles from '../../styles/Pages.module.css'
 
 // image assets from src/images
 const heroImg = new URL('../../images/girl2.jpg', import.meta.url).href
-const teamImg1 = new URL('../../images/adich pic.jpg', import.meta.url).href
-const teamImg2 = new URL('../../images/adich pic.jpg', import.meta.url).href
-const teamImg3 = new URL('../../images/adich pic.jpg', import.meta.url).href
+const teamImg1 = new URL('../../images/adich-pic.jpg', import.meta.url).href
+const teamImg2 = new URL('../../images/adich-pic.jpg', import.meta.url).href
+const teamImg3 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 
 export default function About() {
   return (
