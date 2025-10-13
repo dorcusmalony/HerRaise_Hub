@@ -2,15 +2,19 @@ name: Frontend CI/CD Pipeline
 
 on:
   push:
-    branches: [develop, main]
+    branches:
+      - main
+      - develop
+      - feature/**
   pull_request:
-    # run CI for any PR so we can create preview deployments
-    branches: [ main ]
+    branches:
+      - main
+      - develop
 
 permissions:
-    contents: read
-    packages: write
-    id-token: write
+  contents: read
+  packages: write
+  id-token: write
 
 env:
   APP_DIR: herconnect
@@ -107,7 +111,6 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-vercel-${{ github.ref }}
       cancel-in-progress: true
-    # run this job for production (main), staging (develop) and PR events (preview)
     if: |
       github.ref == 'refs/heads/main' ||
       github.ref == 'refs/heads/develop' ||
@@ -121,10 +124,5 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           zeit-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          # choose project id based on branch/event:
-          # - main -> production project id (secret: VERCEL_PROJECT_ID_PROD)
-          # - develop -> staging project id (secret: VERCEL_PROJECT_ID_STAGING)
-          # - pull_request -> use staging project id to create preview deployments
           vercel-project-id: ${{ github.ref == 'refs/heads/main' && secrets.VERCEL_PROJECT_ID_PROD || github.ref == 'refs/heads/develop' && secrets.VERCEL_PROJECT_ID_STAGING || secrets.VERCEL_PROJECT_ID_STAGING }}
-          # mark production deploy only when on main
           working-directory: ${{ env.APP_DIR }}
