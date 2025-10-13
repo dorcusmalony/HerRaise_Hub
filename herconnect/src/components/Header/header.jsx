@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 export default function Header() {
 	// compute URL for image placed in src/images; update filename if different
-	const logoUrl = new URL('../../images/her logo.jpg', import.meta.url).href
+	const logoUrl = new URL('../../images/her-logo.jpg', import.meta.url).href
 	const navigate = useNavigate()
 	const API = import.meta.env.VITE_API_URL || '/api'
 
@@ -60,7 +60,6 @@ export default function Header() {
 					<Link to="/" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Home</Link>
 					<Link to="/about" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>About</Link>
 					<Link to="/contact" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Contact</Link>
-					<Link to="/forum" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Forum</Link>
 					<Link to="/resources" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Resources</Link>
 					<Link to="/login" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Login</Link>
 

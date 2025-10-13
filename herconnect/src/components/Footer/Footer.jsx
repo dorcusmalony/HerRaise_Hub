@@ -52,7 +52,6 @@ export default function Footer(){
             <h5>Quick Links</h5>
             <ul className="list-unstyled small">
               <li><a href="/resources" className="text-white">Resources</a></li>
-              <li><a href="/forum" className="text-white">Forum</a></li>
               <li><a href="/reports" className="text-white">Reports</a></li>
               <li><a href="/about" className="text-white">About</a></li>
               {isLoggedIn ? (

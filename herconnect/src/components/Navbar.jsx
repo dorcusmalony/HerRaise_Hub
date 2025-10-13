@@ -5,9 +5,9 @@ import styles from '../../styles/Pages.module.css'
 
 // image assets from src/images
 const heroImg = new URL('../../images/girl2.jpg', import.meta.url).href
-const teamImg1 = new URL('../../images/adich pic.jpg', import.meta.url).href
-const teamImg2 = new URL('../../images/adich pic.jpg', import.meta.url).href
-const teamImg3 = new URL('../../images/adich pic.jpg', import.meta.url).href
+const teamImg1 = new URL('../../images/adich-pic.jpg', import.meta.url).href
+const teamImg2 = new URL('../../images/adich-pic.jpg', import.meta.url).href
+const teamImg3 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 
 export default function About() {
   return (
@@ -83,6 +83,17 @@ export default function About() {
           <button className="btn btn-primary">Recruit 100+ mentors</button>
         </div>
       </section>
+
+      {/* Navigation (modified) */}
+      <nav className="d-flex align-items-center gap-2">
+        <Link to="/" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Home</Link>
+        <Link to="/about" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>About</Link>
+        <Link to="/contact" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Contact</Link>
+        <Link to="/resources" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Resources</Link>
+        <Link to="/login" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Login</Link>
+        <button type="button" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Logout</button>
+        <Link to="/register" className="btn btn-sm text-white" style={{background: 'var(--brand-magenta)', border: `1px solid var(--border-blue)`}}>Register</Link>
+      </nav>
     </div>
   )
 }
