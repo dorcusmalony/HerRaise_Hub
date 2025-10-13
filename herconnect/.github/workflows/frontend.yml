@@ -5,12 +5,12 @@ on:
     branches: [develop, main]
   pull_request:
     # run CI for any PR so we can create preview deployments
-    branches: [ 'main' ]
+    branches: [ main ]
 
 permissions:
-  contents: read
-  packages: write
-  id-token: write
+    contents: read
+    packages: write
+    id-token: write
 
 env:
   APP_DIR: herconnect
