@@ -1,5 +1,4 @@
 import React from 'react'
-import '../../styles/BootstrapVars.module.css' // ensures Bootstrap + vars are loaded
 import styles from '../../styles/Pages.module.css'
 
 // image assets from src/images
@@ -10,7 +9,7 @@ const teamImg3 = new URL('../../images/adich pic.jpg', import.meta.url).href
 
 export default function About() {
   return (
-    <div className="container py-4">
+    <div className={`container py-4 ${styles.container}`}>
       {/* Hero with overlay text and CTAs */}
       <section className="mb-5 position-relative">
         <div className={styles.heroWrapper}>
