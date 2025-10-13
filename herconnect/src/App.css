@@ -1,4 +1,4 @@
-/* Replace constrained root with full-width root so footer/background can reach edges */
+
 #root {
 	/* allow full width, don't artificially center the entire app */
 	width: 100%;

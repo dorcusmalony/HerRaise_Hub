@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import '../../styles/BootstrapVars.module.css' // ensures Bootstrap + vars are loaded
+import styles from '../../styles/Pages.module.css'
 
 export default function Register(){
 	const [form, setForm] = useState({
@@ -118,7 +120,7 @@ export default function Register(){
 	}
 
 	return (
-		<div className="mx-auto" style={{maxWidth:640}}>
+		<div className={`mx-auto ${styles.container}`}>
 			<h3>Create account</h3>
 			<form onSubmit={e => e.preventDefault()}>
 				<div className="mb-2">
@@ -190,7 +192,7 @@ export default function Register(){
 					<button type="button" className="btn btn-outline-primary" onClick={() => handleSubmit('mentee')} disabled={submitting}>
 						{submitting ? 'Submitting…' : 'Join as Mentee'}
 					</button>
-					<button type="button" className="btn" style={{background: 'var(--brand-magenta)', color:'#fff'}} onClick={() => handleSubmit('mentor')} disabled={submitting}>
+					<button type="button" className={`btn ${styles.brandButton}`} onClick={() => handleSubmit('mentor')} disabled={submitting}>
 						{submitting ? 'Submitting…' : 'Join as Mentor'}
 					</button>
 				</div>
@@ -200,7 +202,7 @@ export default function Register(){
 			{result && (
 				<div className="mt-4 alert alert-light">
 					<strong>Response:</strong>
-					<pre style={{whiteSpace:'pre-wrap', wordBreak:'break-word', marginTop:8}}>{JSON.stringify(result, null, 2)}</pre>
+					<pre className={styles.responsePre}>{JSON.stringify(result, null, 2)}</pre>
 				</div>
 			)}
 		</div>

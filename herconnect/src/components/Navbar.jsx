@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom' // or NavLink if preferred
 import '../../styles/BootstrapVars.module.css' // ensures Bootstrap + vars are loaded
 import styles from '../../styles/Pages.module.css'
 
