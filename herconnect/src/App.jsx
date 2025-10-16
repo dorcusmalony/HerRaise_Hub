@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header/header.jsx'
 import Footer from './components/Footer/Footer'
@@ -12,6 +12,17 @@ import ResetPassword from './pages/Auth/ResetPassword'
 import './App.css'
 
 export default function App() {
+  // quick runtime check to help debug malformed VITE_API_URL -> causes 404s
+  useEffect(() => {
+    const api = import.meta.env.VITE_API_URL || ''
+    console.log('VITE_API_URL=', api)
+    if (!api) {
+      console.warn('VITE_API_URL is not set. Set it in .env (local) and in Vercel env vars.')
+    } else if (!/^https?:\/\/.+/.test(api)) {
+      console.warn('VITE_API_URL looks malformed. It should start with "https://" (e.g. https://herraise-hub-backend-1.onrender.com). Check your .env / Vercel config.')
+    }
+  }, [])
+
   return (
     <div className="app-root">
       <Header />
