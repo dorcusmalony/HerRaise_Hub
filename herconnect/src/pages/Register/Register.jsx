@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import '../../styles/BootstrapVars.module.css' // ensures Bootstrap + vars are loaded
 import styles from '../../styles/Pages.module.css'
 
-export default function Signup(){ // renamed from Register
+export default function Register(){ // renamed from Signup back to Register
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
@@ -70,7 +70,7 @@ export default function Signup(){ // renamed from Register
 		setErrors({})
 
 		try {
-			const res = await fetch(`${API}/signup`, { // changed from /register to /signup
+			const res = await fetch(`${API}/register`, { // changed from /signup back to /register
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload)
@@ -105,7 +105,7 @@ export default function Signup(){ // renamed from Register
 				setResult(fakeResponse)
 				try { localStorage.setItem('token', fakeResponse.token) } catch (e) {}
 			} else {
-				const fakeResponse = { success: true, message: 'Signed up as mentee (simulated)', user: { name: payload.name, email: payload.email, role: 'mentee' } } // updated message
+				const fakeResponse = { success: true, message: 'Registered as mentee (simulated)', user: { name: payload.name, email: payload.email, role: 'mentee' } } // restored original message
 				setResult(fakeResponse)
 			}
 		} finally {
@@ -121,7 +121,7 @@ export default function Signup(){ // renamed from Register
 
 	return (
 		<div className={`mx-auto ${styles.container}`}>
-			<h3>Sign up</h3> {/* updated label */}
+			<h3>Create account</h3> {/* restored original heading */}
 			<form onSubmit={e => e.preventDefault()}>
 				<div className="mb-2">
 					<label className="form-label">Name</label>
