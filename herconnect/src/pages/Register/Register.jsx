@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import '../../styles/BootstrapVars.module.css' // ensures Bootstrap + vars are loaded
 import styles from '../../styles/Pages.module.css'
 
@@ -18,6 +18,8 @@ export default function Register(){ // renamed from Signup back to Register
 	const [errors, setErrors] = useState({})
 	const [result, setResult] = useState(null) // store simulated/API response
 	const [submitting, setSubmitting] = useState(false)
+	// Add new state for debugging
+	const [debugInfo, setDebugInfo] = useState(null)
 
 	const handleChange = (e) => {
 		const { name, value } = e.target
@@ -64,25 +66,73 @@ export default function Register(){ // renamed from Signup back to Register
 	const submitToServer = async (role) => {
 		if (!validate(role)) return
 		const payload = buildPayload(role)
-		const API = import.meta.env.VITE_API_URL || '/api' // set VITE_API_URL in .env for real backend
+		const API = import.meta.env.VITE_API_URL || '/api'
+		
+		// List of endpoints to try in order, based on common API structures
+		const endpointsToTry = [
+			`${API}/register`,          // Try direct /register first
+			`${API}/api/register`,      // Try with /api prefix
+			`${API}/api/auth/register`  // Try with /api/auth prefix
+		];
+		
 		setSubmitting(true)
 		setResult(null)
 		setErrors({})
-
-		try {
-			const res = await fetch(`${API}/register`, { // changed from /signup back to /register
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload)
-			})
-			const data = await res.json().catch(() => null)
-			if (!res.ok) throw new Error(data?.message || 'Registration failed')
-			// server success
-			setResult(data)
-			if (data?.token) {
-				try { localStorage.setItem('token', data.token) } catch (e) {}
+		
+		console.log("Base API URL:", API);
+		console.log("Will try endpoints:", endpointsToTry);
+		console.log("Payload:", payload);
+		
+		let succeeded = false;
+		
+		// Try each endpoint in order until one works
+		for (const url of endpointsToTry) {
+			if (succeeded) break;
+			
+			try {
+				console.log(`Trying endpoint: ${url}`);
+				const res = await fetch(url, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(payload)
+				})
+				
+				console.log(`Response from ${url}:`, res.status);
+				
+				if (res.status === 404) {
+					console.log("404 Not Found - will try next endpoint");
+					continue; // Try the next endpoint
+				}
+				
+				const data = await res.json().catch(() => null)
+				
+				if (!res.ok) {
+					console.error("Error response:", data);
+					throw new Error(data?.message || 'Registration failed')
+				}
+				
+				// server success
+				console.log("Success with endpoint:", url);
+				setResult(data)
+				if (data?.token) {
+					try { localStorage.setItem('token', data.token) } catch (e) {}
+				}
+				succeeded = true;
+				break;
+				
+			} catch (err) {
+				console.error(`Error with ${url}:`, err.message);
+				// Continue to next endpoint if it was a 404
+				if (err.message.includes('404')) {
+					continue;
+				}
 			}
-		} catch (err) {
+		}
+		
+		// If all endpoints failed, use fallback
+		if (!succeeded) {
+			console.log("All endpoints failed, using fallback response");
+			
 			// network or server error -> fallback to simulated response (keeps dev flow functional)
 			if (role === 'mentor') {
 				const fakeResponse = {
@@ -108,11 +158,11 @@ export default function Register(){ // renamed from Signup back to Register
 				const fakeResponse = { success: true, message: 'Registered as mentee (simulated)', user: { name: payload.name, email: payload.email, role: 'mentee' } } // restored original message
 				setResult(fakeResponse)
 			}
-		} finally {
-			setSubmitting(false)
-			// clear password in UI for safety
-			setForm(prev => ({ ...prev, password: '' }))
 		}
+		
+		setSubmitting(false)
+		// clear password in UI for safety
+		setForm(prev => ({ ...prev, password: '' }))
 	}
 
 	const handleSubmit = (role) => {
@@ -197,6 +247,14 @@ export default function Register(){ // renamed from Signup back to Register
 					</button>
 				</div>
 			</form>
+
+			{/* Debug info for troubleshooting */}
+			{debugInfo && (
+				<div className="mt-3 alert alert-warning">
+					<strong>Debug:</strong> {debugInfo}
+					<div className="small mt-1">Check browser console (F12) for more details.</div>
+				</div>
+			)}
 
 			{/* show server or simulated response */}
 			{result && (
