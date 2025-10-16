@@ -66,26 +66,31 @@ export default function Register(){ // renamed from Signup back to Register
 	const submitToServer = async (role) => {
 		if (!validate(role)) return
 		const payload = buildPayload(role)
-		const API = import.meta.env.VITE_API_URL || '/api'
+		const API = import.meta.env.VITE_API_URL || '';
+		console.log("Environment VITE_API_URL:", API);
 		
-		// List of endpoints to try in order, based on common API structures
+		// List of endpoints to try in sequence - ordered by most likely to work
 		const endpointsToTry = [
-			`${API}/register`,          // Try direct /register first
-			`${API}/api/register`,      // Try with /api prefix
-			`${API}/api/auth/register`  // Try with /api/auth prefix
+			`${API}/register`,               // Direct /register on base URL
+			`${API}/api/register`,           // With /api prefix
+			`${API}/api/auth/register`,      // With /api/auth prefix
+			// Test these if base domain works but specific endpoints fail
+			`${API.split('/api')[0]}/register`,  // Try removing any /api from base URL
+			`https://herraise-hub-backend-1.onrender.com/register`,  // Direct hardcoded fallback
+			`https://herraise-hub-backend-1.onrender.com/api/register`, // Hardcoded with /api
+			`https://herraise-hub-backend-1.onrender.com/api/auth/register` // Hardcoded with /api/auth
 		];
 		
 		setSubmitting(true)
 		setResult(null)
 		setErrors({})
 		
-		console.log("Base API URL:", API);
-		console.log("Will try endpoints:", endpointsToTry);
-		console.log("Payload:", payload);
+		console.log("Testing endpoints in sequence:", endpointsToTry);
 		
 		let succeeded = false;
+		let lastError = null;
 		
-		// Try each endpoint in order until one works
+		// Try each endpoint until one works
 		for (const url of endpointsToTry) {
 			if (succeeded) break;
 			
@@ -95,7 +100,7 @@ export default function Register(){ // renamed from Signup back to Register
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(payload)
-				})
+				});
 				
 				console.log(`Response from ${url}:`, res.status);
 				
@@ -104,28 +109,35 @@ export default function Register(){ // renamed from Signup back to Register
 					continue; // Try the next endpoint
 				}
 				
-				const data = await res.json().catch(() => null)
+				// Try to parse response as JSON
+				const data = await res.json().catch(() => {
+					console.warn(`Response from ${url} is not valid JSON`);
+					return null;
+				});
 				
 				if (!res.ok) {
-					console.error("Error response:", data);
-					throw new Error(data?.message || 'Registration failed')
+					console.error(`Error response from ${url}:`, data);
+					lastError = new Error(data?.message || `Server error: ${res.status}`);
+					continue; // Try next endpoint
 				}
 				
-				// server success
-				console.log("Success with endpoint:", url);
-				setResult(data)
+				// Server success
+				console.log(`Success with endpoint: ${url}`);
+				console.log("Response data:", data);
+				setResult(data);
+				
+				// Store URL that worked for future reference
+				try { localStorage.setItem('working_api_endpoint', url); } catch (e) {}
+				
 				if (data?.token) {
-					try { localStorage.setItem('token', data.token) } catch (e) {}
+					try { localStorage.setItem('token', data.token); } catch (e) {}
 				}
+				
 				succeeded = true;
 				break;
-				
 			} catch (err) {
 				console.error(`Error with ${url}:`, err.message);
-				// Continue to next endpoint if it was a 404
-				if (err.message.includes('404')) {
-					continue;
-				}
+				lastError = err;
 			}
 		}
 		
