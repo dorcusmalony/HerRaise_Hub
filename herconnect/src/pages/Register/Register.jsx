@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import '../../styles/BootstrapVars.module.css' // ensures Bootstrap + vars are loaded
+// Try to POST to backend, fallback to simulated response on error
+	import React, { useState, useEffect } from 'react'
+import '../../styles/BootstrapVars.module.css'
 import styles from '../../styles/Pages.module.css'
 
-export default function Register(){ // renamed from Signup back to Register
+export default function Register(){
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
 		password: '',
-		role: 'mentee', // default
+		role: 'mentee',
 		language: 'en',
 		phoneNumber: '',
 		location: { city: '', state: '' },
 		dateOfBirth: '',
-		interests: '', // comma separated input, will become array
+		interests: '',
 		educationLevel: '',
 	})
 	const [errors, setErrors] = useState({})
-	const [result, setResult] = useState(null) // store simulated/API response
+	const [result, setResult] = useState(null)
 	const [submitting, setSubmitting] = useState(false)
-	// Add new state for debugging
 	const [debugInfo, setDebugInfo] = useState(null)
 
 	const handleChange = (e) => {
@@ -43,7 +43,6 @@ export default function Register(){ // renamed from Signup back to Register
 		return Object.keys(err).length === 0
 	}
 
-	// Build payload to match backend exact shape
 	const buildPayload = (role) => {
 		return {
 			name: form.name.trim(),
@@ -62,78 +61,69 @@ export default function Register(){ // renamed from Signup back to Register
 		}
 	}
 
-	// Try to POST to backend, fallback to simulated response on error
 	const submitToServer = async (role) => {
 		if (!validate(role)) return
 		const payload = buildPayload(role)
-		const API = import.meta.env.VITE_API_URL || '/api'
+		const API = import.meta.env.VITE_API_URL || ''
 		
-		// List of endpoints to try in order, based on common API structures
-		const endpointsToTry = [
-			`${API}/register`,          // Try direct /register first
-			`${API}/api/register`,      // Try with /api prefix
-			`${API}/api/auth/register`  // Try with /api/auth prefix
-		];
+		if (!API) {
+			console.error("VITE_API_URL is not set!")
+			setDebugInfo("VITE_API_URL environment variable is missing. Check your .env file.")
+			return
+		}
+		
+		console.log("Environment VITE_API_URL:", API)
+		
+		const endpoint = `${API}/api/auth/register`
 		
 		setSubmitting(true)
 		setResult(null)
 		setErrors({})
+		setDebugInfo(null)
 		
-		console.log("Base API URL:", API);
-		console.log("Will try endpoints:", endpointsToTry);
-		console.log("Payload:", payload);
+		console.log("Calling endpoint:", endpoint)
 		
-		let succeeded = false;
-		
-		// Try each endpoint in order until one works
-		for (const url of endpointsToTry) {
-			if (succeeded) break;
+		try {
+			const res = await fetch(endpoint, {
+				method: 'POST',
+				headers: { 
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			})
 			
-			try {
-				console.log(`Trying endpoint: ${url}`);
-				const res = await fetch(url, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(payload)
-				})
-				
-				console.log(`Response from ${url}:`, res.status);
-				
-				if (res.status === 404) {
-					console.log("404 Not Found - will try next endpoint");
-					continue; // Try the next endpoint
-				}
-				
-				const data = await res.json().catch(() => null)
-				
-				if (!res.ok) {
-					console.error("Error response:", data);
-					throw new Error(data?.message || 'Registration failed')
-				}
-				
-				// server success
-				console.log("Success with endpoint:", url);
-				setResult(data)
-				if (data?.token) {
-					try { localStorage.setItem('token', data.token) } catch (e) {}
-				}
-				succeeded = true;
-				break;
-				
-			} catch (err) {
-				console.error(`Error with ${url}:`, err.message);
-				// Continue to next endpoint if it was a 404
-				if (err.message.includes('404')) {
-					continue;
-				}
+			console.log("Response status:", res.status)
+			
+			const data = await res.json().catch(() => {
+				console.warn("Response is not valid JSON")
+				return null
+			})
+			
+			if (!res.ok) {
+				console.error("Error response:", data)
+				setDebugInfo(`Server error (${res.status}): ${data?.message || 'Unknown error'}`)
+				setErrors({ submit: data?.message || `Server error: ${res.status}` })
+				setSubmitting(false)
+				return
 			}
-		}
-		
-		// If all endpoints failed, use fallback
-		if (!succeeded) {
-			console.log("All endpoints failed, using fallback response");
 			
-			// network or server error -> fallback to simulated response (keeps dev flow functional)
+			console.log("Success! Response data:", data)
+			setResult(data)
+			
+			if (data?.token) {
+				try { localStorage.setItem('token', data.token) } catch (e) {}
+			}
+			
+		} catch (err) {
+			console.error("Network/Fetch error:", err)
+			
+			if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+				setDebugInfo(`Network error - likely CORS issue. Backend needs to allow: ${window.location.origin}`)
+			} else {
+				setDebugInfo(`Error: ${err.message}`)
+			}
+			
+			console.log("Using fallback simulated response")
 			if (role === 'mentor') {
 				const fakeResponse = {
 					success: true,
@@ -150,18 +140,22 @@ export default function Register(){ // renamed from Signup back to Register
 						interests: payload.interests.length ? payload.interests : ['leadership','career development'],
 						educationLevel: payload.educationLevel || 'bachelor',
 					},
-					_note: 'simulated fallback response'
+					_note: 'simulated fallback response (backend not reachable)'
 				}
 				setResult(fakeResponse)
 				try { localStorage.setItem('token', fakeResponse.token) } catch (e) {}
 			} else {
-				const fakeResponse = { success: true, message: 'Registered as mentee (simulated)', user: { name: payload.name, email: payload.email, role: 'mentee' } } // restored original message
+				const fakeResponse = { 
+					success: true, 
+					message: 'Registered as mentee (simulated)', 
+					user: { name: payload.name, email: payload.email, role: 'mentee' },
+					_note: 'simulated fallback response (backend not reachable)'
+				}
 				setResult(fakeResponse)
 			}
 		}
 		
 		setSubmitting(false)
-		// clear password in UI for safety
 		setForm(prev => ({ ...prev, password: '' }))
 	}
 
@@ -171,7 +165,7 @@ export default function Register(){ // renamed from Signup back to Register
 
 	return (
 		<div className={`mx-auto ${styles.container}`}>
-			<h3>Create account</h3> {/* restored original heading */}
+			<h3>Create account</h3>
 			<form onSubmit={e => e.preventDefault()}>
 				<div className="mb-2">
 					<label className="form-label">Name</label>
@@ -205,7 +199,6 @@ export default function Register(){ // renamed from Signup back to Register
 					</select>
 				</div>
 
-				{/* Mentor-only fields (still editable but validated only when role=mentor) */}
 				<div className="mb-2">
 					<label className="form-label">City</label>
 					<input name="city" value={form.location.city} onChange={handleChange} className="form-control" autoComplete="address-level2" />
@@ -248,7 +241,6 @@ export default function Register(){ // renamed from Signup back to Register
 				</div>
 			</form>
 
-			{/* Debug info for troubleshooting */}
 			{debugInfo && (
 				<div className="mt-3 alert alert-warning">
 					<strong>Debug:</strong> {debugInfo}
@@ -256,7 +248,6 @@ export default function Register(){ // renamed from Signup back to Register
 				</div>
 			)}
 
-			{/* show server or simulated response */}
 			{result && (
 				<div className="mt-4 alert alert-light">
 					<strong>Response:</strong>

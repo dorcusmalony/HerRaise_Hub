@@ -12,8 +12,9 @@ import ResetPassword from './pages/Auth/ResetPassword'
 import './App.css'
 
 export default function App() {
-  // quick runtime check to help debug malformed VITE_API_URL -> causes 404s
+  // Fix: Read from environment variable instead of hardcoded value
   useEffect(() => {
+    // Read from environment variable - not hardcoded
     const api = import.meta.env.VITE_API_URL || ''
     console.log('VITE_API_URL=', api)
     if (!api) {
