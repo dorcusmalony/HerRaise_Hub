@@ -1,14 +1,9 @@
 export function useTranslation() {
-  // Simple translation function - returns English text by default
-  // You can expand this to support multiple languages later
   const translations = {
     'profile.mentee': 'Mentee',
     'profile.mentor': 'Mentor',
     'profile.admin': 'Admin',
-    'profile.level': 'Level',
     'profile.points': 'Points',
-    'profile.status': 'Status',
-    'profile.verified': 'Verified',
     'common.error': 'Error',
     'common.success': 'Success',
     'profile.editProfile': 'Edit Profile',
@@ -31,13 +26,13 @@ export function useTranslation() {
     'profile.state': 'State/Country',
     'profile.statePlaceholder': 'e.g., Kenya',
     'profile.interests': 'Interests',
-    'profile.interestsHelp': 'Select topics you\'re interested in',
+    'profile.interestsHelp': 'Select topics you are interested in',
     'profile.customInterestsPlaceholder': 'Add custom interests (comma-separated)',
     'profile.education': 'Education Level',
     'profile.selectEducation': 'Select your education level',
     'educationLevels.secondary': 'Secondary School',
-    'educationLevels.bachelor': 'Bachelor\'s Degree',
-    'educationLevels.master': 'Master\'s Degree',
+    'educationLevels.bachelor': 'Bachelor Degree',
+    'educationLevels.master': 'Master Degree',
     'educationLevels.phd': 'PhD',
     'educationLevels.other': 'Other',
     'mentor.title': 'Mentor Information',
@@ -53,9 +48,7 @@ export function useTranslation() {
     'mentor.mentorBioPlaceholder': 'Describe your experience and what you can help mentees with...'
   }
 
-  const t = (key) => {
-    return translations[key] || key
-  }
+  const t = (key) => translations[key] || key
 
   return { t }
 }
