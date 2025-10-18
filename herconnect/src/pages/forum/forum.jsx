@@ -196,7 +196,10 @@ export default function Forum() {
                     {/* Author Avatar */}
                     <div>
                       <img 
-                        src={post.author?.profilePicture || 'https://via.placeholder.com/50'} 
+                        src={
+                          post.author?.profilePicture || 
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name || 'User')}&background=E84393&color=fff`
+                        } 
                         alt={post.author?.name}
                         className="rounded-circle"
                         style={{ width: 50, height: 50, objectFit: 'cover' }}
