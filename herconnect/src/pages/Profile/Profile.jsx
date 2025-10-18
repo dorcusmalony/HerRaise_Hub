@@ -28,9 +28,6 @@ export default function Profile() {
     educationLevel: '',
     profilePicture: null,
     totalPoints: 0,
-    level: 1,
-    isVerified: false,
-    verificationDate: null,
     mentorProfile: null
   })
   
@@ -230,23 +227,13 @@ export default function Profile() {
         </span>
       </div>
 
-      {/* Gamification Info */}
-      {(profile.totalPoints > 0 || profile.level > 1 || profile.isVerified) && (
-        <div className="d-flex justify-content-center gap-3 mb-4">
-          <div className="text-center">
-            <strong className="d-block text-muted small">{t('profile.level')}</strong>
-            <div className="badge bg-primary fs-6">{profile.level}</div>
+      {/* Gamification Info - Only Points */}
+      {profile.totalPoints > 0 && (
+        <div className="d-flex justify-content-center mb-4">
+          <div className="text-center px-4 py-3 rounded" style={{ background: 'linear-gradient(135deg, var(--brand-magenta) 0%, #c33764 100%)', color: 'white' }}>
+            <strong className="d-block small text-uppercase" style={{ letterSpacing: '1px', opacity: 0.9 }}>Total Points</strong>
+            <div className="fs-2 fw-bold">{profile.totalPoints}</div>
           </div>
-          <div className="text-center">
-            <strong className="d-block text-muted small">{t('profile.points')}</strong>
-            <div className="fs-6">{profile.totalPoints}</div>
-          </div>
-          {profile.isVerified && (
-            <div className="text-center">
-              <strong className="d-block text-muted small">{t('profile.status')}</strong>
-              <div className="text-success fs-6">✓ {t('profile.verified')}</div>
-            </div>
-          )}
         </div>
       )}
 
@@ -681,4 +668,4 @@ export default function Profile() {
     </div>
   )
 }
-
+                        

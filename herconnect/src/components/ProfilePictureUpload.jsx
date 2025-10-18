@@ -8,13 +8,11 @@ export default function ProfilePictureUpload({ currentPicture, onUploadSuccess, 
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       setError('Please select an image file')
       return
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setError('Image must be less than 5MB')
       return
@@ -45,14 +43,13 @@ export default function ProfilePictureUpload({ currentPicture, onUploadSuccess, 
       const data = await response.json()
       onUploadSuccess(data.profilePicture || data.url)
     } catch (err) {
-      console.error('Upload error:', err)
       setError(err.message || 'Failed to upload image')
     } finally {
       setUploading(false)
     }
   }
 
-  const defaultImage = 'https://via.placeholder.com/150/cccccc/666666?text=No+Image'
+  const defaultImage = 'https://via.placeholder.com/150/E84393/ffffff?text=Profile'
 
   return (
     <div className="profile-picture-upload text-center mb-3">
@@ -71,20 +68,19 @@ export default function ProfilePictureUpload({ currentPicture, onUploadSuccess, 
         {editable && (
           <label
             htmlFor="profile-picture-input"
-            className="position-absolute bottom-0 end-0 btn btn-sm btn-primary rounded-circle"
+            className="position-absolute bottom-0 end-0 btn btn-sm rounded-circle"
             style={{
               width: 40,
               height: 40,
               padding: 0,
-              cursor: uploading ? 'not-allowed' : 'pointer'
+              cursor: uploading ? 'not-allowed' : 'pointer',
+              background: 'var(--brand-magenta)',
+              color: 'white',
+              border: '2px solid white'
             }}
             title="Change profile picture"
           >
-            {uploading ? (
-              <span className="spinner-border spinner-border-sm" role="status"></span>
-            ) : (
-              '📷'
-            )}
+            {uploading ? '⏳' : '📷'}
           </label>
         )}
         <input
@@ -97,7 +93,7 @@ export default function ProfilePictureUpload({ currentPicture, onUploadSuccess, 
         />
       </div>
       {error && (
-        <div className="alert alert-danger alert-sm mt-2" style={{ maxWidth: 300, margin: '0.5rem auto' }}>
+        <div className="alert alert-danger alert-sm mt-2" style={{ maxWidth: 300, margin: '0.5rem auto', fontSize: '0.85rem' }}>
           {error}
         </div>
       )}

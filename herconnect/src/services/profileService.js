@@ -9,7 +9,7 @@ export const profileService = {
       throw new Error('No authentication token found')
     }
     
-    const response = await fetch(`${API_URL}/api/auth/me`, {
+    const response = await fetch(`${API_URL}/api/profile`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -19,7 +19,7 @@ export const profileService = {
     
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized')
+        throw new Error('401 Unauthorized')
       }
       throw new Error(`Failed to fetch profile: ${response.status}`)
     }
@@ -35,7 +35,7 @@ export const profileService = {
       throw new Error('No authentication token found')
     }
     
-    const response = await fetch(`${API_URL}/api/auth/update-profile`, {
+    const response = await fetch(`${API_URL}/api/profile`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
