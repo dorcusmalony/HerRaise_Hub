@@ -13,10 +13,11 @@ import Profile from './pages/Profile/Profile.jsx'
 import Forum from './pages/forum/forum.jsx'
 import Dashboard from './pages/dashboard/dashboard.jsx'
 import Opportunities from './pages/Opportunities/Opportunities.jsx'
+import { initializeSocket, disconnectSocket } from './services/socketService'
 import './App.css'
+import NotificationToast from './components/NotificationToast/NotificationToast'
 
 export default function App() {
-  // Fix: Read from environment variable instead of hardcoded value
   useEffect(() => {
     // Read from environment variable - not hardcoded
     const api = import.meta.env.VITE_API_URL || ''
@@ -26,11 +27,23 @@ export default function App() {
     } else if (!/^https?:\/\/.+/.test(api)) {
       console.warn('VITE_API_URL looks malformed. It should start with "https://" (e.g. https://herraise-hub-backend-1.onrender.com). Check your .env / Vercel config.')
     }
+
+    // Initialize socket if user is logged in
+    const token = localStorage.getItem('token')
+    if (token) {
+      initializeSocket(token)
+    }
+
+    // Cleanup on unmount
+    return () => {
+      disconnectSocket()
+    }
   }, [])
 
   return (
     <div className="app-root">
       <Header />
+      <NotificationToast />
       <main className="container py-4">
         <Routes>
           <Route path="/" element={<Home />} />
