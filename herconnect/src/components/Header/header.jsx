@@ -33,7 +33,12 @@ export default function Header() {
 			console.warn('Logout request failed', err)
 		} finally {
 			// ✅ Always clear client state regardless of server response
-			try { localStorage.removeItem('token'); localStorage.removeItem('authToken') } catch (_) {}
+			try { 
+				localStorage.removeItem('token')
+				localStorage.removeItem('authToken')
+			} catch {
+				// Ignore localStorage errors
+			}
 			navigate('/login', { replace: true })
 		}
 	}
@@ -64,6 +69,7 @@ export default function Header() {
 					<Link to="/about" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>About</Link>
 					<Link to="/contact" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Contact</Link>
 					<Link to="/resources" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Resources</Link>
+					<Link to="/profile" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Profile</Link>
 					<Link to="/login" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Login</Link>
 
 					{/* replaced <Link to="/logout"> with an API-backed action */}

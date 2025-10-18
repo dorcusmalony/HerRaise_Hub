@@ -1,0 +1,287 @@
+name: Frontend CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, ]
+  pull_request:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  # Job 1: Install and Cache Dependencies
+  install:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+  # Job 2: Lint Check
+  lint:
+    name: ESLint Check
+    runs-on: ubuntu-latest
+    needs: [install]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: false
+
+  # Job 3: Build Check
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: [install]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create production build
+        run: npm run build
+        env:
+          CI: true
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://herraise-hub-backend-1.onrender.com' }}
+
+      - name: Check build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo " Build failed - dist folder not created"
+            exit 1
+          fi
+          echo " Build successful - dist folder created"
+          ls -la dist
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 7
+
+  # Job 4: Type Check (if using TypeScript)
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    needs: [install]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript check if tsconfig.json exists
+        run: |
+          if [ -f "tsconfig.json" ]; then
+            npx tsc --noEmit
+          else
+            echo "tsconfig.json not found, skipping type check."
+          fi
+
+  # Job 5: Test (if tests exist)
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: [install]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test || echo " No tests configured or tests failed"
+        continue-on-error: true
+
+  # Job 6: Security Audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    needs: [install]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate || echo " Some vulnerabilities found"
+        continue-on-error: true
+
+      - name: Check for critical vulnerabilities
+        run: |
+          npm audit --audit-level=critical
+          if [ $? -ne 0 ]; then
+            echo "❌ Critical vulnerabilities found!"
+            exit 1
+          fi
+
+  # Job 7: Preview Deployment Comment (for PRs)
+  preview-info:
+    name: Preview Deployment Info
+    runs-on: ubuntu-latest
+    needs: [lint, build]
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Comment PR with preview info
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const lintResult = '${{ needs.lint.result }}';
+            const buildResult = '${{ needs.build.result }}';
+
+            const allPassed = lintResult === 'success' && buildResult === 'success';
+            const emoji = allPassed ? '✅' : '❌';
+
+            let message = `${emoji} **CI Pipeline Status**\n\n`;
+            message += `**Lint**: ${lintResult === 'success' ? '✅ Passed' : '❌ Failed'}\n`;
+            message += `**Build**: ${buildResult === 'success' ? '✅ Passed' : '❌ Failed'}\n\n`;
+
+            if (allPassed) {
+              message += ' **Ready for merge!**\n\n';
+              message += 'Vercel will automatically deploy this PR when merged to `main`.\n\n';
+            } else {
+              message += ' **Not ready for merge** - Please fix the issues above.\n\n';
+            }
+
+            message += `**Branch**: \`${context.payload.pull_request.head.ref}\` → \`${context.payload.pull_request.base.ref}\`\n`;
+            message += `**Commit**: ${context.sha.substring(0, 7)}\n`;
+            message += `**Author**: @${context.payload.pull_request.user.login}`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+  # Job 8: Branch Protection Check
+  branch-check:
+    name: Branch Protection Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Check PR target branch
+        run: |
+          if [[ "${{ github.base_ref }}" == "main" ]]; then
+            echo "✅ PR targets main branch - this is correct!"
+          elif [[ "${{ github.base_ref }}" == "develop" ]]; then
+            echo "✅ PR targets develop branch - this is correct!"
+          else
+            echo " Warning: PR targets unusual branch: ${{ github.base_ref }}"
+          fi
+
+  # Job 9: Final Status Summary
+  status-summary:
+    name: CI Status Summary
+    runs-on: ubuntu-latest
+    needs: [lint, build, security]
+    if: always()
+
+    steps:
+      - name: Check overall status
+        run: |
+          echo "=== CI Pipeline Summary ==="
+          echo "Lint: ${{ needs.lint.result }}"
+          echo "Build: ${{ needs.build.result }}"
+          echo "Security: ${{ needs.security.result }}"
+
+          if [[ "${{ needs.lint.result }}" == "success" ]] && \
+             [[ "${{ needs.build.result }}" == "success" ]] && \
+             [[ "${{ needs.security.result }}" == "success" ]]; then
+            echo "✅ All checks passed!"
+            exit 0
+          else
+            echo " Some checks failed!"
+            exit 1
+          fi

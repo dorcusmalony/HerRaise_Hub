@@ -250,7 +250,7 @@ export default function Login({ setIsAuthenticated }) {
       </form>
 
       <div className="small">
-        Don't have an account? <Link to="/register">Register</Link>
+        Don&apos;t have an account? <Link to="/register">Register</Link>
         <br />
         Have a reset token? <Link to="/reset-password">Reset password</Link>
       </div>
@@ -258,7 +258,7 @@ export default function Login({ setIsAuthenticated }) {
       {/* Show response like Register page */}
       {result && result.success && (
         <div className="mt-4 alert alert-success">
-          <strong>Success!</strong> Login successful. Redirecting to dashboard...
+          <strong>Success!</strong> Login successful. Redirecting to your profile...
         </div>
       )}
 
@@ -273,7 +273,7 @@ export default function Login({ setIsAuthenticated }) {
             />
             <h2 id="forgot-heading" className="contact-title">Forgot Password</h2>
             <p className="small text-muted">
-              Enter your account email. We'll send password reset instructions if it's recognized.
+              Enter your account email. We&apos;ll send password reset instructions if it&apos;s recognized.
             </p>
 
             <form onSubmit={handleForgotSubmit}>

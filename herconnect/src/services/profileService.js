@@ -1,0 +1,54 @@
+const API_URL = import.meta.env.VITE_API_URL || ''
+
+export const profileService = {
+  // Get current user profile
+  async getProfile() {
+    const token = localStorage.getItem('token')
+    
+    if (!token) {
+      throw new Error('No authentication token found')
+    }
+    
+    const response = await fetch(`${API_URL}/api/profile`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized')
+      }
+      throw new Error(`Failed to fetch profile: ${response.status}`)
+    }
+    
+    return response.json()
+  },
+
+  // Update user profile
+  async updateProfile(profileData) {
+    const token = localStorage.getItem('token')
+    
+    if (!token) {
+      throw new Error('No authentication token found')
+    }
+    
+    const response = await fetch(`${API_URL}/api/profile`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(profileData)
+    })
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error.message || 'Failed to update profile')
+    }
+    
+    return response.json()
+  }
+}

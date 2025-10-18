@@ -28,7 +28,12 @@ export default function Footer(){
     } catch (err) {
       console.warn('Logout error', err)
     } finally {
-      try { localStorage.removeItem('token'); localStorage.removeItem('authToken') } catch (_) {}
+      try { 
+        localStorage.removeItem('token')
+        localStorage.removeItem('authToken')
+      } catch {
+        // Ignore localStorage errors
+      }
       navigate('/login', { replace: true })
     }
   }

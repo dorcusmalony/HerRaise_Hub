@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header/header.jsx'
 import Footer from './components/Footer/Footer'
-import HomePage from './pages/HomePage/HomePage'
+import Home from './pages/Home/Home'
 import About from './pages/About/About'
 import Contact from './pages/Contact/Contact'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register.jsx'
 import ResourcePage from './pages/ResourcePage/ResourcePage'
 import ResetPassword from './pages/Auth/ResetPassword'
+import Profile from './pages/Profile/Profile.jsx'
 import './App.css'
 
 export default function App() {
@@ -29,13 +30,14 @@ export default function App() {
       <Header />
       <main className="container py-4">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/resources" element={<ResourcePage />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
       <Footer />
