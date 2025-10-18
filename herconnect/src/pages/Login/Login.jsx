@@ -258,7 +258,7 @@ export default function Login({ setIsAuthenticated }) {
       {/* Show response like Register page */}
       {result && result.success && (
         <div className="mt-4 alert alert-success">
-          <strong>Success!</strong> Login successful. Redirecting to dashboard...
+          <strong>Success!</strong> Login successful. Redirecting to your profile...
         </div>
       )}
 
