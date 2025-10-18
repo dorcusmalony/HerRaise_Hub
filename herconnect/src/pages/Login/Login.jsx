@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { initializeSocket, requestNotificationPermission } from '../../services/socketService'
 import styles from '../../styles/Pages.module.css'
 
-export default function Login({ setIsAuthenticated }) {
+export default function Login() {
   const navigate = useNavigate()
-  const location = useLocation()
   const API = import.meta.env.VITE_API_URL || ''
 
   // Form state
@@ -63,10 +62,10 @@ export default function Login({ setIsAuthenticated }) {
       }
 
       // Success!
-      console.log('✅ Login successful!')
+      console.log('✅ Login successful!', data)
       setResult(data)
 
-      // Store token and user
+      // Store token and user data
       if (data?.token) {
         try {
           localStorage.setItem('token', data.token)
@@ -85,38 +84,24 @@ export default function Login({ setIsAuthenticated }) {
       if (data?.user) {
         try {
           localStorage.setItem('user', JSON.stringify(data.user))
-          console.log('✅ User data saved:', data.user)
+          console.log('✅ User data saved successfully:', data.user)
         } catch (e) {
           console.error('Failed to save user data:', e)
         }
+      } else {
+        console.warn('⚠️ No user data in login response')
       }
 
-      // Update global auth state
-      if (setIsAuthenticated) {
-        setIsAuthenticated(true)
-      }
-
-      // Redirect after 1.5 seconds
+      // Redirect based on role
       setTimeout(() => {
-        const userRole = data?.user?.role
-        const from = location.state?.from?.pathname
-        
-        let redirectPath = from || '/'
-        
-        // Default redirects by role if no "from" path
-        if (!from) {
-          if (userRole === 'mentor') {
-            redirectPath = '/dashboard/mentor'
-          } else if (userRole === 'mentee') {
-            redirectPath = '/dashboard/mentee'
-          } else {
-            redirectPath = '/dashboard'
-          }
+        if (data.user?.role === 'admin') {
+          navigate('/admin/dashboard')
+        } else if (data.user?.role === 'mentor') {
+          navigate('/dashboard')
+        } else {
+          navigate('/dashboard')
         }
-        
-        console.log(`Redirecting to: ${redirectPath}`)
-        navigate(redirectPath, { replace: true })
-      }, 1500)
+      }, 800)
       
     } catch (err) {
       console.error('Login error:', err)
