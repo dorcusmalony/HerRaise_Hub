@@ -50,5 +50,81 @@ export const profileService = {
     }
     
     return response.json()
+  },
+
+  // Upload profile picture
+  async uploadProfilePicture(file) {
+    const token = localStorage.getItem('token')
+    
+    if (!token) {
+      throw new Error('No authentication token found')
+    }
+
+    const formData = new FormData()
+    formData.append('profilePicture', file)
+    
+    const response = await fetch(`${API_URL}/api/profile/picture`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    })
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error.message || 'Failed to upload profile picture')
+    }
+    
+    return response.json()
+  },
+
+  // Delete profile picture
+  async deleteProfilePicture() {
+    const token = localStorage.getItem('token')
+    
+    if (!token) {
+      throw new Error('No authentication token found')
+    }
+    
+    const response = await fetch(`${API_URL}/api/profile/picture`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error.message || 'Failed to delete profile picture')
+    }
+    
+    return response.json()
+  },
+
+  // Change language preference
+  async changeLanguage(language) {
+    const token = localStorage.getItem('token')
+    
+    if (!token) {
+      throw new Error('No authentication token found')
+    }
+    
+    const response = await fetch(`${API_URL}/api/profile/language`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ language })
+    })
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error.message || 'Failed to change language')
+    }
+    
+    return response.json()
   }
 }

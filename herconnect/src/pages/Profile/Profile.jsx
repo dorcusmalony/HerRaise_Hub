@@ -28,12 +28,20 @@ export default function Profile() {
     educationLevel: '',
     profilePicture: null,
     totalPoints: 0,
+    level: 1,
+    yearsOfExperience: 0,
     mentorProfile: null
   })
   
   const [editForm, setEditForm] = useState({})
 
-  // ✅ Fetch profile data on mount
+  // Define available interests for the form
+  const availableInterests = [
+    'leadership', 'education', 'technology', 'business',
+    'health', 'personal growth', 'career development'
+  ]
+
+  // Fetch profile data on mount
   const loadProfile = useCallback(async () => {
     const token = localStorage.getItem('token')
     if (!token) {
@@ -43,7 +51,9 @@ export default function Profile() {
 
     try {
       const response = await profileService.getProfile()
-      const userData = response.user || response.data || response
+      console.log('Profile loaded:', response)
+      
+      const userData = response.user || response
       setProfile(userData)
       setEditForm(userData)
       localStorage.setItem('user', JSON.stringify(userData))
@@ -108,9 +118,9 @@ export default function Profile() {
   const handleInterestToggle = (interest) => {
     setEditForm(prev => ({
       ...prev,
-      interests: prev.interests.includes(interest)
+      interests: prev.interests?.includes(interest)
         ? prev.interests.filter(i => i !== interest)
-        : [...prev.interests, interest]
+        : [...(prev.interests || []), interest]
     }))
   }
 
@@ -121,6 +131,7 @@ export default function Profile() {
     const updatedUser = { ...profile, profilePicture: newPictureUrl }
     localStorage.setItem('user', JSON.stringify(updatedUser))
     setSuccess('Profile picture updated successfully!')
+    setTimeout(() => setSuccess(null), 3000)
   }
 
   const handleSave = async (e) => {
@@ -200,15 +211,16 @@ export default function Profile() {
   if (error && !profile.name) {
     return (
       <div className="container py-5">
-        <div className="alert alert-danger">Error: {error}</div>
+        <div className="alert alert-danger">
+          <h4>Error Loading Profile</h4>
+          <p>{error}</p>
+          <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
+            Go to Dashboard
+          </button>
+        </div>
       </div>
     )
   }
-
-  const availableInterests = [
-    'leadership', 'education', 'technology', 'business',
-    'health', 'personal growth', 'career development'
-  ]
 
   return (
     <div className={`mx-auto ${styles.container}`} style={{ maxWidth: 720 }}>
@@ -219,33 +231,38 @@ export default function Profile() {
           onUploadSuccess={handleProfilePictureUpload}
           editable={editing}
         />
-        <h3 className="mb-2">{profile.name}</h3>
+        <h3 className="mb-2">{profile.name || 'User'}</h3>
         <span className="badge" style={{ background: 'var(--brand-magenta)', fontSize: '1rem' }}>
-          {profile.role === 'mentee' ? `🎓 ${t('profile.mentee')}` : 
-           profile.role === 'mentor' ? `👩‍🏫 ${t('profile.mentor')}` : 
-           `👑 ${t('profile.admin')}`}
+          {profile.role === 'mentee' ? '🎓 Mentee' : 
+           profile.role === 'mentor' ? '👩‍🏫 Mentor' : 
+           '👑 Admin'}
         </span>
       </div>
 
-      {/* Gamification Info - Only Points */}
+      {/* Points & Level */}
       {profile.totalPoints > 0 && (
-        <div className="d-flex justify-content-center mb-4">
+        <div className="d-flex justify-content-center gap-3 mb-4">
           <div className="text-center px-4 py-3 rounded" style={{ background: 'linear-gradient(135deg, var(--brand-magenta) 0%, #c33764 100%)', color: 'white' }}>
             <strong className="d-block small text-uppercase" style={{ letterSpacing: '1px', opacity: 0.9 }}>Total Points</strong>
             <div className="fs-2 fw-bold">{profile.totalPoints}</div>
+          </div>
+          <div className="text-center px-4 py-3 rounded" style={{ background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)', color: 'white' }}>
+            <strong className="d-block small text-uppercase" style={{ letterSpacing: '1px', opacity: 0.9 }}>Level</strong>
+            <div className="fs-2 fw-bold">{profile.level || 1}</div>
           </div>
         </div>
       )}
 
       {error && (
         <div className="alert alert-danger alert-dismissible fade show" role="alert">
-          <strong>{t('common.error')}:</strong> {error}
+          <strong>Error:</strong> {error}
           <button type="button" className="btn-close" onClick={() => setError(null)}></button>
         </div>
       )}
+      
       {success && (
         <div className="alert alert-success alert-dismissible fade show" role="alert">
-          <strong>{t('common.success')}!</strong> {success}
+          <strong>Success!</strong> {success}
           <button type="button" className="btn-close" onClick={() => setSuccess(null)}></button>
         </div>
       )}
@@ -254,17 +271,152 @@ export default function Profile() {
       {!editing && (
         <div className="d-flex gap-2 justify-content-center mb-4">
           <button className={`btn ${styles.brandButton}`} onClick={() => setEditing(true)}>
-            {t('profile.editProfile')}
+            ✏️ Edit Profile
           </button>
           <button className="btn btn-outline-secondary" onClick={() => navigate('/change-password')}>
-            {t('profile.changePassword')}
+            🔒 Change Password
           </button>
         </div>
       )}
 
       <div className="card shadow-sm">
         <div className="card-body p-4">
-          {editing ? (
+          {!editing ? (
+            <div className="profile-info">
+              {/* Basic Info */}
+              <div className="row g-3 mb-4">
+                <div className="col-12 col-md-6">
+                  <div className="info-item">
+                    <label className="d-block text-muted small fw-bold">Email:</label>
+                    <span>{profile.email || '—'}</span>
+                  </div>
+                </div>
+
+                <div className="col-12 col-md-6">
+                  <div className="info-item">
+                    <label className="d-block text-muted small fw-bold">Phone:</label>
+                    <span>{profile.phoneNumber || '—'}</span>
+                  </div>
+                </div>
+
+                <div className="col-12 col-md-6">
+                  <div className="info-item">
+                    <label className="d-block text-muted small fw-bold">Location:</label>
+                    <span>
+                      {profile.location?.city || profile.location?.state 
+                        ? `${profile.location.city}, ${profile.location.state}` 
+                        : '—'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="col-12 col-md-6">
+                  <div className="info-item">
+                    <label className="d-block text-muted small fw-bold">Language:</label>
+                    <span className="text-capitalize">{profile.language || 'English'}</span>
+                  </div>
+                </div>
+
+                <div className="col-12 col-md-6">
+                  <div className="info-item">
+                    <label className="d-block text-muted small fw-bold">Date of Birth:</label>
+                    <span>{profile.dateOfBirth || '—'}</span>
+                  </div>
+                </div>
+
+                <div className="col-12 col-md-6">
+                  <div className="info-item">
+                    <label className="d-block text-muted small fw-bold">Education:</label>
+                    <span className="text-capitalize">{profile.educationLevel || '—'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {profile.bio && (
+                <div className="info-item mb-4">
+                  <label className="d-block text-muted small fw-bold mb-2">Bio:</label>
+                  <p className="mb-0">{profile.bio}</p>
+                </div>
+              )}
+
+              {profile.interests?.length > 0 && (
+                <div className="info-item mb-4">
+                  <label className="d-block text-muted small fw-bold mb-2">Interests:</label>
+                  <div className="interests-tags d-flex flex-wrap gap-2">
+                    {profile.interests.map((interest, idx) => (
+                      <span key={idx} className="badge bg-light text-dark border tag">
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Mentor Profile Section */}
+              {profile.role === 'mentor' && profile.mentorProfile && (
+                <>
+                  <hr className="my-4" />
+                  <h5 className="mb-3">Mentor Information</h5>
+
+                  <div className="row g-3">
+                    <div className="col-12 col-md-6">
+                      <div className="info-item">
+                        <label className="d-block text-muted small fw-bold">Professional Title:</label>
+                        <span>{profile.mentorProfile.professionalTitle || '—'}</span>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-6">
+                      <div className="info-item">
+                        <label className="d-block text-muted small fw-bold">Organization:</label>
+                        <span>{profile.mentorProfile.organization || '—'}</span>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-6">
+                      <div className="info-item">
+                        <label className="d-block text-muted small fw-bold">Years of Experience:</label>
+                        <span>{profile.mentorProfile.yearsOfExperience || 0} years</span>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-6">
+                      <div className="info-item">
+                        <label className="d-block text-muted small fw-bold">Max Mentees:</label>
+                        <span>{profile.mentorProfile.maxMentees || 5}</span>
+                      </div>
+                    </div>
+
+                    {profile.mentorProfile.linkedinProfile && (
+                      <div className="col-12">
+                        <div className="info-item">
+                          <label className="d-block text-muted small fw-bold">LinkedIn:</label>
+                          <a href={profile.mentorProfile.linkedinProfile} target="_blank" rel="noopener noreferrer" className="text-primary">
+                            View Profile
+                          </a>
+                        </div>
+                      </div>
+                    )}
+
+                    {profile.mentorProfile.expertise?.length > 0 && (
+                      <div className="col-12">
+                        <div className="info-item">
+                          <label className="d-block text-muted small fw-bold mb-2">Expertise:</label>
+                          <div className="d-flex flex-wrap gap-2">
+                            {profile.mentorProfile.expertise.map((exp, i) => (
+                              <span key={i} className="badge tag" style={{ background: 'var(--brand-magenta)' }}>
+                                {exp}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
             <form onSubmit={handleSave}>
               <div className="row g-3">
                 <div className="col-12 col-md-6">
@@ -527,145 +679,9 @@ export default function Profile() {
                 </button>
               </div>
             </form>
-          ) : (
-            <div className="profile-info">
-              {/* Basic Info */}
-              <div className="row g-3 mb-4">
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Email:</label>
-                    <span>{profile.email || '—'}</span>
-                  </div>
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Phone:</label>
-                    <span>{profile.phoneNumber || '—'}</span>
-                  </div>
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Location:</label>
-                    <span>
-                      {profile.location?.city || profile.location?.state 
-                        ? `${profile.location.city}, ${profile.location.state}` 
-                        : '—'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Language:</label>
-                    <span className="text-capitalize">{profile.language || 'English'}</span>
-                  </div>
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Date of Birth:</label>
-                    <span>{profile.dateOfBirth || '—'}</span>
-                  </div>
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Education:</label>
-                    <span className="text-capitalize">{profile.educationLevel || '—'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {profile.bio && (
-                <div className="info-item mb-4">
-                  <label className="d-block text-muted small fw-bold mb-2">Bio:</label>
-                  <p className="mb-0">{profile.bio}</p>
-                </div>
-              )}
-
-              {profile.interests?.length > 0 && (
-                <div className="info-item mb-4">
-                  <label className="d-block text-muted small fw-bold mb-2">Interests:</label>
-                  <div className="interests-tags d-flex flex-wrap gap-2">
-                    {profile.interests.map((interest, idx) => (
-                      <span key={idx} className="badge bg-light text-dark border tag">
-                        {interest}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Mentor Profile Section */}
-              {profile.role === 'mentor' && profile.mentorProfile && (
-                <>
-                  <hr className="my-4" />
-                  <h5 className="mb-3">Mentor Information</h5>
-
-                  <div className="row g-3">
-                    <div className="col-12 col-md-6">
-                      <div className="info-item">
-                        <label className="d-block text-muted small fw-bold">Professional Title:</label>
-                        <span>{profile.mentorProfile.professionalTitle || '—'}</span>
-                      </div>
-                    </div>
-
-                    <div className="col-12 col-md-6">
-                      <div className="info-item">
-                        <label className="d-block text-muted small fw-bold">Organization:</label>
-                        <span>{profile.mentorProfile.organization || '—'}</span>
-                      </div>
-                    </div>
-
-                    <div className="col-12 col-md-6">
-                      <div className="info-item">
-                        <label className="d-block text-muted small fw-bold">Years of Experience:</label>
-                        <span>{profile.mentorProfile.yearsOfExperience || 0} years</span>
-                      </div>
-                    </div>
-
-                    <div className="col-12 col-md-6">
-                      <div className="info-item">
-                        <label className="d-block text-muted small fw-bold">Max Mentees:</label>
-                        <span>{profile.mentorProfile.maxMentees || 5}</span>
-                      </div>
-                    </div>
-
-                    {profile.mentorProfile.linkedinProfile && (
-                      <div className="col-12">
-                        <div className="info-item">
-                          <label className="d-block text-muted small fw-bold">LinkedIn:</label>
-                          <a href={profile.mentorProfile.linkedinProfile} target="_blank" rel="noopener noreferrer" className="text-primary">
-                            View Profile
-                          </a>
-                        </div>
-                      </div>
-                    )}
-
-                    {profile.mentorProfile.expertise?.length > 0 && (
-                      <div className="col-12">
-                        <div className="info-item">
-                          <label className="d-block text-muted small fw-bold mb-2">Expertise:</label>
-                          <div className="d-flex flex-wrap gap-2">
-                            {profile.mentorProfile.expertise.map((exp, i) => (
-                              <span key={i} className="badge tag" style={{ background: 'var(--brand-magenta)' }}>
-                                {exp}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
           )}
         </div>
       </div>
     </div>
   )
 }
-        

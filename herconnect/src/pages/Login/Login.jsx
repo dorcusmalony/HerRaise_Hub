@@ -85,7 +85,7 @@ export default function Login({ setIsAuthenticated }) {
       if (data?.user) {
         try {
           localStorage.setItem('user', JSON.stringify(data.user))
-          console.log('✅ User data saved successfully')
+          console.log('✅ User data saved:', data.user)
         } catch (e) {
           console.error('Failed to save user data:', e)
         }
