@@ -38,11 +38,12 @@ export default function ImageUpload({ onImageUpload, currentImage, label = "Prof
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API}/api/upload/profile-picture`, {
+      
+      // ✅ Using correct backend endpoint: POST /api/profile/picture
+      const response = await fetch(`${API}/api/profile/picture`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
-          // Don't set Content-Type - let browser set it with boundary
         },
         body: formData
       })
@@ -54,8 +55,8 @@ export default function ImageUpload({ onImageUpload, currentImage, label = "Prof
 
       const data = await response.json()
       
-      // Cloudinary returns secure_url or url
-      const imageUrl = data.profilePicture || data.secure_url || data.url || data.imageUrl
+      // Backend returns: { success: true, user: { profilePicture: 'cloudinary_url' } }
+      const imageUrl = data.user?.profilePicture || data.profilePicture || data.secure_url || data.url
       
       if (imageUrl) {
         onImageUpload(imageUrl)
