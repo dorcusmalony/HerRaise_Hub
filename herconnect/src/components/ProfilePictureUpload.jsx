@@ -3,6 +3,7 @@ import { useState } from 'react'
 export default function ProfilePictureUpload({ currentPicture, onUploadSuccess, editable }) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState(null)
+  const API = import.meta.env.VITE_API_URL || ''
 
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0]
@@ -26,36 +27,48 @@ export default function ProfilePictureUpload({ currentPicture, onUploadSuccess, 
       formData.append('profilePicture', file)
 
       const token = localStorage.getItem('token')
-      const API = import.meta.env.VITE_API_URL || ''
 
       const response = await fetch(`${API}/api/profile/picture`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`
+          'Authorization': `Bearer ${token}`
+          // Don't set Content-Type for FormData
         },
         body: formData
       })
 
       if (!response.ok) {
-        throw new Error('Failed to upload profile picture')
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || 'Failed to upload profile picture')
       }
 
       const data = await response.json()
-      onUploadSuccess(data.profilePicture || data.url)
+      
+      // Cloudinary returns secure_url or url
+      const imageUrl = data.profilePicture || data.secure_url || data.url || data.user?.profilePicture
+      
+      if (imageUrl) {
+        onUploadSuccess(imageUrl)
+      } else {
+        throw new Error('No image URL received from server')
+      }
     } catch (err) {
+      console.error('Upload error:', err)
       setError(err.message || 'Failed to upload image')
     } finally {
       setUploading(false)
     }
   }
 
-  const defaultImage = 'https://via.placeholder.com/150/E84393/ffffff?text=Profile'
+  // Use ui-avatars as fallback instead of placeholder service
+  const defaultImage = currentPicture || 
+    'https://ui-avatars.com/api/?name=User&background=E84393&color=fff&size=150'
 
   return (
     <div className="profile-picture-upload text-center mb-3">
       <div className="position-relative d-inline-block">
         <img
-          src={currentPicture || defaultImage}
+          src={defaultImage}
           alt="Profile"
           className="rounded-circle"
           style={{
@@ -92,6 +105,14 @@ export default function ProfilePictureUpload({ currentPicture, onUploadSuccess, 
           className="d-none"
         />
       </div>
+      {uploading && (
+        <div className="mt-2">
+          <div className="spinner-border spinner-border-sm text-primary" role="status">
+            <span className="visually-hidden">Uploading...</span>
+          </div>
+          <small className="text-muted d-block">Uploading to Cloudinary...</small>
+        </div>
+      )}
       {error && (
         <div className="alert alert-danger alert-sm mt-2" style={{ maxWidth: 300, margin: '0.5rem auto', fontSize: '0.85rem' }}>
           {error}
