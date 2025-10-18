@@ -1,9 +1,12 @@
 // Try to POST to backend, fallback to simulated response on error
 	import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ImageUpload from '../../components/ImageUpload/ImageUpload.jsx'
 import '../../styles/BootstrapVars.module.css'
 import styles from '../../styles/Pages.module.css'
 
 export default function Register(){
+	const navigate = useNavigate()
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
@@ -15,6 +18,7 @@ export default function Register(){
 		dateOfBirth: '',
 		interests: '',
 		educationLevel: '',
+		profilePicture: '' // Add profile picture field
 	})
 	const [errors, setErrors] = useState({})
 	const [result, setResult] = useState(null)
@@ -45,6 +49,10 @@ export default function Register(){
 		return Object.keys(err).length === 0
 	}
 
+	const handleImageUpload = (imageUrl) => {
+		setForm(prev => ({ ...prev, profilePicture: imageUrl }))
+	}
+
 	const buildPayload = (role) => {
 		return {
 			name: form.name.trim(),
@@ -59,7 +67,8 @@ export default function Register(){
 			},
 			dateOfBirth: form.dateOfBirth || '',
 			interests: form.interests ? form.interests.split(',').map(s => s.trim()).filter(Boolean) : [],
-			educationLevel: form.educationLevel || ''
+			educationLevel: form.educationLevel || '',
+			profilePicture: form.profilePicture || '' // Include profile picture
 		}
 	}
 
@@ -133,15 +142,13 @@ export default function Register(){
 				dateOfBirth: '',
 				interests: '',
 				educationLevel: '',
+				profilePicture: ''
 			})
 
-			if (data?.token) {
-				try { 
-					localStorage.setItem('token', data.token)
-				} catch {
-					// Ignore localStorage errors
-				}
-			}
+			// ✅ Redirect to login page after 2 seconds
+			setTimeout(() => {
+				navigate('/login', { replace: true })
+			}, 2000)
 			
 		} catch (err) {
 			console.error("Registration error:", err)
@@ -159,6 +166,13 @@ export default function Register(){
 		<div className={`mx-auto ${styles.container}`}>
 			<h3>Create account</h3>
 			<form onSubmit={e => e.preventDefault()}>
+				{/* Profile Picture Upload */}
+				<ImageUpload 
+					onImageUpload={handleImageUpload}
+					currentImage={form.profilePicture}
+					label="Profile Picture (Optional)"
+				/>
+
 				<div className="mb-2">
 					<label className="form-label">Name</label>
 					<input name="name" value={form.name} onChange={handleChange} className="form-control" autoComplete="name" />
