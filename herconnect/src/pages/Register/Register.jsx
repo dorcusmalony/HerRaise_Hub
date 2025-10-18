@@ -1,9 +1,11 @@
 // Try to POST to backend, fallback to simulated response on error
 	import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import '../../styles/BootstrapVars.module.css'
 import styles from '../../styles/Pages.module.css'
 
 export default function Register(){
+	const navigate = useNavigate()
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
@@ -135,13 +137,10 @@ export default function Register(){
 				educationLevel: '',
 			})
 
-			if (data?.token) {
-				try { 
-					localStorage.setItem('token', data.token)
-				} catch {
-					// Ignore localStorage errors
-				}
-			}
+			// ✅ Redirect to login page after 2 seconds
+			setTimeout(() => {
+				navigate('/login', { replace: true })
+			}, 2000)
 			
 		} catch (err) {
 			console.error("Registration error:", err)
