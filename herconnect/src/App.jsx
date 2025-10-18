@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header/header.jsx'
 import Footer from './components/Footer/Footer'
-import HomePage from './pages/HomePage/HomePage'
+import Home from './pages/Home/Home'
 import About from './pages/About/About'
 import Contact from './pages/Contact/Contact'
 import Login from './pages/Login/Login'
@@ -29,7 +29,7 @@ export default function App() {
       <Header />
       <main className="container py-4">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />

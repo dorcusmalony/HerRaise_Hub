@@ -48,7 +48,7 @@ export default function ResetPassword(){
       } else {
         setStatus({ ok: false, message: data?.message || 'Unable to reset password.' })
       }
-    } catch (err) {
+    } catch {
       setStatus({ ok: false, message: 'Network error, try again.' })
     } finally {
       setLoading(false)

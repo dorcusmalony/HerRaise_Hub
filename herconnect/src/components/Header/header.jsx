@@ -33,7 +33,12 @@ export default function Header() {
 			console.warn('Logout request failed', err)
 		} finally {
 			// ✅ Always clear client state regardless of server response
-			try { localStorage.removeItem('token'); localStorage.removeItem('authToken') } catch (_) {}
+			try { 
+				localStorage.removeItem('token')
+				localStorage.removeItem('authToken')
+			} catch {
+				// Ignore localStorage errors
+			}
 			navigate('/login', { replace: true })
 		}
 	}

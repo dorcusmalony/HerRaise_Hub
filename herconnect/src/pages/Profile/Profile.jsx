@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from '../../styles/Pages.module.css'
 import { profileService } from '../../services/profileService'
@@ -37,11 +37,7 @@ export default function Profile() {
   const [editForm, setEditForm] = useState({})
 
   // ✅ Fetch profile data on mount
-  useEffect(() => {
-    loadProfile()
-  }, [])
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     const token = localStorage.getItem('token')
     if (!token) {
       navigate('/login')
@@ -66,7 +62,11 @@ export default function Profile() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [navigate])
+
+  useEffect(() => {
+    loadProfile()
+  }, [loadProfile])
 
   const handleEditChange = (e) => {
     const { name, value } = e.target
@@ -207,8 +207,6 @@ export default function Profile() {
       </div>
     )
   }
-
-  const displayImage = profile.profilePicture || 'https://via.placeholder.com/150'
 
   const availableInterests = [
     'leadership', 'education', 'technology', 'business',

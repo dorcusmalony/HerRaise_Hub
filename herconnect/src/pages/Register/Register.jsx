@@ -1,5 +1,5 @@
 // Try to POST to backend, fallback to simulated response on error
-	import React, { useState, useEffect } from 'react'
+	import React, { useState } from 'react'
 import '../../styles/BootstrapVars.module.css'
 import styles from '../../styles/Pages.module.css'
 
@@ -22,7 +22,6 @@ export default function Register(){
 	const [debugInfo, setDebugInfo] = useState(null)
 	const [success, setSuccess] = useState(null)
 	const [error, setError] = useState(null)
-	const [loading, setLoading] = useState(false)
 
 	const handleChange = (e) => {
 		const { name, value } = e.target
@@ -137,7 +136,11 @@ export default function Register(){
 			})
 
 			if (data?.token) {
-				try { localStorage.setItem('token', data.token) } catch (e) {}
+				try { 
+					localStorage.setItem('token', data.token)
+				} catch {
+					// Ignore localStorage errors
+				}
 			}
 			
 		} catch (err) {
