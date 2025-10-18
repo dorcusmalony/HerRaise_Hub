@@ -193,7 +193,18 @@ export default function Register(){
 
 				<div className="mb-3">
 					<label className="form-label">Phone number</label>
-					<input name="phoneNumber" value={form.phoneNumber} onChange={handleChange} className="form-control" placeholder="+211..." autoComplete="tel" />
+					<input 
+						type="tel"
+						name="phoneNumber" 
+						value={form.phoneNumber} 
+						onChange={handleChange} 
+						className="form-control" 
+						placeholder="+211 912 345 678"
+						pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"
+						title="Enter a valid phone number (e.g., +211 912 345 678)"
+						autoComplete="tel"
+					/>
+					<small className="text-muted">Include country code (e.g., +211 for South Sudan)</small>
 				</div>
 
 				<div className="mb-3">
@@ -217,7 +228,15 @@ export default function Register(){
 
 				<div className="mb-2">
 					<label className="form-label">Date of birth</label>
-					<input type="date" name="dateOfBirth" value={form.dateOfBirth} onChange={handleChange} className="form-control" />
+					<input 
+						type="date" 
+						name="dateOfBirth" 
+						value={form.dateOfBirth} 
+						onChange={handleChange} 
+						className="form-control"
+						max={new Date().toISOString().split('T')[0]}
+					/>
+					<small className="text-muted">You must be at least 13 years old to register</small>
 				</div>
 
 				<div className="mb-2">

@@ -48,39 +48,88 @@ export default function Profile() {
   const loadProfile = useCallback(async () => {
     const token = localStorage.getItem('token')
     
-    console.log('🔍 Checking auth token:', token ? 'Token exists' : 'No token found')
+    console.log(' Checking auth token:', token ? 'Token exists' : 'No token found')
     
     if (!token) {
-      console.warn('❌ No token - redirecting to login')
+      console.warn(' No token - redirecting to login')
       navigate('/login')
       return
     }
 
     try {
-      console.log('📡 Fetching profile from backend...')
+      console.log(' Fetching profile from backend...')
       const response = await profileService.getProfile()
       console.log('✅ Profile loaded successfully:', response)
       
-      // Backend might return { success: true, user: {...} } or just {...}
+      // Backend might return { success: true, user: {...} } or { user: {...} } or just {...}
       const userData = response.user || response.data || response
       
       console.log('👤 User data:', userData)
       
+      // ✅ Convert ISO timestamp to yyyy-MM-dd format for date input
+      if (userData.dateOfBirth) {
+        userData.dateOfBirth = new Date(userData.dateOfBirth).toISOString().split('T')[0]
+      }
+      
+      // Validate we have at least a name and email
+      if (!userData.name || !userData.email) {
+        console.warn(' Incomplete user data, checking localStorage...')
+        
+        // Fallback to localStorage
+        const cachedUser = localStorage.getItem('user')
+        if (cachedUser) {
+          const parsedUser = JSON.parse(cachedUser)
+          
+          // Convert date for cached user too
+          if (parsedUser.dateOfBirth) {
+            parsedUser.dateOfBirth = new Date(parsedUser.dateOfBirth).toISOString().split('T')[0]
+          }
+          
+          console.log(' Using cached user data:', parsedUser)
+          setProfile(parsedUser)
+          setEditForm(parsedUser)
+          setError(null)
+          setLoading(false)
+          return
+        } else {
+          throw new Error('Profile data is incomplete and no cached data available')
+        }
+      }
+      
       setProfile(userData)
       setEditForm(userData)
       localStorage.setItem('user', JSON.stringify(userData))
-      
       setError(null)
     } catch (err) {
-      console.error('❌ Profile fetch error:', err)
+      console.error(' Profile fetch error:', err)
       
       if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-        console.warn('🔒 Unauthorized - clearing auth and redirecting')
+        console.warn(' Unauthorized - clearing auth and redirecting')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         navigate('/login')
       } else {
-        setError(err.message || 'Failed to load profile. Please try again.')
+        // Try to use cached data as fallback
+        const cachedUser = localStorage.getItem('user')
+        if (cachedUser) {
+          try {
+            const parsedUser = JSON.parse(cachedUser)
+            
+            // Convert date for cached user
+            if (parsedUser.dateOfBirth) {
+              parsedUser.dateOfBirth = new Date(parsedUser.dateOfBirth).toISOString().split('T')[0]
+            }
+            
+            console.log(' Backend failed, using cached user data:', parsedUser)
+            setProfile(parsedUser)
+            setEditForm(parsedUser)
+            setError('Using cached profile data. Some info may be outdated.')
+          } catch (parseErr) {
+            setError(err.message || 'Failed to load profile. Please try again.')
+          }
+        } else {
+          setError(err.message || 'Failed to load profile. Please try again.')
+        }
       }
     } finally {
       setLoading(false)
@@ -161,8 +210,9 @@ export default function Profile() {
       return
     }
 
-    if (editForm.phoneNumber && !/^\+?[\d\s-()]+$/.test(editForm.phoneNumber)) {
-      setError('Please enter a valid phone number')
+    // Updated phone validation with simpler regex
+    if (editForm.phoneNumber && !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(editForm.phoneNumber)) {
+      setError('Please enter a valid phone number (e.g., +211 912 345 678)')
       return
     }
 
@@ -229,20 +279,20 @@ export default function Profile() {
     return (
       <div className="container py-5">
         <div className="alert alert-danger">
-          <h4>⚠️ Error Loading Profile</h4>
+          <h4> Error Loading Profile</h4>
           <p>{error}</p>
           <div className="d-flex gap-2">
             <button className="btn btn-primary" onClick={() => loadProfile()}>
-              🔄 Retry
+               Retry
             </button>
             <button className="btn btn-outline-secondary" onClick={() => navigate('/dashboard')}>
-              🏠 Go to Dashboard
+               Go to Dashboard
             </button>
             <button className="btn btn-outline-danger" onClick={() => {
               localStorage.clear()
               navigate('/login')
             }}>
-              🔒 Logout
+               Logout
             </button>
           </div>
         </div>
@@ -261,9 +311,9 @@ export default function Profile() {
         />
         <h3 className="mb-2">{profile.name || 'User'}</h3>
         <span className="badge" style={{ background: 'var(--brand-magenta)', fontSize: '1rem' }}>
-          {profile.role === 'mentee' ? '🎓 Mentee' : 
-           profile.role === 'mentor' ? '👩‍🏫 Mentor' : 
-           '👑 Admin'}
+          {profile.role === 'mentee' ? ' Mentee' : 
+           profile.role === 'mentor' ? ' Mentor' : 
+           ' Admin'}
         </span>
         {profile.isVerified && (
           <span className="badge bg-success ms-2">✓ Verified</span>
@@ -302,10 +352,10 @@ export default function Profile() {
       {!editing && (
         <div className="d-flex gap-2 justify-content-center mb-4">
           <button className={`btn ${styles.brandButton}`} onClick={() => setEditing(true)}>
-            ✏️ Edit Profile
+             Edit Profile
           </button>
           <button className="btn btn-outline-secondary" onClick={() => navigate('/change-password')}>
-            🔒 Change Password
+             Change Password
           </button>
         </div>
       )}
@@ -352,7 +402,11 @@ export default function Profile() {
                 <div className="col-12 col-md-6">
                   <div className="info-item">
                     <label className="d-block text-muted small fw-bold">Date of Birth:</label>
-                    <span>{profile.dateOfBirth || '—'}</span>
+                    <span>
+                      {profile.dateOfBirth 
+                        ? new Date(profile.dateOfBirth).toLocaleDateString()
+                        : '—'}
+                    </span>
                   </div>
                 </div>
 
@@ -489,15 +543,16 @@ export default function Profile() {
                 <div className="col-12 col-md-6">
                   <label className="form-label">{t('profile.phoneNumber')}</label>
                   <input 
+                    type="tel"
                     name="phoneNumber"
                     value={editForm.phoneNumber || ''}
                     onChange={handleEditChange}
                     className="form-control"
-                    placeholder="+254 712 345 678"
-                    pattern="^\+?[\d\s-()]+$"
-                    title={t('profile.phoneNumberHint')}
+                    placeholder="+211 912 345 678"
+                    pattern="^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$"
+                    title="Enter a valid phone number with country code"
                   />
-                  <small className="text-muted">{t('profile.phoneNumberHelp')}</small>
+                  <small className="text-muted">Include country code, e.g., +211 912 345 678</small>
                 </div>
 
                 <div className="col-12 col-md-6">
@@ -525,6 +580,7 @@ export default function Profile() {
                     className="form-control"
                     max={new Date().toISOString().split('T')[0]}
                   />
+                  <small className="text-muted">Format: YYYY-MM-DD</small>
                 </div>
 
                 <div className="col-12 col-md-6">
@@ -588,11 +644,11 @@ export default function Profile() {
                     required
                   >
                     <option value="">{t('profile.selectEducation')}</option>
-                    <option value="secondary">🎓 {t('educationLevels.secondary')}</option>
-                    <option value="bachelor">🎓 {t('educationLevels.bachelor')}</option>
-                    <option value="master">🎓 {t('educationLevels.master')}</option>
-                    <option value="phd">🎓 {t('educationLevels.phd')}</option>
-                    <option value="other">📚 {t('educationLevels.other')}</option>
+                    <option value="secondary"> {t('educationLevels.secondary')}</option>
+                    <option value="bachelor"> {t('educationLevels.bachelor')}</option>
+                    <option value="master"> {t('educationLevels.master')}</option>
+                    <option value="phd"> {t('educationLevels.phd')}</option>
+                    <option value="other"> {t('educationLevels.other')}</option>
                   </select>
                 </div>
 
@@ -673,47 +729,30 @@ export default function Profile() {
 
                     <div className="col-12">
                       <label className="form-label">{t('mentor.mentorBio')}</label>
-                      <textarea 
-                        name="mentor-bio"
-                        value={editForm.mentorProfile?.bio || ''}
-                        onChange={handleEditChange}
-                        className="form-control"
-                        rows="4"
-                        placeholder={t('mentor.mentorBioPlaceholder')}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <div className="d-flex gap-2 mt-4">
-                <button 
-                  type="submit" 
-                  className={`btn ${styles.brandButton}`} 
-                  disabled={saving}
-                >
-                  {saving ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                      Saving...
-                    </>
-                  ) : (
-                    ' Save Changes'
-                  )}
-                </button>
-                <button 
-                  type="button" 
-                  className="btn btn-light" 
-                  onClick={handleCancel}
-                  disabled={saving}
-                >
-                  ✖️ Cancel
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
+                                <textarea 
+                                  name="mentor-bio"
+                                  value={editForm.mentorProfile?.bio || ''}
+                                  onChange={handleEditChange}
+                                  className="form-control"
+                                  rows="3"
+                                  placeholder={t('mentor.mentorBioPlaceholder')}
+                                />
+                                            </div>
+                                          </>
+                                        )}
+                                        <div className="col-12 d-flex gap-2 justify-content-end mt-4">
+                                          <button type="submit" className={`btn ${styles.brandButton}`} disabled={saving}>
+                                            {saving ? 'Saving...' : 'Save Changes'}
+                                          </button>
+                                          <button type="button" className="btn btn-outline-secondary" onClick={handleCancel} disabled={saving}>
+                                            Cancel
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  )}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }

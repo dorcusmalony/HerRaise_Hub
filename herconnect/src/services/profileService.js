@@ -9,6 +9,8 @@ export const profileService = {
       throw new Error('No authentication token found')
     }
     
+    console.log('📡 Calling GET /api/profile with token:', token.substring(0, 20) + '...')
+    
     const response = await fetch(`${API_URL}/api/profile`, {
       method: 'GET',
       headers: {
@@ -17,14 +19,21 @@ export const profileService = {
       }
     })
     
+    console.log('📥 Profile response status:', response.status)
+    
     if (!response.ok) {
       if (response.status === 401) {
         throw new Error('401 Unauthorized')
       }
+      const errorText = await response.text()
+      console.error('❌ Profile fetch failed:', errorText)
       throw new Error(`Failed to fetch profile: ${response.status}`)
     }
     
-    return response.json()
+    const data = await response.json()
+    console.log('✅ Profile data received:', data)
+    
+    return data
   },
 
   // Update user profile
