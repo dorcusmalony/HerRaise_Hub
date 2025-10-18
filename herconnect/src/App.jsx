@@ -9,6 +9,7 @@ import Login from './pages/Login/Login'
 import Register from './pages/Register/Register.jsx'
 import ResourcePage from './pages/ResourcePage/ResourcePage'
 import ResetPassword from './pages/Auth/ResetPassword'
+import Profile from './pages/Profile/Profile.jsx'
 import './App.css'
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/resources" element={<ResourcePage />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
       <Footer />
