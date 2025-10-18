@@ -12,7 +12,8 @@ export default function Header() {
 		e?.preventDefault?.()
 		const token = localStorage.getItem('token') || localStorage.getItem('authToken')
 		try {
-			const res = await fetch(`${API}/logout`, {
+			// Fixed: Add /api prefix to match backend route structure
+			const res = await fetch(`${API}/api/auth/logout`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -20,16 +21,18 @@ export default function Header() {
 				},
 				credentials: 'include'
 			})
+
 			const data = await res.json().catch(() => null)
+
 			if (res.ok && data?.success) {
 				console.log('Logout successful:', data.message)
 			} else {
-				console.warn('Logout response:', data)
+				console.warn('Logout response:', res.status, data)
 			}
 		} catch (err) {
 			console.warn('Logout request failed', err)
 		} finally {
-			// always clear client state and redirect
+			// ✅ Always clear client state regardless of server response
 			try { localStorage.removeItem('token'); localStorage.removeItem('authToken') } catch (_) {}
 			navigate('/login', { replace: true })
 		}

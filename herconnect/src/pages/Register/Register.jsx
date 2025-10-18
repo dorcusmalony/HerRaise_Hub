@@ -20,6 +20,9 @@ export default function Register(){
 	const [result, setResult] = useState(null)
 	const [submitting, setSubmitting] = useState(false)
 	const [debugInfo, setDebugInfo] = useState(null)
+	const [success, setSuccess] = useState(null)
+	const [error, setError] = useState(null)
+	const [loading, setLoading] = useState(false)
 
 	const handleChange = (e) => {
 		const { name, value } = e.target
@@ -80,6 +83,8 @@ export default function Register(){
 		setResult(null)
 		setErrors({})
 		setDebugInfo(null)
+		setSuccess(null)
+		setError(null)
 		
 		console.log("Calling endpoint:", endpoint)
 		
@@ -96,67 +101,51 @@ export default function Register(){
 			
 			const data = await res.json().catch(() => {
 				console.warn("Response is not valid JSON")
-				return null
+				return { message: 'Invalid server response' }
 			})
 			
+			console.log("Response data:", data)
+
 			if (!res.ok) {
-				console.error("Error response:", data)
-				setDebugInfo(`Server error (${res.status}): ${data?.message || 'Unknown error'}`)
-				setErrors({ submit: data?.message || `Server error: ${res.status}` })
-				setSubmitting(false)
-				return
+				// Handle specific error cases
+				if (res.status === 400) {
+					throw new Error(data.message || 'Invalid registration data. Please check all fields.')
+				} else if (res.status === 409) {
+					throw new Error('Email already registered. Please login instead.')
+				} else if (res.status === 500) {
+					throw new Error('Server error. Please try again later.')
+				} else {
+					throw new Error(data.message || `Registration failed (${res.status})`)
+				}
 			}
+
+			// Success
+			setSuccess(data.message || 'Registration successful! Redirecting to login...')
 			
-			console.log("Success! Response data:", data)
-			setResult(data)
-			
+			// Clear form
+			setForm({
+				name: '',
+				email: '',
+				password: '',
+				role: 'mentee',
+				language: 'en',
+				phoneNumber: '',
+				location: { city: '', state: '' },
+				dateOfBirth: '',
+				interests: '',
+				educationLevel: '',
+			})
+
 			if (data?.token) {
 				try { localStorage.setItem('token', data.token) } catch (e) {}
 			}
 			
 		} catch (err) {
-			console.error("Network/Fetch error:", err)
-			
-			if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
-				setDebugInfo(`Network error - likely CORS issue. Backend needs to allow: ${window.location.origin}`)
-			} else {
-				setDebugInfo(`Error: ${err.message}`)
-			}
-			
-			console.log("Using fallback simulated response")
-			if (role === 'mentor') {
-				const fakeResponse = {
-					success: true,
-					token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-					user: {
-						id: 'c3a2b1a4-2a23-4dc8-baf1-2b44e4e8aa3f',
-						name: payload.name || 'Mary Ajok',
-						email: payload.email || 'maryajok@example.com',
-						role: 'mentor',
-						language: payload.language || 'en',
-						phoneNumber: payload.phoneNumber || '+211900000001',
-						location: payload.location,
-						dateOfBirth: payload.dateOfBirth || '1995-06-20',
-						interests: payload.interests.length ? payload.interests : ['leadership','career development'],
-						educationLevel: payload.educationLevel || 'bachelor',
-					},
-					_note: 'simulated fallback response (backend not reachable)'
-				}
-				setResult(fakeResponse)
-				try { localStorage.setItem('token', fakeResponse.token) } catch (e) {}
-			} else {
-				const fakeResponse = { 
-					success: true, 
-					message: 'Registered as mentee (simulated)', 
-					user: { name: payload.name, email: payload.email, role: 'mentee' },
-					_note: 'simulated fallback response (backend not reachable)'
-				}
-				setResult(fakeResponse)
-			}
+			console.error("Registration error:", err)
+			setError(err.message || 'Registration failed. Please try again.')
+		} finally {
+			setSubmitting(false)
 		}
-		
-		setSubmitting(false)
-		setForm(prev => ({ ...prev, password: '' }))
 	}
 
 	const handleSubmit = (role) => {
@@ -241,9 +230,10 @@ export default function Register(){
 				</div>
 			</form>
 
-			{debugInfo && (
+			{(debugInfo || error) && (
 				<div className="mt-3 alert alert-warning">
-					<strong>Debug:</strong> {debugInfo}
+					{error && <div className="text-danger"><strong>Error:</strong> {error}</div>}
+					{debugInfo && <div className="text-warning"><strong>Debug:</strong> {debugInfo}</div>}
 					<div className="small mt-1">Check browser console (F12) for more details.</div>
 				</div>
 			)}
@@ -252,6 +242,12 @@ export default function Register(){
 				<div className="mt-4 alert alert-light">
 					<strong>Response:</strong>
 					<pre className={styles.responsePre}>{JSON.stringify(result, null, 2)}</pre>
+				</div>
+			)}
+
+			{success && (
+				<div className="mt-4 alert alert-success">
+					{success}
 				</div>
 			)}
 		</div>

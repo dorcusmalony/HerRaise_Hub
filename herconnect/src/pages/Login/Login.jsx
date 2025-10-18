@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import styles from '../../styles/Pages.module.css'
 
-export default function Login() {
+export default function Login({ setIsAuthenticated }) {
   const navigate = useNavigate()
-
-  // ✅ Use correct backend API URL
-  const API = import.meta.env.VITE_API_URL || 'https://herraise-hub-backend-1.onrender.com/api/auth'
+  const location = useLocation()
+  const API = import.meta.env.VITE_API_URL || ''
 
   // Form state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [debugInfo, setDebugInfo] = useState(null)
+  const [result, setResult] = useState(null)
 
   // Forgot password flow
   const [forgotOpen, setForgotOpen] = useState(false)
@@ -20,41 +21,111 @@ export default function Login() {
   const [forgotStatus, setForgotStatus] = useState(null)
   const [forgotLoading, setForgotLoading] = useState(false)
 
-  // ✅ Handle login
   const handleLogin = async (e) => {
     e.preventDefault()
     setError(null)
+    setDebugInfo(null)
+    setResult(null)
     setLoading(true)
 
+    if (!API) {
+      setDebugInfo('VITE_API_URL environment variable is missing. Check your .env file.')
+      setLoading(false)
+      return
+    }
+
+    const endpoint = `${API}/api/auth/login`
+    console.log('Login endpoint:', endpoint)
+
     try {
-      const res = await fetch(`${API}/login`, {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       })
 
-      const data = await res.json().catch(() => null)
+      console.log('Login response status:', res.status)
+      
+      const data = await res.json().catch(() => {
+        console.warn('Response is not valid JSON')
+        return null
+      })
+      
+      console.log('Login response data:', data)
 
       if (!res.ok) {
-        throw new Error(data?.message || 'Invalid email or password')
+        const errorMsg = data?.message || data?.error || `Login failed (${res.status})`
+        setDebugInfo(`Server error (${res.status}): ${errorMsg}`)
+        setError(errorMsg)
+        setLoading(false)
+        return
       }
 
-      // Save token if available
+      // Success!
+      console.log('✅ Login successful!')
+      setResult(data)
+
+      // Store token and user
       if (data?.token) {
-        localStorage.setItem('token', data.token)
+        try {
+          localStorage.setItem('token', data.token)
+          console.log('✅ Token saved successfully')
+        } catch (e) {
+          console.error('Failed to save token:', e)
+        }
+      }
+      
+      if (data?.user) {
+        try {
+          localStorage.setItem('user', JSON.stringify(data.user))
+          console.log('✅ User data saved successfully')
+        } catch (e) {
+          console.error('Failed to save user data:', e)
+        }
       }
 
-      // Redirect to home
-      navigate('/', { replace: true })
+      // Update global auth state
+      if (setIsAuthenticated) {
+        setIsAuthenticated(true)
+      }
+
+      // Redirect after 1.5 seconds
+      setTimeout(() => {
+        const userRole = data?.user?.role
+        const from = location.state?.from?.pathname
+        
+        let redirectPath = from || '/'
+        
+        // Default redirects by role if no "from" path
+        if (!from) {
+          if (userRole === 'mentor') {
+            redirectPath = '/dashboard/mentor'
+          } else if (userRole === 'mentee') {
+            redirectPath = '/dashboard/mentee'
+          } else {
+            redirectPath = '/dashboard'
+          }
+        }
+        
+        console.log(`Redirecting to: ${redirectPath}`)
+        navigate(redirectPath, { replace: true })
+      }, 1500)
+      
     } catch (err) {
-      setError(err.message || 'Login failed')
+      console.error('Login error:', err)
+      
+      if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+        setDebugInfo(`Network error - likely CORS issue. Backend needs to allow: ${window.location.origin}`)
+        setError('Unable to connect to server. Please try again later.')
+      } else {
+        setError(err.message || 'Login failed')
+      }
     } finally {
       setLoading(false)
       setPassword('')
     }
   }
 
-  // ✅ Forgot password submit
   const handleForgotSubmit = async (e) => {
     e.preventDefault()
     setForgotStatus(null)
@@ -64,24 +135,66 @@ export default function Login() {
       return
     }
 
-    setForgotLoading(true)
-    try {
-      const res = await fetch(`${API}/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: forgotEmail })
-      })
-      const data = await res.json().catch(() => null)
-      if (res.ok && (data?.success || data?.message)) {
-        setForgotStatus({ ok: true, message: 'If that email exists, reset instructions were sent.' })
-      } else {
-        setForgotStatus({ ok: false, message: data?.message || 'Unable to process request.' })
-      }
-    } catch {
-      setForgotStatus({ ok: false, message: 'Network error, please try again.' })
-    } finally {
-      setForgotLoading(false)
+    if (!API) {
+      setForgotStatus({ ok: false, message: 'API URL not configured.' })
+      return
     }
+
+    setForgotLoading(true)
+    
+    const endpoints = [
+      `${API}/api/auth/forgot-password`,
+      `${API}/api/auth/forgotPassword`,
+      `${API}/api/forgot-password`
+    ]
+
+    let success = false
+    let lastError = null
+
+    for (const endpoint of endpoints) {
+      try {
+        console.log('Trying forgot password endpoint:', endpoint)
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: forgotEmail })
+        })
+        
+        console.log('Forgot password response status:', res.status)
+        
+        if (res.status === 404) {
+          console.log('404 - trying next endpoint')
+          continue
+        }
+        
+        const data = await res.json().catch(() => null)
+        console.log('Forgot password response:', data)
+        
+        if (res.ok) {
+          setForgotStatus({ 
+            ok: true, 
+            message: data?.message || 'If that email exists, reset instructions were sent.' 
+          })
+          success = true
+          setForgotEmail('')
+          break
+        } else {
+          lastError = data?.message || 'Unable to process request.'
+        }
+      } catch (err) {
+        console.error(`Error with ${endpoint}:`, err)
+        lastError = err.message
+      }
+    }
+
+    if (!success) {
+      setForgotStatus({ 
+        ok: false, 
+        message: lastError || 'Forgot password feature not available. Please contact support.' 
+      })
+    }
+
+    setForgotLoading(false)
   }
 
   return (
@@ -113,7 +226,14 @@ export default function Login() {
           />
         </div>
 
-        {error && <div className="text-danger small mb-2">{error}</div>}
+        {error && <div className="alert alert-danger small mb-2">{error}</div>}
+        
+        {debugInfo && (
+          <div className="alert alert-warning small mb-2">
+            <strong>Debug:</strong> {debugInfo}
+            <div className="small mt-1">Check browser console (F12) for more details.</div>
+          </div>
+        )}
 
         <div className="d-flex gap-2 mb-3">
           <button className="btn btn-primary" type="submit" disabled={loading}>
@@ -135,7 +255,13 @@ export default function Login() {
         Have a reset token? <Link to="/reset-password">Reset password</Link>
       </div>
 
-      {/* ✅ Forgot Password Overlay */}
+      {/* Show response like Register page */}
+      {result && result.success && (
+        <div className="mt-4 alert alert-success">
+          <strong>Success!</strong> Login successful. Redirecting to dashboard...
+        </div>
+      )}
+
       {forgotOpen && (
         <div className="contact-overlay" role="dialog" aria-modal="true" aria-labelledby="forgot-heading">
           <div className="contact-card mx-auto" style={{ maxWidth: 520 }}>
@@ -143,11 +269,11 @@ export default function Login() {
               type="button"
               className="btn-close float-end"
               aria-label="Close"
-              onClick={() => { setForgotOpen(false); setForgotStatus(null) }}
+              onClick={() => { setForgotOpen(false); setForgotStatus(null); setForgotEmail('') }}
             />
             <h2 id="forgot-heading" className="contact-title">Forgot Password</h2>
             <p className="small text-muted">
-              Enter your account email. We'll send password reset instructions if it’s recognized.
+              Enter your account email. We'll send password reset instructions if it's recognized.
             </p>
 
             <form onSubmit={handleForgotSubmit}>
@@ -165,7 +291,7 @@ export default function Login() {
               </div>
 
               {forgotStatus && (
-                <div className={`mb-2 small ${forgotStatus.ok ? 'text-success' : 'text-danger'}`}>
+                <div className={`alert ${forgotStatus.ok ? 'alert-success' : 'alert-danger'} small mb-2`}>
                   {forgotStatus.message}
                 </div>
               )}
@@ -174,7 +300,7 @@ export default function Login() {
                 <button
                   type="button"
                   className="btn btn-light"
-                  onClick={() => { setForgotOpen(false); setForgotStatus(null) }}
+                  onClick={() => { setForgotOpen(false); setForgotStatus(null); setForgotEmail('') }}
                 >
                   Cancel
                 </button>
