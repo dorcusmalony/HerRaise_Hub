@@ -16,6 +16,7 @@ export default function Profile() {
   const [success, setSuccess] = useState(null)
   
   const [profile, setProfile] = useState({
+    id: '',
     name: '',
     email: '',
     role: '',
@@ -29,42 +30,57 @@ export default function Profile() {
     profilePicture: null,
     totalPoints: 0,
     level: 1,
+    isActive: true,
+    isVerified: false,
     yearsOfExperience: 0,
     mentorProfile: null
   })
   
   const [editForm, setEditForm] = useState({})
 
-  // Define available interests for the form
+  // Define available interests
   const availableInterests = [
     'leadership', 'education', 'technology', 'business',
-    'health', 'personal growth', 'career development'
+    'health', 'personal growth', 'career development', 'mentorship', 'entrepreneurship'
   ]
 
-  // Fetch profile data on mount
+  // Load profile data
   const loadProfile = useCallback(async () => {
     const token = localStorage.getItem('token')
+    
+    console.log('🔍 Checking auth token:', token ? 'Token exists' : 'No token found')
+    
     if (!token) {
+      console.warn('❌ No token - redirecting to login')
       navigate('/login')
       return
     }
 
     try {
+      console.log('📡 Fetching profile from backend...')
       const response = await profileService.getProfile()
-      console.log('Profile loaded:', response)
+      console.log('✅ Profile loaded successfully:', response)
       
-      const userData = response.user || response
+      // Backend might return { success: true, user: {...} } or just {...}
+      const userData = response.user || response.data || response
+      
+      console.log('👤 User data:', userData)
+      
       setProfile(userData)
       setEditForm(userData)
       localStorage.setItem('user', JSON.stringify(userData))
+      
+      setError(null)
     } catch (err) {
-      console.error('Profile fetch error:', err)
+      console.error('❌ Profile fetch error:', err)
+      
       if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+        console.warn('🔒 Unauthorized - clearing auth and redirecting')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         navigate('/login')
       } else {
-        setError(err.message)
+        setError(err.message || 'Failed to load profile. Please try again.')
       }
     } finally {
       setLoading(false)
@@ -202,8 +218,9 @@ export default function Profile() {
     return (
       <div className="container text-center py-5">
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
+          <span className="visually-hidden">Loading profile...</span>
         </div>
+        <p className="mt-3 text-muted">Loading your profile...</p>
       </div>
     )
   }
@@ -212,11 +229,22 @@ export default function Profile() {
     return (
       <div className="container py-5">
         <div className="alert alert-danger">
-          <h4>Error Loading Profile</h4>
+          <h4>⚠️ Error Loading Profile</h4>
           <p>{error}</p>
-          <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
-            Go to Dashboard
-          </button>
+          <div className="d-flex gap-2">
+            <button className="btn btn-primary" onClick={() => loadProfile()}>
+              🔄 Retry
+            </button>
+            <button className="btn btn-outline-secondary" onClick={() => navigate('/dashboard')}>
+              🏠 Go to Dashboard
+            </button>
+            <button className="btn btn-outline-danger" onClick={() => {
+              localStorage.clear()
+              navigate('/login')
+            }}>
+              🔒 Logout
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -237,6 +265,9 @@ export default function Profile() {
            profile.role === 'mentor' ? '👩‍🏫 Mentor' : 
            '👑 Admin'}
         </span>
+        {profile.isVerified && (
+          <span className="badge bg-success ms-2">✓ Verified</span>
+        )}
       </div>
 
       {/* Points & Level */}
@@ -279,6 +310,7 @@ export default function Profile() {
         </div>
       )}
 
+      {/* Profile Content */}
       <div className="card shadow-sm">
         <div className="card-body p-4">
           {!editing ? (
