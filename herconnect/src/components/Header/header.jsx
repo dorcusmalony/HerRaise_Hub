@@ -68,13 +68,11 @@ export default function Header() {
 					<Link to="/" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Home</Link>
 					<Link to="/about" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>About</Link>
 					<Link to="/contact" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Contact</Link>
+					<Link to="/opportunities" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Opportunities</Link>
 					<Link to="/resources" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Resources</Link>
 					<Link to="/profile" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Profile</Link>
 					<Link to="/login" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Login</Link>
-
-					{/* replaced <Link to="/logout"> with an API-backed action */}
 					<button type="button" onClick={handleLogout} className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Logout</button>
-
 					<Link to="/register" className="btn btn-sm text-white" style={{background: 'var(--brand-magenta)', border: `1px solid var(--border-blue)`}}>Register</Link>
 				</nav>
 			</div>
