@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { initializeSocket, requestNotificationPermission } from '../../services/socketService'
 import styles from '../../styles/Pages.module.css'
 
 export default function Login({ setIsAuthenticated }) {
@@ -70,6 +71,12 @@ export default function Login({ setIsAuthenticated }) {
         try {
           localStorage.setItem('token', data.token)
           console.log('✅ Token saved successfully')
+          
+          // Initialize WebSocket connection
+          initializeSocket(data.token)
+          
+          // Request notification permission
+          await requestNotificationPermission()
         } catch (e) {
           console.error('Failed to save token:', e)
         }

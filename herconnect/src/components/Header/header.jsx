@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { disconnectSocket } from '../../services/socketService'
 
 export default function Header() {
 	// compute URL for image placed in src/images; update filename if different
@@ -32,7 +33,10 @@ export default function Header() {
 		} catch (err) {
 			console.warn('Logout request failed', err)
 		} finally {
-			// ✅ Always clear client state regardless of server response
+			// Disconnect WebSocket
+			disconnectSocket()
+
+			// Clear client state regardless of server response
 			try { 
 				localStorage.removeItem('token')
 				localStorage.removeItem('authToken')

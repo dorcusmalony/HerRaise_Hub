@@ -1,0 +1,100 @@
+import io from 'socket.io-client'
+
+let socket = null
+
+export const initializeSocket = (token) => {
+  if (socket?.connected) {
+    console.log('Socket already connected')
+    return socket
+  }
+
+  const API_URL = import.meta.env.VITE_API_URL || ''
+  const socketUrl = API_URL.replace('/api', '').replace(/\/$/, '')
+
+  socket = io(socketUrl, {
+    auth: { token },
+    transports: ['websocket', 'polling'],
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionAttempts: 5
+  })
+
+  socket.on('connect', () => {
+    console.log('✅ Connected to WebSocket')
+    const userId = getUserIdFromToken(token)
+    if (userId) {
+      socket.emit('authenticate', userId)
+    }
+  })
+
+  socket.on('disconnect', () => {
+    console.log('❌ Disconnected from WebSocket')
+  })
+
+  socket.on('connect_error', (error) => {
+    console.error('WebSocket connection error:', error)
+  })
+
+  // Listen for new opportunities
+  socket.on('opportunity:new', (data) => {
+    console.log('🆕 New opportunity:', data)
+    showNotification('New Opportunity', data.title || 'A new opportunity has been posted!')
+  })
+
+  // Listen for application status updates
+  socket.on('application:status_update', (data) => {
+    console.log('📝 Application status updated:', data)
+    showNotification('Application Update', `Your application status: ${data.status}`)
+  })
+
+  // Listen for deadline reminders
+  socket.on('opportunity:deadline_reminder', (data) => {
+    console.log('⏰ Deadline reminder:', data)
+    showNotification('Deadline Reminder', data.message || 'Deadline approaching!')
+  })
+
+  return socket
+}
+
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect()
+    socket = null
+  }
+}
+
+export const getSocket = () => socket
+
+function getUserIdFromToken(token) {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.id || payload.userId
+  } catch (error) {
+    console.error('Error decoding token:', error)
+    return null
+  }
+}
+
+function showNotification(title, message) {
+  // Browser notification
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, { 
+      body: message,
+      icon: '/vite.svg' // Update with your app icon
+    })
+  }
+
+  // In-app notification (you can customize this)
+  const event = new CustomEvent('app-notification', {
+    detail: { title, message }
+  })
+  window.dispatchEvent(event)
+}
+
+export const requestNotificationPermission = async () => {
+  if ('Notification' in window && Notification.permission === 'default') {
+    const permission = await Notification.requestPermission()
+    return permission === 'granted'
+  }
+  return Notification.permission === 'granted'
+}
