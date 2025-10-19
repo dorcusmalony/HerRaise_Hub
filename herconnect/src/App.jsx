@@ -13,6 +13,7 @@ import Profile from './pages/Profile/Profile.jsx'
 import Forum from './pages/forum/forum.jsx'
 import Dashboard from './pages/dashboard/dashboard.jsx'
 import Opportunities from './pages/Opportunities/Opportunities.jsx'
+import SafetyReport from './pages/SafetyReport/SafetyReport'
 import { initializeSocket, disconnectSocket } from './services/socketService'
 import './App.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/forum" element={<Forum />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/opportunities" element={<Opportunities />} />
+          <Route path="/safety-report" element={<SafetyReport />} />
         </Routes>
       </main>
       <Footer />

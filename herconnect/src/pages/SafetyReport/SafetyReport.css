@@ -1,0 +1,140 @@
+.safety-report-header {
+  padding: 2rem 1rem;
+}
+
+.safety-divider {
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    #dc2626 0,
+    #dc2626 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  margin: 1.5rem 0;
+}
+
+.safety-section {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.safety-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.safety-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.safety-radio-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 0;
+}
+
+.safety-radio-option input[type="radio"] {
+  margin-right: 0.75rem;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  accent-color: #E84393;
+}
+
+.safety-radio-label {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #dee2e6;
+  transition: all 0.2s;
+}
+
+.safety-radio-option input[type="radio"]:checked + .safety-radio-label {
+  background: #fff;
+  border-left-color: #E84393;
+  box-shadow: 0 2px 8px rgba(232, 67, 147, 0.15);
+  font-weight: 500;
+}
+
+.safety-radio-label:hover {
+  background: #fff;
+  border-left-color: #E84393;
+}
+
+.safety-emergency-help {
+  padding: 1.5rem;
+  background: #fff3cd;
+  border-radius: 12px;
+  border: 2px solid #ffc107;
+}
+
+.safety-emergency-help .btn {
+  font-weight: 600;
+  padding: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .safety-section {
+    padding: 1rem;
+  }
+  
+  .safety-radio-label {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+}
+
+/* Tailwind-like utility classes for compatibility */
+.max-w-2xl {
+  max-width: 42rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+.shadow {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.hover\:bg-gray-50:hover {
+  background-color: #f9fafb;
+}
+
+.focus\:ring-2:focus {
+  outline: 2px solid;
+  outline-offset: 2px;
+}
+
+.focus\:ring-blue-500:focus {
+  outline-color: #3b82f6;
+}
+
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}
