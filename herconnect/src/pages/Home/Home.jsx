@@ -4,52 +4,8 @@ import styles from '../../styles/Pages.module.css'
 
 // image assets from src/images
 const heroImg = new URL('../../images/girl2.jpg', import.meta.url).href
-const alumniImg1 = new URL('../../images/adich-pic.jpg', import.meta.url).href
-const alumniImg2 = new URL('../../images/adich-pic.jpg', import.meta.url).href
-const alumniImg3 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 
 export default function Home() {
-  const values = [
-    { name: 'Respect', icon: '', color: '#FFD700' },
-    { name: 'Mentorship', icon: '', color: '#E84393' },
-    { name: 'Diversity', icon: '', color: '#4A90E2' },
-    { name: 'Equality', icon: '', color: '#9B59B6' },
-    { name: 'Inclusion', icon: '', color: '#FF6B6B' },
-    { name: 'Empowerment', icon: '', color: '#F39C12' },
-    { name: 'Collaboration', icon: '', color: '#3498DB' },
-    { name: 'Lifelong Learning', icon: '', color: '#8E44AD' }
-  ]
-
-  const testimonials = [
-    {
-      name: 'Dorcus Alier',
-      image: alumniImg1,
-      role: 'Secondary School Student',
-      testimony: 'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.'
-    },
-    {
-      name: 'Kur Peter',
-      image: alumniImg2,
-      role: 'University Student',
-      testimony: 'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.'
-    },
-    {
-      name: 'Abuk Mayen',
-      image: alumniImg3,
-      role: 'High School Graduate',
-      testimony: 'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!'
-    }
-  ]
-
-  const communityGuidelines = [
-    { icon: '', title: 'Be Respectful', description: 'Treat everyone with kindness and dignity' },
-    { icon: '', title: 'Embrace Inclusivity', description: 'Celebrate diversity and welcome all voices' },
-    { icon: '', title: 'Communicate Positively', description: 'Use encouraging and constructive language' },
-    { icon: '', title: 'Stay Safe', description: 'Protect your privacy and report concerns' },
-    { icon: '', title: 'Support Each Other', description: 'Lift others up and share knowledge' },
-    { icon: '', title: 'Be Authentic', description: 'Share genuine experiences and advice' }
-  ]
-
   return (
     <div className="home-page">
       {/* Hero Section */}
@@ -57,18 +13,19 @@ export default function Home() {
         <div className={styles.heroWrapper}>
           <img src={heroImg} alt="Empowering young women" className={`img-fluid w-100 ${styles.heroImg}`} />
           <div className={styles.heroOverlay}>
-            <div className="container">
-              <h1 className={`${styles.heroTitle} display-3 fw-bold text-white mb-4`}>
-                Every Girl Deserves Education & A Bright Future
+            <div className="container text-center">
+              <h1 className={`${styles.heroTitle} display-2 fw-bold text-white mb-4`}>
+                Empowering Young Women in South Sudan
               </h1>
-              <p className="lead text-white mb-4" style={{ maxWidth: '600px' }}>
-                Empowering young women in South Sudan through mentorship, resources, and opportunities
+              <p className="lead text-white mb-4 mx-auto" style={{ maxWidth: '700px', fontSize: '1.3rem' }}>
+                Connect with mentors, access resources, and discover opportunities
+                to build your future
               </p>
-              <div className="d-flex gap-3">
-                <Link to="/register" className={`btn btn-lg ${styles.brandButton}`}>
-                  Join Our Community
+              <div className="d-flex gap-3 justify-content-center flex-wrap">
+                <Link to="/register" className={`btn btn-lg ${styles.brandButton}`} style={{ fontSize: '1.2rem', padding: '0.8rem 2rem' }}>
+                  Join HerRaise Hub
                 </Link>
-                <Link to="/about" className="btn btn-lg btn-outline-light">
+                <Link to="/about" className="btn btn-lg btn-outline-light" style={{ fontSize: '1.2rem', padding: '0.8rem 2rem' }}>
                   Learn More
                 </Link>
               </div>
@@ -78,160 +35,142 @@ export default function Home() {
       </section>
 
       <div className="container py-5">
-        {/* Mission Statement */}
-        <section className="mb-5 text-center">
-          <h2 className="display-5 fw-bold mb-4" style={{ color: 'var(--brand-magenta)' }}>
-            Our Mission
-          </h2>
+        {/* What We Do Section */}
+        <section className="text-center mb-5">
+          <h2 className="display-5 fw-bold mb-4">What We Do</h2>
           <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            HerRaise Hub bridges the gap by connecting primary and high school girls with life-changing opportunities,
-            dedicated mentors, and supportive peer networks. Together, we expand opportunities for the next generation
-            of women leaders to succeed.
+            HerRaise Hub is a platform dedicated to empowering young women in South Sudan
+            through <strong>mentorship</strong>, <strong>educational resources</strong>, and
+            <strong>career opportunities</strong>.
           </p>
         </section>
 
-        {/* Our Values */}
+        {/* Key Features */}
         <section className="mb-5">
-          <h2 className="text-center mb-4 fw-bold">Our Core Values</h2>
-          <div className="row g-3">
-            {values.map((value, idx) => (
-              <div key={idx} className="col-6 col-md-3">
-                <div 
-                  className="card h-100 text-center border-0 shadow-sm hover-shadow"
-                  style={{
-                    background: `linear-gradient(135deg, ${value.color}15, ${value.color}30)`,
-                    borderLeft: `4px solid ${value.color}`
-                  }}
-                >
-                  <div className="card-body d-flex flex-column align-items-center justify-content-center py-4">
-                    <div className="fs-1 mb-2">{value.icon}</div>
-                    <h6 className="fw-bold mb-0" style={{ color: value.color }}>
-                      {value.name}
-                    </h6>
-                  </div>
-                </div>
+          <div className="row g-4">
+            {/* Feature 1: Mentorship */}
+            <div className="col-md-4">
+              <div className="card h-100 border-0 shadow-sm text-center p-4">
+                <div className="mb-3" style={{ fontSize: '3rem' }}>👩‍🏫</div>
+                <h4 className="fw-bold mb-3">Find a Mentor</h4>
+                <p className="text-muted">
+                  Connect with experienced women leaders who will guide you through
+                  your educational and career journey.
+                </p>
+                <Link to="/register" className="btn btn-outline-primary mt-auto">
+                  Get Started
+                </Link>
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
 
-        {/* Impact Goal Section */}
-        <section className="mb-5">
-          <div className="card border-0 shadow-lg" style={{ background: 'linear-gradient(135deg, #E84393 0%, #c33764 100%)' }}>
-            <div className="card-body text-white p-5">
-              <div className="row align-items-center">
-                <div className="col-lg-8">
-                  <h2 className="display-6 fw-bold mb-4"> Our 2030 Goal: Reach 10,000 Girls</h2>
-                  <p className="lead mb-4">
-                    By 2030, we aim to connect <strong>10,000 girls</strong> with resources for undergraduate opportunities,
-                    conferences, and internships.
-                  </p>
-                  <div className="mb-4">
-                    <h5 className="fw-bold mb-3">We Fight Against:</h5>
-                    <div className="row g-2">
-                      <div className="col-md-6">
-                        <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
-                          <span>Gender Inequality</span>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
-                          <span>Gender-Based Violence</span>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
-                          <span>Early Marriage</span>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
-                          <span>Lack of Opportunities</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <h5 className="fw-bold mb-3">Help Us Reach Our Goal By:</h5>
-                  <ul className="list-unstyled mb-4">
-                    <li className="mb-2"> <strong>Joining</strong> our platform to learn and connect</li>
-                    <li className="mb-2"> <strong>Becoming a mentor</strong> to guide young women</li>
-                    <li className="mb-2"> <strong>Spreading the word</strong> to reach more girls</li>
-                    <li className="mb-2"> <strong>Supporting</strong> our mission and programs</li>
-                  </ul>
-                </div>
-                <div className="col-lg-4 text-center">
-                  <div className="bg-white text-dark rounded-circle mx-auto mb-3" style={{ width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div>
-                      <div className="display-4 fw-bold" style={{ color: 'var(--brand-magenta)' }}>10K</div>
-                      <div className="small fw-bold">BY 2030</div>
-                    </div>
-                  </div>
-                  <Link to="/register" className="btn btn-light btn-lg fw-bold">
-                    Join Our Mission
-                  </Link>
-                </div>
+            {/* Feature 2: Resources */}
+            <div className="col-md-4">
+              <div className="card h-100 border-0 shadow-sm text-center p-4">
+                <div className="mb-3" style={{ fontSize: '3rem' }}>📚</div>
+                <h4 className="fw-bold mb-3">Access Resources</h4>
+                <p className="text-muted">
+                  Explore CV templates, scholarship guides, career tips, and
+                  educational materials to help you succeed.
+                </p>
+                <Link to="/resources" className="btn btn-outline-primary mt-auto">
+                  Browse Resources
+                </Link>
+              </div>
+            </div>
+
+            {/* Feature 3: Opportunities */}
+            <div className="col-md-4">
+              <div className="card h-100 border-0 shadow-sm text-center p-4">
+                <div className="mb-3" style={{ fontSize: '3rem' }}>🎯</div>
+                <h4 className="fw-bold mb-3">Discover Opportunities</h4>
+                <p className="text-muted">
+                  Find internships, scholarships, conferences, and events
+                  designed for young women in South Sudan.
+                </p>
+                <Link to="/opportunities" className="btn btn-outline-primary mt-auto">
+                  View Opportunities
+                </Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Alumni Testimonials */}
+        {/* Why Join Section */}
         <section className="mb-5">
-          <h2 className="text-center mb-4 fw-bold">Success Stories from Our Community</h2>
-          <p className="text-center text-muted mb-5">
-            Hear from young women whose lives have been transformed by HerRaise Hub
-          </p>
-          <div className="row g-4">
-            {testimonials.map((testimonial, idx) => (
-              <div key={idx} className="col-md-4">
-                <div className="card h-100 border-0 shadow hover-shadow">
-                  <div className="card-body p-4">
-                    <div className="text-center mb-3">
-                      <img 
-                        src={testimonial.image} 
-                        alt={testimonial.name}
-                        className="rounded-circle mb-3"
-                        style={{ width: 100, height: 100, objectFit: 'cover', border: '4px solid var(--brand-magenta)' }}
-                      />
-                      <h5 className="fw-bold mb-1">{testimonial.name}</h5>
-                      <p className="text-muted small mb-0">{testimonial.role}</p>
+          <div className="card border-0" style={{ background: 'linear-gradient(135deg, #E84393 0%, #c33764 100%)' }}>
+            <div className="card-body text-white p-5 text-center">
+              <h2 className="display-6 fw-bold mb-4">Why Join HerRaise Hub?</h2>
+              <div className="row g-4 text-start">
+                <div className="col-md-6">
+                  <div className="d-flex align-items-start gap-3">
+                    <div className="fs-3">✨</div>
+                    <div>
+                      <h5 className="fw-bold">Build Your Network</h5>
+                      <p className="mb-0">Connect with peers and mentors who understand your challenges and aspirations.</p>
                     </div>
-                    <div className="position-relative">
-                      <div className="text-muted mb-2" style={{ fontSize: '2rem', lineHeight: 1, opacity: 0.3 }}>"</div>
-                      <p className="text-muted fst-italic" style={{ fontSize: '0.95rem' }}>
-                        {testimonial.testimony}
-                      </p>
-                      <div className="text-end text-muted" style={{ fontSize: '2rem', lineHeight: 1, opacity: 0.3 }}>"</div>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="d-flex align-items-start gap-3">
+                    <div className="fs-3">💪</div>
+                    <div>
+                      <h5 className="fw-bold">Develop Your Skills</h5>
+                      <p className="mb-0">Access free educational resources and training materials to advance your career.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="d-flex align-items-start gap-3">
+                    <div className="fs-3">🎓</div>
+                    <div>
+                      <h5 className="fw-bold">Unlock Opportunities</h5>
+                      <p className="mb-0">Be the first to know about scholarships, internships, and leadership programs.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="d-flex align-items-start gap-3">
+                    <div className="fs-3">🤝</div>
+                    <div>
+                      <h5 className="fw-bold">Join a Supportive Community</h5>
+                      <p className="mb-0">Be part of a growing movement of young women supporting each other.</p>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+              <div className="mt-4">
+                <Link to="/register" className="btn btn-light btn-lg fw-bold">
+                  Join Our Community Today
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Community Guidelines */}
+        {/* How It Works */}
         <section className="mb-5">
-          <h2 className="text-center mb-4 fw-bold">Our Community Guidelines</h2>
-          <p className="text-center text-muted mb-5">
-            Creating a safe, supportive, and empowering space for all members
-          </p>
+          <h2 className="text-center fw-bold mb-5">How It Works</h2>
           <div className="row g-4">
-            {communityGuidelines.map((guideline, idx) => (
-              <div key={idx} className="col-md-4">
-                <div className="card h-100 border-0 bg-light">
-                  <div className="card-body text-center p-4">
-                    <div className="fs-1 mb-3">{guideline.icon}</div>
-                    <h5 className="fw-bold mb-2">{guideline.title}</h5>
-                    <p className="text-muted mb-0 small">{guideline.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <div className="col-md-3 text-center">
+              <div className="mb-3" style={{ fontSize: '2.5rem' }}>1️⃣</div>
+              <h5 className="fw-bold">Sign Up</h5>
+              <p className="text-muted small">Create your free account as a mentee or mentor</p>
+            </div>
+            <div className="col-md-3 text-center">
+              <div className="mb-3" style={{ fontSize: '2.5rem' }}>2️⃣</div>
+              <h5 className="fw-bold">Build Your Profile</h5>
+              <p className="text-muted small">Share your interests, goals, and aspirations</p>
+            </div>
+            <div className="col-md-3 text-center">
+              <div className="mb-3" style={{ fontSize: '2.5rem' }}>3️⃣</div>
+              <h5 className="fw-bold">Connect & Learn</h5>
+              <p className="text-muted small">Find mentors, access resources, and join discussions</p>
+            </div>
+            <div className="col-md-3 text-center">
+              <div className="mb-3" style={{ fontSize: '2.5rem' }}>4️⃣</div>
+              <h5 className="fw-bold">Achieve Your Goals</h5>
+              <p className="text-muted small">Apply to opportunities and build your future</p>
+            </div>
           </div>
         </section>
 
@@ -239,21 +178,21 @@ export default function Home() {
         <section className="text-center mb-5">
           <div className="card border-0 bg-light">
             <div className="card-body p-5">
-              <h2 className="display-6 fw-bold mb-4">Ready to Make a Difference?</h2>
+              <h2 className="display-6 fw-bold mb-3">Ready to Start Your Journey?</h2>
               <p className="lead text-muted mb-4">
-                Join thousands of young women and mentors creating positive change together
+                Join thousands of young women building their futures together
               </p>
               <div className="d-flex gap-3 justify-content-center flex-wrap">
                 <Link to="/register" className={`btn btn-lg ${styles.brandButton}`}>
-                  Create Account
+                  Create Free Account
                 </Link>
-                <Link to="/opportunities" className="btn btn-lg btn-primary">
-                  Explore Opportunities
-                </Link>
-                <Link to="/about" className="btn btn-lg btn-outline-secondary">
-                  Learn More
+                <Link to="/login" className="btn btn-lg btn-outline-primary">
+                  Sign In
                 </Link>
               </div>
+              <p className="text-muted small mt-3 mb-0">
+                Already have an account? <Link to="/login">Login here</Link>
+              </p>
             </div>
           </div>
         </section>

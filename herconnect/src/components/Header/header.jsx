@@ -12,15 +12,37 @@ export default function Header() {
 	const [notifications] = useState([]) // Remove setNotifications since it's not used yet
 	const dropdownRef = useRef(null)
 
-	// Load user data
+	// Load user data on mount AND when storage changes
 	useEffect(() => {
-		const userData = localStorage.getItem('user')
-		if (userData) {
-			try {
-				setUser(JSON.parse(userData))
-			} catch (e) {
-				console.error('Failed to parse user data:', e)
+		const loadUser = () => {
+			const userData = localStorage.getItem('user')
+			if (userData) {
+				try {
+					setUser(JSON.parse(userData))
+					console.log('✅ User loaded in Header:', JSON.parse(userData))
+				} catch (e) {
+					console.error('Failed to parse user data:', e)
+					setUser(null)
+				}
+			} else {
+				setUser(null)
 			}
+		}
+
+		// Load initially
+		loadUser()
+
+		// Listen for storage changes (when user logs in/out)
+		window.addEventListener('storage', loadUser)
+		
+		// Custom events for same-tab updates
+		window.addEventListener('user-login', loadUser)
+		window.addEventListener('user-logout', loadUser)
+
+		return () => {
+			window.removeEventListener('storage', loadUser)
+			window.removeEventListener('user-login', loadUser)
+			window.removeEventListener('user-logout', loadUser)
 		}
 	}, [])
 
@@ -48,6 +70,8 @@ export default function Header() {
 
 	const handleLogout = async (e) => {
 		e?.preventDefault?.()
+		setShowDropdown(false) // Close dropdown immediately
+		
 		const token = localStorage.getItem('token') || localStorage.getItem('authToken')
 		
 		try {
@@ -62,15 +86,28 @@ export default function Header() {
 
 			const data = await res.json().catch(() => null)
 			if (res.ok && data?.success) {
-				console.log('Logout successful:', data.message)
+				console.log('✅ Logout successful:', data.message)
 			}
 		} catch (err) {
-			console.warn('Logout request failed', err)
+			console.warn('⚠️ Logout request failed', err)
 		} finally {
+			// Disconnect WebSocket
 			disconnectSocket()
+
+			// Clear all auth data
 			localStorage.removeItem('token')
 			localStorage.removeItem('authToken')
 			localStorage.removeItem('user')
+			
+			// ✅ Clear user state immediately
+			setUser(null)
+			
+			// ✅ Dispatch logout event to update other components
+			window.dispatchEvent(new Event('user-logout'))
+			
+			console.log('✅ User logged out, localStorage cleared')
+			
+			// Navigate to login
 			navigate('/login', { replace: true })
 		}
 	}
