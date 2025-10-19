@@ -42,12 +42,12 @@ export default function Home() {
   ]
 
   const communityGuidelines = [
-    { icon: '🤝', title: 'Be Respectful', description: 'Treat everyone with kindness and dignity' },
-    { icon: '🌈', title: 'Embrace Inclusivity', description: 'Celebrate diversity and welcome all voices' },
-    { icon: '💬', title: 'Communicate Positively', description: 'Use encouraging and constructive language' },
-    { icon: '🛡️', title: 'Stay Safe', description: 'Protect your privacy and report concerns' },
-    { icon: '🤲', title: 'Support Each Other', description: 'Lift others up and share knowledge' },
-    { icon: '✨', title: 'Be Authentic', description: 'Share genuine experiences and advice' }
+    { icon: '', title: 'Be Respectful', description: 'Treat everyone with kindness and dignity' },
+    { icon: '', title: 'Embrace Inclusivity', description: 'Celebrate diversity and welcome all voices' },
+    { icon: '', title: 'Communicate Positively', description: 'Use encouraging and constructive language' },
+    { icon: '', title: 'Stay Safe', description: 'Protect your privacy and report concerns' },
+    { icon: '', title: 'Support Each Other', description: 'Lift others up and share knowledge' },
+    { icon: '', title: 'Be Authentic', description: 'Share genuine experiences and advice' }
   ]
 
   return (
@@ -121,7 +121,7 @@ export default function Home() {
             <div className="card-body text-white p-5">
               <div className="row align-items-center">
                 <div className="col-lg-8">
-                  <h2 className="display-6 fw-bold mb-4">🎯 Our 2030 Goal: Reach 10,000 Girls</h2>
+                  <h2 className="display-6 fw-bold mb-4"> Our 2030 Goal: Reach 10,000 Girls</h2>
                   <p className="lead mb-4">
                     By 2030, we aim to connect <strong>10,000 girls</strong> with resources for undergraduate opportunities,
                     conferences, and internships.
@@ -157,10 +157,10 @@ export default function Home() {
                   </div>
                   <h5 className="fw-bold mb-3">Help Us Reach Our Goal By:</h5>
                   <ul className="list-unstyled mb-4">
-                    <li className="mb-2">✨ <strong>Joining</strong> our platform to learn and connect</li>
-                    <li className="mb-2">🤝 <strong>Becoming a mentor</strong> to guide young women</li>
-                    <li className="mb-2">📢 <strong>Spreading the word</strong> to reach more girls</li>
-                    <li className="mb-2">💝 <strong>Supporting</strong> our mission and programs</li>
+                    <li className="mb-2"> <strong>Joining</strong> our platform to learn and connect</li>
+                    <li className="mb-2"> <strong>Becoming a mentor</strong> to guide young women</li>
+                    <li className="mb-2"> <strong>Spreading the word</strong> to reach more girls</li>
+                    <li className="mb-2"> <strong>Supporting</strong> our mission and programs</li>
                   </ul>
                 </div>
                 <div className="col-lg-4 text-center">
