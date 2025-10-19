@@ -135,6 +135,7 @@ export default function Header() {
 				{/* Navigation */}
 				<nav className="d-none d-md-flex align-items-center gap-4">
 					<Link to="/" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>Home</Link>
+					<Link to="/about" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>About</Link>
 					<Link to="/forum" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>Forum</Link>
 					<Link to="/opportunities" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>Opportunities</Link>
 					<Link to="/resources" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>Resources</Link>
