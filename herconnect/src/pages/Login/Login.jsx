@@ -81,12 +81,16 @@ export default function Login() {
         }
       }
       
+      // Save user data
       if (data?.user) {
         try {
           localStorage.setItem('user', JSON.stringify(data.user))
           console.log('✅ User data saved successfully:', data.user)
+          
+          // ✅ Dispatch event to update Header
+          window.dispatchEvent(new Event('user-login'))
         } catch (e) {
-          console.error('Failed to save user data:', e)
+          console.error('❌ Failed to save user data:', e)
         }
       } else {
         console.warn('⚠️ No user data in login response')
