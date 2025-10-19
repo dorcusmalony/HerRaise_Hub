@@ -280,18 +280,6 @@ export default function Header() {
 											</Link>
 
 											<Link
-												to="/safety-report"
-												className="d-flex align-items-center px-3 py-2 text-decoration-none text-dark hover-bg-light"
-												onClick={() => setShowDropdown(false)}
-											>
-												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2 text-muted">
-													<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-													<path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
-												</svg>
-												🚨 Report Safety Concern
-											</Link>
-
-											<Link
 												to="/help"
 												className="d-flex align-items-center px-3 py-2 text-decoration-none text-dark hover-bg-light"
 												onClick={() => setShowDropdown(false)}
@@ -306,6 +294,18 @@ export default function Header() {
 
 										{/* Logout */}
 										<div className="border-top pt-1">
+											<Link
+												to="/safety-report"
+												className="d-flex align-items-center w-100 px-3 py-2 text-decoration-none text-danger hover-bg-danger-light"
+												onClick={() => setShowDropdown(false)}
+											>
+												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2">
+													<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+													<path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+												</svg>
+												🚨 Report Safety Concern
+											</Link>
+
 											<button
 												onClick={handleLogout}
 												className="d-flex align-items-center w-100 px-3 py-2 text-decoration-none border-0 bg-transparent text-danger hover-bg-danger-light"
