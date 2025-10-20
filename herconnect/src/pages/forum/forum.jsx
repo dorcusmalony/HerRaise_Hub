@@ -69,8 +69,13 @@ export default function Forum() {
     }
   }
 
+  const handleUpdatePost = (updatedPost) => {
+    setPosts(prev => prev.map(p => p.id === updatedPost.id ? updatedPost : p))
+    setEditingPost(null)
+  }
+
   const handleDeletePost = async (postId) => {
-    if (!confirm('Are you sure you want to delete this post?')) return
+    if (!window.confirm('Are you sure you want to delete this post? This action cannot be undone.')) return
 
     const token = localStorage.getItem('token')
     
@@ -83,10 +88,11 @@ export default function Forum() {
       })
       
       if (response.ok) {
-        fetchPosts()
+        setPosts(prev => prev.filter(p => p.id !== postId))
       }
     } catch (error) {
       console.error('Error deleting post:', error)
+      alert('Failed to delete post. Please try again.')
     }
   }
 
@@ -142,6 +148,30 @@ export default function Forum() {
     }
   }
 
+  const handleUpdateComment = async (commentId, newContent) => {
+    const token = localStorage.getItem('token')
+    
+    try {
+      const response = await fetch(`${API}/api/forum/comments/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: newContent })
+      })
+
+      if (response.ok) {
+        fetchPosts()
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error('Error updating comment:', error)
+      return false
+    }
+  }
+
   const handleLikeComment = async (commentId) => {
     const token = localStorage.getItem('token')
     
@@ -160,21 +190,24 @@ export default function Forum() {
   }
 
   const handleDeleteComment = async (commentId) => {
-    if (!confirm('Delete this comment?')) return
+    if (!window.confirm('Delete this comment? This action cannot be undone.')) return
 
     const token = localStorage.getItem('token')
     
     try {
-      await fetch(`${API}/api/forum/comments/${commentId}`, {
+      const response = await fetch(`${API}/api/forum/comments/${commentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
       
-      fetchPosts()
+      if (response.ok) {
+        fetchPosts()
+      }
     } catch (error) {
       console.error('Error deleting comment:', error)
+      alert('Failed to delete comment. Please try again.')
     }
   }
 
@@ -215,10 +248,13 @@ export default function Forum() {
       <div className={`mx-auto ${styles.container}`}>
         <CreatePostForm
           editPost={editingPost}
-          onSuccess={() => {
-            setShowCreateForm(false)
-            setEditingPost(null)
-            fetchPosts()
+          onSuccess={(post) => {
+            if (editingPost) {
+              handleUpdatePost(post)
+            } else {
+              setShowCreateForm(false)
+              fetchPosts()
+            }
           }}
           onCancel={() => {
             setShowCreateForm(false)
@@ -309,7 +345,7 @@ export default function Forum() {
         </div>
       ) : (
         posts.map(post => (
-          <div key={post.id} className="card mb-4 shadow-sm">
+          <div key={post.id} className="card mb-4 shadow-sm hover-shadow-lg transition">
             <div className="card-body">
               <div className="d-flex gap-3">
                 {/* Author Avatar */}
@@ -323,7 +359,7 @@ export default function Forum() {
                 {/* Post Content */}
                 <div className="flex-grow-1">
                   <div className="d-flex justify-content-between align-items-start mb-2">
-                    <div>
+                    <div className="flex-grow-1">
                       <h5 className="mb-1">
                         {getPostTypeIcon(post.type)} {post.title}
                       </h5>
@@ -331,6 +367,12 @@ export default function Forum() {
                         <strong>{post.author?.name}</strong>
                         <span>•</span>
                         <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                        {post.createdAt !== post.updatedAt && (
+                          <>
+                            <span>•</span>
+                            <span className="fst-italic">Edited</span>
+                          </>
+                        )}
                         <span className={`badge bg-${getPostTypeBadge(post.type)}`}>
                           {post.type}
                         </span>
@@ -339,18 +381,32 @@ export default function Forum() {
 
                     {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
                       <div className="dropdown">
-                        <button className="btn btn-sm btn-link text-muted" data-bs-toggle="dropdown">
-                          ⋮
+                        <button 
+                          className="btn btn-sm btn-link text-muted p-1" 
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                          </svg>
                         </button>
-                        <ul className="dropdown-menu dropdown-menu-end">
+                        <ul className="dropdown-menu dropdown-menu-end shadow">
                           <li>
                             <button className="dropdown-item" onClick={() => setEditingPost(post)}>
-                              ✏️ Edit
+                              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                              </svg>
+                              Edit Post
                             </button>
                           </li>
                           <li>
                             <button className="dropdown-item text-danger" onClick={() => handleDeletePost(post.id)}>
-                              🗑️ Delete
+                              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                              </svg>
+                              Delete Post
                             </button>
                           </li>
                         </ul>
@@ -358,13 +414,13 @@ export default function Forum() {
                     )}
                   </div>
 
-                  <p className="text-muted mb-3 white-space-pre-wrap">{post.content}</p>
+                  <p className="text-muted mb-3" style={{ whiteSpace: 'pre-wrap' }}>{post.content}</p>
 
                   {/* Tags */}
                   {post.tags && post.tags.length > 0 && (
                     <div className="d-flex flex-wrap gap-2 mb-3">
                       {post.tags.map((tag, index) => (
-                        <span key={index} className="badge bg-light text-dark">
+                        <span key={index} className="badge bg-light text-dark border">
                           #{tag}
                         </span>
                       ))}
@@ -375,48 +431,58 @@ export default function Forum() {
                   <div className="d-flex gap-4 align-items-center pt-3 border-top">
                     <button 
                       onClick={() => handleLikePost(post.id)}
-                      className="btn btn-link btn-sm p-0 text-decoration-none"
+                      className={`btn btn-link btn-sm p-0 text-decoration-none ${post.likes?.some(l => l.userId === currentUser?.id) ? 'text-danger' : 'text-muted'}`}
+                      title="Like post"
                     >
-                      ❤️ {post.likes?.length || 0}
+                      ❤️ <span className="ms-1">{post.likes?.length || 0}</span>
                     </button>
 
                     <button 
                       onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
-                      className="btn btn-link btn-sm p-0 text-decoration-none"
+                      className="btn btn-link btn-sm p-0 text-decoration-none text-muted"
+                      title="View comments"
                     >
-                      💬 {post.ForumComments?.length || 0} Comments
+                      💬 <span className="ms-1">{post.ForumComments?.length || 0} Comments</span>
                     </button>
 
-                    <span className="text-muted small ms-auto">
-                      👁️ {post.views || 0} Views
+                    <span className="text-muted small ms-auto" title="Views">
+                      👁️ {post.views || 0}
                     </span>
                   </div>
 
                   {/* Comments Section */}
                   {expandedPost === post.id && (
                     <div className="mt-4 pt-4 border-top">
-                      {/* Add Comment */}
+                      {/* Add Comment Form */}
                       <div className="mb-4">
                         <textarea
                           value={commentText[post.id] || ''}
                           onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
-                          placeholder="Write a comment..."
+                          placeholder="Write a thoughtful comment..."
                           rows="3"
                           className="form-control mb-2"
                         />
-                        <button
-                          onClick={() => handleAddComment(post.id)}
-                          disabled={!commentText[post.id]?.trim()}
-                          className="btn text-white"
-                          style={{ background: 'var(--brand-magenta)' }}
-                        >
-                          Comment
-                        </button>
+                        <div className="d-flex justify-content-end">
+                          <button
+                            onClick={() => handleAddComment(post.id)}
+                            disabled={!commentText[post.id]?.trim()}
+                            className="btn text-white"
+                            style={{ background: 'var(--brand-magenta)' }}
+                          >
+                            Post Comment
+                          </button>
+                        </div>
                       </div>
 
                       {/* Comments List */}
-                      {post.ForumComments && post.ForumComments.length > 0 && (
-                        <div>
+                      {post.ForumComments && post.ForumComments.length > 0 ? (
+                        <div className="comments-section">
+                          <h6 className="mb-3 text-muted">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2">
+                              <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                            </svg>
+                            Comments ({post.ForumComments.length})
+                          </h6>
                           {post.ForumComments
                             .filter(c => !c.parentCommentId)
                             .map(comment => (
@@ -427,11 +493,20 @@ export default function Forum() {
                                   replies: post.ForumComments.filter(c => c.parentCommentId === comment.id)
                                 }}
                                 onReply={handleReplyToComment}
+                                onUpdate={handleUpdateComment}
                                 onLike={handleLikeComment}
                                 onDelete={handleDeleteComment}
                                 currentUser={currentUser}
+                                postAuthorId={post.author?.id}
                               />
                             ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-4">
+                          <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16" className="text-muted mb-2">
+                            <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                          </svg>
+                          <p className="text-muted">No comments yet. Be the first to comment!</p>
                         </div>
                       )}
                     </div>
