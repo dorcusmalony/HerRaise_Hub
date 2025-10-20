@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import CreatePostForm from '../../components/Forum/CreatePostForm'
+import CommentItem from '../../components/Forum/CommentItem'
 import styles from '../../styles/Pages.module.css'
 
 export default function Forum() {
@@ -7,8 +8,21 @@ export default function Forum() {
   
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all') // all, discussions, projects, questions
-  const [sortBy, setSortBy] = useState('recent') // recent, popular, trending
+  const [filter, setFilter] = useState('all')
+  const [sortBy, setSortBy] = useState('recent')
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [editingPost, setEditingPost] = useState(null)
+  const [expandedPost, setExpandedPost] = useState(null)
+  const [commentText, setCommentText] = useState({})
+  const [currentUser, setCurrentUser] = useState(null)
+
+  // Load current user
+  useEffect(() => {
+    const userData = localStorage.getItem('user')
+    if (userData) {
+      setCurrentUser(JSON.parse(userData))
+    }
+  }, [])
 
   const fetchPosts = useCallback(async () => {
     const token = localStorage.getItem('token')
@@ -36,44 +50,154 @@ export default function Forum() {
     fetchPosts()
   }, [fetchPosts])
 
-  const handleLike = async (postId) => {
+  const handleLikePost = async (postId) => {
     const token = localStorage.getItem('token')
     
     try {
-      await fetch(`${API}/api/forum/posts/${postId}/like`, {
+      const response = await fetch(`${API}/api/forum/posts/${postId}/like`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       })
       
-      // Refresh posts
-      fetchPosts()
+      if (response.ok) {
+        fetchPosts()
+      }
     } catch (error) {
       console.error('Error liking post:', error)
     }
   }
 
-  const getPostTypeIcon = (type) => {
-    switch(type) {
-      case 'project': return '📁'
-      case 'question': return '❓'
-      case 'essay': return '📝'
-      case 'video': return '🎥'
-      default: return '💬'
+  const handleDeletePost = async (postId) => {
+    if (!confirm('Are you sure you want to delete this post?')) return
+
+    const token = localStorage.getItem('token')
+    
+    try {
+      const response = await fetch(`${API}/api/forum/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      if (response.ok) {
+        fetchPosts()
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error)
     }
+  }
+
+  const handleAddComment = async (postId) => {
+    const text = commentText[postId]
+    if (!text?.trim()) return
+
+    const token = localStorage.getItem('token')
+    
+    try {
+      const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: text })
+      })
+
+      if (response.ok) {
+        setCommentText(prev => ({ ...prev, [postId]: '' }))
+        fetchPosts()
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error)
+    }
+  }
+
+  const handleReplyToComment = async (parentCommentId, replyText) => {
+    const token = localStorage.getItem('token')
+    const post = posts.find(p => p.ForumComments?.some(c => c.id === parentCommentId))
+    
+    if (!post) return
+
+    try {
+      const response = await fetch(`${API}/api/forum/posts/${post.id}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          content: replyText,
+          parentCommentId
+        })
+      })
+
+      if (response.ok) {
+        fetchPosts()
+      }
+    } catch (error) {
+      console.error('Error replying to comment:', error)
+    }
+  }
+
+  const handleLikeComment = async (commentId) => {
+    const token = localStorage.getItem('token')
+    
+    try {
+      await fetch(`${API}/api/forum/comments/${commentId}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      fetchPosts()
+    } catch (error) {
+      console.error('Error liking comment:', error)
+    }
+  }
+
+  const handleDeleteComment = async (commentId) => {
+    if (!confirm('Delete this comment?')) return
+
+    const token = localStorage.getItem('token')
+    
+    try {
+      await fetch(`${API}/api/forum/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      fetchPosts()
+    } catch (error) {
+      console.error('Error deleting comment:', error)
+    }
+  }
+
+  const getPostTypeIcon = (type) => {
+    const icons = {
+      project: '📁',
+      question: '❓',
+      essay: '📝',
+      video: '🎥',
+      discussion: '💬'
+    }
+    return icons[type] || '💬'
   }
 
   const getPostTypeBadge = (type) => {
     const badges = {
-      project: 'bg-primary',
-      question: 'bg-warning',
-      essay: 'bg-info',
-      video: 'bg-danger',
-      discussion: 'bg-success'
+      project: 'primary',
+      question: 'warning',
+      essay: 'info',
+      video: 'danger',
+      discussion: 'success'
     }
-    return badges[type] || 'bg-secondary'
+    return badges[type] || 'secondary'
   }
 
   if (loading) {
@@ -86,6 +210,25 @@ export default function Forum() {
     )
   }
 
+  if (showCreateForm || editingPost) {
+    return (
+      <div className={`mx-auto ${styles.container}`}>
+        <CreatePostForm
+          editPost={editingPost}
+          onSuccess={() => {
+            setShowCreateForm(false)
+            setEditingPost(null)
+            fetchPosts()
+          }}
+          onCancel={() => {
+            setShowCreateForm(false)
+            setEditingPost(null)
+          }}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className={`mx-auto ${styles.container}`}>
       {/* Header */}
@@ -94,9 +237,13 @@ export default function Forum() {
           <h2>🗨️ Discussion Forum</h2>
           <p className="text-muted mb-0">Share ideas, ask questions, and connect with peers</p>
         </div>
-        <Link to="/forum/create" className="btn btn-primary">
+        <button 
+          onClick={() => setShowCreateForm(true)}
+          className="btn text-white"
+          style={{ background: 'var(--brand-magenta)' }}
+        >
           + Create Post
-        </Link>
+        </button>
       </div>
 
       {/* Filter & Sort Bar */}
@@ -107,49 +254,22 @@ export default function Forum() {
             <div className="col-md-6">
               <label className="form-label small text-muted">Filter by:</label>
               <div className="btn-group w-100" role="group">
-                <input 
-                  type="radio" 
-                  className="btn-check" 
-                  name="filter" 
-                  id="filter-all" 
-                  value="all"
-                  checked={filter === 'all'}
-                  onChange={(e) => setFilter(e.target.value)}
-                />
-                <label className="btn btn-outline-primary" htmlFor="filter-all">All</label>
-
-                <input 
-                  type="radio" 
-                  className="btn-check" 
-                  name="filter" 
-                  id="filter-discussions" 
-                  value="discussion"
-                  checked={filter === 'discussion'}
-                  onChange={(e) => setFilter(e.target.value)}
-                />
-                <label className="btn btn-outline-primary" htmlFor="filter-discussions">Discussions</label>
-
-                <input 
-                  type="radio" 
-                  className="btn-check" 
-                  name="filter" 
-                  id="filter-projects" 
-                  value="project"
-                  checked={filter === 'project'}
-                  onChange={(e) => setFilter(e.target.value)}
-                />
-                <label className="btn btn-outline-primary" htmlFor="filter-projects">Projects</label>
-
-                <input 
-                  type="radio" 
-                  className="btn-check" 
-                  name="filter" 
-                  id="filter-questions" 
-                  value="question"
-                  checked={filter === 'question'}
-                  onChange={(e) => setFilter(e.target.value)}
-                />
-                <label className="btn btn-outline-primary" htmlFor="filter-questions">Questions</label>
+                {['all', 'discussion', 'project', 'question'].map(f => (
+                  <div key={f}>
+                    <input 
+                      type="radio" 
+                      className="btn-check" 
+                      name="filter" 
+                      id={`filter-${f}`}
+                      value={f}
+                      checked={filter === f}
+                      onChange={(e) => setFilter(e.target.value)}
+                    />
+                    <label className="btn btn-outline-primary" htmlFor={`filter-${f}`}>
+                      {f.charAt(0).toUpperCase() + f.slice(1)}
+                    </label>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -164,7 +284,6 @@ export default function Forum() {
                 <option value="recent">Most Recent</option>
                 <option value="popular">Most Popular</option>
                 <option value="trending">Trending</option>
-                <option value="unanswered">Unanswered</option>
               </select>
             </div>
           </div>
@@ -172,131 +291,156 @@ export default function Forum() {
       </div>
 
       {/* Posts List */}
-      <div className="row">
-        {posts.length === 0 ? (
-          <div className="col-12">
-            <div className="card">
-              <div className="card-body text-center py-5">
-                <h4 className="text-muted mb-3">No posts yet</h4>
-                <p className="text-muted mb-4">
-                  Be the first to start a discussion, share a project, or ask a question!
-                </p>
-                <Link to="/forum/create" className="btn btn-primary">
-                  Create First Post
-                </Link>
-              </div>
-            </div>
+      {posts.length === 0 ? (
+        <div className="card">
+          <div className="card-body text-center py-5">
+            <h4 className="text-muted mb-3">No posts yet</h4>
+            <p className="text-muted mb-4">
+              Be the first to start a discussion!
+            </p>
+            <button 
+              onClick={() => setShowCreateForm(true)}
+              className="btn text-white"
+              style={{ background: 'var(--brand-magenta)' }}
+            >
+              Create First Post
+            </button>
           </div>
-        ) : (
-          posts.map(post => (
-            <div key={post.id} className="col-12 mb-3">
-              <div className="card hover-shadow">
-                <div className="card-body">
-                  <div className="d-flex gap-3">
-                    {/* Author Avatar */}
+        </div>
+      ) : (
+        posts.map(post => (
+          <div key={post.id} className="card mb-4 shadow-sm">
+            <div className="card-body">
+              <div className="d-flex gap-3">
+                {/* Author Avatar */}
+                <img 
+                  src={post.author?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name || 'User')}&background=E84393&color=fff`}
+                  alt={post.author?.name}
+                  className="rounded-circle"
+                  style={{ width: 50, height: 50, objectFit: 'cover' }}
+                />
+
+                {/* Post Content */}
+                <div className="flex-grow-1">
+                  <div className="d-flex justify-content-between align-items-start mb-2">
                     <div>
-                      <img 
-                        src={
-                          post.author?.profilePicture || 
-                          `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name || 'User')}&background=E84393&color=fff`
-                        } 
-                        alt={post.author?.name}
-                        className="rounded-circle"
-                        style={{ width: 50, height: 50, objectFit: 'cover' }}
-                      />
-                    </div>
-
-                    {/* Post Content */}
-                    <div className="flex-grow-1">
-                      <div className="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                          <h5 className="mb-1">
-                            <Link to={`/forum/post/${post.id}`} className="text-decoration-none text-dark">
-                              {getPostTypeIcon(post.type)} {post.title}
-                            </Link>
-                          </h5>
-                          <div className="d-flex align-items-center gap-2 text-muted small">
-                            <span className="fw-bold">{post.author?.name}</span>
-                            <span>•</span>
-                            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-                            <span>•</span>
-                            <span className={`badge ${getPostTypeBadge(post.type)}`}>
-                              {post.type}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Post Excerpt */}
-                      <p className="text-muted mb-2">
-                        {post.content?.substring(0, 200)}
-                        {post.content?.length > 200 && '...'}
-                      </p>
-
-                      {/* Attachments Preview */}
-                      {post.attachments?.length > 0 && (
-                        <div className="d-flex gap-2 mb-2">
-                          {post.attachments.map((attachment, idx) => (
-                            <span key={idx} className="badge bg-light text-dark border">
-                              {attachment.type === 'video' && '🎥'}
-                              {attachment.type === 'image' && '🖼️'}
-                              {attachment.type === 'document' && '📄'}
-                              {' '}{attachment.name}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Engagement Stats */}
-                      <div className="d-flex gap-4 align-items-center">
-                        <button 
-                          className="btn btn-sm btn-link text-decoration-none p-0"
-                          onClick={() => handleLike(post.id)}
-                        >
-                          👍 {post.likes || 0} Likes
-                        </button>
-                        <Link 
-                          to={`/forum/post/${post.id}`}
-                          className="btn btn-sm btn-link text-decoration-none p-0"
-                        >
-                          💬 {post.commentsCount || 0} Comments
-                        </Link>
-                        <span className="text-muted small">
-                          👁️ {post.views || 0} Views
+                      <h5 className="mb-1">
+                        {getPostTypeIcon(post.type)} {post.title}
+                      </h5>
+                      <div className="d-flex align-items-center gap-2 text-muted small">
+                        <strong>{post.author?.name}</strong>
+                        <span>•</span>
+                        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                        <span className={`badge bg-${getPostTypeBadge(post.type)}`}>
+                          {post.type}
                         </span>
                       </div>
                     </div>
+
+                    {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
+                      <div className="dropdown">
+                        <button className="btn btn-sm btn-link text-muted" data-bs-toggle="dropdown">
+                          ⋮
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <button className="dropdown-item" onClick={() => setEditingPost(post)}>
+                              ✏️ Edit
+                            </button>
+                          </li>
+                          <li>
+                            <button className="dropdown-item text-danger" onClick={() => handleDeletePost(post.id)}>
+                              🗑️ Delete
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
                   </div>
+
+                  <p className="text-muted mb-3 white-space-pre-wrap">{post.content}</p>
+
+                  {/* Tags */}
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="d-flex flex-wrap gap-2 mb-3">
+                      {post.tags.map((tag, index) => (
+                        <span key={index} className="badge bg-light text-dark">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="d-flex gap-4 align-items-center pt-3 border-top">
+                    <button 
+                      onClick={() => handleLikePost(post.id)}
+                      className="btn btn-link btn-sm p-0 text-decoration-none"
+                    >
+                      ❤️ {post.likes?.length || 0}
+                    </button>
+
+                    <button 
+                      onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                      className="btn btn-link btn-sm p-0 text-decoration-none"
+                    >
+                      💬 {post.ForumComments?.length || 0} Comments
+                    </button>
+
+                    <span className="text-muted small ms-auto">
+                      👁️ {post.views || 0} Views
+                    </span>
+                  </div>
+
+                  {/* Comments Section */}
+                  {expandedPost === post.id && (
+                    <div className="mt-4 pt-4 border-top">
+                      {/* Add Comment */}
+                      <div className="mb-4">
+                        <textarea
+                          value={commentText[post.id] || ''}
+                          onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
+                          placeholder="Write a comment..."
+                          rows="3"
+                          className="form-control mb-2"
+                        />
+                        <button
+                          onClick={() => handleAddComment(post.id)}
+                          disabled={!commentText[post.id]?.trim()}
+                          className="btn text-white"
+                          style={{ background: 'var(--brand-magenta)' }}
+                        >
+                          Comment
+                        </button>
+                      </div>
+
+                      {/* Comments List */}
+                      {post.ForumComments && post.ForumComments.length > 0 && (
+                        <div>
+                          {post.ForumComments
+                            .filter(c => !c.parentCommentId)
+                            .map(comment => (
+                              <CommentItem
+                                key={comment.id}
+                                comment={{
+                                  ...comment,
+                                  replies: post.ForumComments.filter(c => c.parentCommentId === comment.id)
+                                }}
+                                onReply={handleReplyToComment}
+                                onLike={handleLikeComment}
+                                onDelete={handleDeleteComment}
+                                currentUser={currentUser}
+                              />
+                            ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          ))
-        )}
-      </div>
-
-      {/* Pagination (if needed) */}
-      {posts.length > 0 && (
-        <div className="d-flex justify-content-center mt-4">
-          <nav>
-            <ul className="pagination">
-              <li className="page-item disabled">
-                <span className="page-link">Previous</span>
-              </li>
-              <li className="page-item active">
-                <span className="page-link">1</span>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">2</a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">3</a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">Next</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+          </div>
+        ))
       )}
     </div>
   )
