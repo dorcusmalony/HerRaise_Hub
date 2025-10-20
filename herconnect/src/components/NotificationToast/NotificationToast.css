@@ -46,7 +46,7 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #999;
+  color: #510cf3;
   padding: 0;
   width: 24px;
   height: 24px;
@@ -56,11 +56,11 @@
 }
 
 .notification-close:hover {
-  color: #333;
+  color: #490449e7;
 }
 
 .notification-body {
   font-size: 13px;
-  color: #666;
+  color: #111ee0;
   line-height: 1.4;
 }

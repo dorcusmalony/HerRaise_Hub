@@ -81,11 +81,11 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
             onChange={(e) => setFormData({...formData, type: e.target.value})}
             className="form-select"
           >
-            <option value="discussion">💬 Discussion</option>
-            <option value="question">❓ Question</option>
-            <option value="project">📁 Project Showcase</option>
-            <option value="essay">📝 Essay/Article</option>
-            <option value="video">🎥 Video</option>
+            <option value="discussion"> Discussion</option>
+            <option value="question"> Question</option>
+            <option value="project"> Project Showcase</option>
+            <option value="essay"> Essay/Article</option>
+            <option value="video"> Video</option>
           </select>
         </div>
 
