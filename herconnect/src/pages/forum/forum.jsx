@@ -213,13 +213,13 @@ export default function Forum() {
 
   const getPostTypeIcon = (type) => {
     const icons = {
-      project: '📁',
-      question: '❓',
-      essay: '📝',
-      video: '🎥',
-      discussion: '💬'
+      project: '',
+      question: '',
+      essay: '',
+      video: '',
+      discussion: ''
     }
-    return icons[type] || '💬'
+    return icons[type] || ''
   }
 
   const getPostTypeBadge = (type) => {
@@ -266,24 +266,23 @@ export default function Forum() {
   }
 
   return (
-    <div className={`mx-auto ${styles.container}`}>
+    <div className={styles.container}>
       {/* Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className={`d-flex justify-content-between align-items-center mb-4 ${styles.mbSmall}`}>
         <div>
-          <h2>🗨️ Discussion Forum</h2>
+          <h2 className={styles.heroTitle}>Discussion Forum</h2>
           <p className="text-muted mb-0">Share ideas, ask questions, and connect with peers</p>
         </div>
         <button 
           onClick={() => setShowCreateForm(true)}
-          className="btn text-white"
-          style={{ background: 'var(--brand-magenta)' }}
+          className={`btn text-white ${styles.brandButton}`}
         >
           + Create Post
         </button>
       </div>
 
       {/* Filter & Sort Bar */}
-      <div className="card mb-4">
+      <div className={`card mb-4 ${styles.mbSmall}`}>
         <div className="card-body">
           <div className="row g-3">
             {/* Filter by Type */}
@@ -328,7 +327,7 @@ export default function Forum() {
 
       {/* Posts List */}
       {posts.length === 0 ? (
-        <div className="card">
+        <div className={`card ${styles.mbSmall}`}>
           <div className="card-body text-center py-5">
             <h4 className="text-muted mb-3">No posts yet</h4>
             <p className="text-muted mb-4">
@@ -336,8 +335,7 @@ export default function Forum() {
             </p>
             <button 
               onClick={() => setShowCreateForm(true)}
-              className="btn text-white"
-              style={{ background: 'var(--brand-magenta)' }}
+              className={`btn text-white ${styles.brandButton}`}
             >
               Create First Post
             </button>
@@ -345,7 +343,7 @@ export default function Forum() {
         </div>
       ) : (
         posts.map(post => (
-          <div key={post.id} className="card mb-4 shadow-sm hover-shadow-lg transition">
+          <div key={post.id} className={`card mb-4 shadow-sm hover-shadow-lg transition ${styles.mbSmall}`}>
             <div className="card-body">
               <div className="d-flex gap-3">
                 {/* Author Avatar */}
@@ -446,7 +444,7 @@ export default function Forum() {
                     </button>
 
                     <span className="text-muted small ms-auto" title="Views">
-                      👁️ {post.views || 0}
+                       {post.views || 0}
                     </span>
                   </div>
 
