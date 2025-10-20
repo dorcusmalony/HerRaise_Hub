@@ -84,7 +84,7 @@ export default function Home() {
             Our Mission
           </h2>
           <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            HerRaise Hub bridges the gap by connecting primary and high school girls with life-changing opportunities,
+            HerRaise Hub bridges the gap by connecting primary, high school girls and school dropout girls with life-changing opportunities,
             dedicated mentors, and supportive peer networks. Together, we expand opportunities for the next generation
             of women leaders to succeed.
           </p>

@@ -14,6 +14,7 @@ import Forum from './pages/forum/forum.jsx'
 import Dashboard from './pages/dashboard/dashboard.jsx'
 import Opportunities from './pages/Opportunities/Opportunities.jsx'
 import SafetyReport from './pages/SafetyReport/SafetyReport'
+import SafetyButton from './components/SafetyButton/SafetyButton'
 import { initializeSocket, disconnectSocket } from './services/socketService'
 import './App.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
@@ -45,6 +46,7 @@ export default function App() {
     <div className="app-root">
       <Header />
       <NotificationToast />
+      <SafetyButton />
       <main className="container py-4">
         <Routes>
           <Route path="/" element={<Home />} />
