@@ -62,16 +62,16 @@ export default function Opportunities() {
   }
 
   return (
-    <div className={`mx-auto ${styles.container}`}>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className={styles.container}>
+      <div className={`d-flex justify-content-between align-items-center mb-4 ${styles.mbSmall}`}>
         <div>
-          <h2> Opportunities</h2>
+          <h2 className={styles.heroTitle}>Opportunities</h2>
           <p className="text-muted mb-0">Internships, scholarships, and events for young women</p>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="card mb-4">
+      <div className={`card mb-4 ${styles.mbSmall}`}>
         <div className="card-body">
           <label className="form-label small text-muted">Filter by type:</label>
           <div className="btn-group w-100" role="group">
@@ -126,7 +126,7 @@ export default function Opportunities() {
       <div className="row">
         {opportunities.length === 0 ? (
           <div className="col-12">
-            <div className="card">
+            <div className={`card ${styles.mbSmall}`}>
               <div className="card-body text-center py-5">
                 <h4 className="text-muted mb-3">No opportunities yet</h4>
                 <p className="text-muted">Check back soon for internships, scholarships, and events!</p>
@@ -136,7 +136,7 @@ export default function Opportunities() {
         ) : (
           opportunities.map(opp => (
             <div key={opp.id} className="col-12 col-md-6 col-lg-4 mb-3">
-              <div className="card h-100 hover-shadow">
+              <div className={`card h-100 hover-shadow ${styles.mbSmall}`}>
                 <div className="card-body">
                   <div className="d-flex justify-content-between align-items-start mb-2">
                     <h5 className="mb-0">
