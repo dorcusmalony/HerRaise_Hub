@@ -464,8 +464,7 @@ export default function Forum() {
                           <button
                             onClick={() => handleAddComment(post.id)}
                             disabled={!commentText[post.id]?.trim()}
-                            className="btn text-white"
-                            style={{ background: 'var(--brand-magenta)' }}
+                            className={`btn text-white ${styles.brandButton}`}
                           >
                             Post Comment
                           </button>

@@ -77,7 +77,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className={`mx-auto ${styles.container}`}>
+      <div className={styles.container}>
         <div className="text-center py-5">
           <div className="spinner-border" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -88,9 +88,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className={`mx-auto ${styles.container}`}>
+    <div className={styles.container}>
       {/* Welcome Section */}
-      <div className="mb-4">
+      <div className={styles.mbSmall}>
         <h2>Welcome back, {user?.name}! 👋</h2>
         <p className="text-muted">
           {user?.role === 'mentor' 
@@ -100,9 +100,9 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="row mb-4 g-3">
+      <div className={`row ${styles.mbSmall} g-3`}>
         <div className="col-md-3">
-          <div className="card text-center h-100">
+          <div className={`card text-center h-100 ${styles.mbSmall}`}>
             <div className="card-body">
               <h3 className="text-primary mb-1">{user?.totalPoints || 0}</h3>
               <small className="text-muted">Points</small>
@@ -110,7 +110,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card text-center h-100">
+          <div className={`card text-center h-100 ${styles.mbSmall}`}>
             <div className="card-body">
               <h3 className="text-success mb-1">Level {user?.level || 1}</h3>
               <small className="text-muted">Your Level</small>
@@ -118,7 +118,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card text-center h-100">
+          <div className={`card text-center h-100 ${styles.mbSmall}`}>
             <div className="card-body">
               <h3 className="text-info mb-1">{recentPosts.length}</h3>
               <small className="text-muted">My Posts</small>
@@ -126,7 +126,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card text-center h-100">
+          <div className={`card text-center h-100 ${styles.mbSmall}`}>
             <div className="card-body">
               <h3 className="text-warning mb-1">0</h3>
               <small className="text-muted">Saved</small>
@@ -139,16 +139,16 @@ export default function Dashboard() {
       <div className="row g-4">
         {/* Forum Section */}
         <div className="col-lg-8">
-          <div className="card h-100">
+          <div className={`card h-100 ${styles.mbSmall}`}>
             <div className="card-header d-flex justify-content-between align-items-center">
               <h5 className="mb-0">🗨️ Recent Discussions</h5>
-              <Link to="/forum" className="btn btn-sm btn-primary">View All</Link>
+              <Link to="/forum" className={`btn btn-sm btn-primary ${styles.footerButton}`}>View All</Link>
             </div>
             <div className="card-body">
               {recentPosts.length === 0 ? (
                 <div className="text-center text-muted py-4">
                   <p className="mb-3">No recent discussions yet.</p>
-                  <Link to="/forum/create" className="btn btn-outline-primary">
+                  <Link to="/forum/create" className={`btn btn-outline-primary ${styles.brandButton}`}>
                     Start a Discussion
                   </Link>
                 </div>
@@ -179,7 +179,7 @@ export default function Dashboard() {
 
         {/* Quick Links Sidebar */}
         <div className="col-lg-4">
-          <div className="card mb-3">
+          <div className={`card mb-3 ${styles.mbSmall}`}>
             <div className="card-header">
               <h6 className="mb-0">Quick Actions</h6>
             </div>
@@ -201,13 +201,13 @@ export default function Dashboard() {
 
           {/* Mentor Badge (if user is mentor) */}
           {user?.role === 'mentor' && (
-            <div className="card border-primary">
+            <div className={`card border-primary ${styles.mbSmall}`}>
               <div className="card-body">
                 <h6 className="card-title">🌟 Mentor Dashboard</h6>
                 <p className="card-text small text-muted">
                   Access mentor-specific features and manage your mentees.
                 </p>
-                <Link to="/mentor/dashboard" className="btn btn-sm btn-primary w-100">
+                <Link to="/mentor/dashboard" className={`btn btn-sm btn-primary w-100 ${styles.brandButton}`}>
                   Go to Mentor Tools
                 </Link>
               </div>
@@ -217,10 +217,10 @@ export default function Dashboard() {
 
         {/* Opportunities Section */}
         <div className="col-md-6">
-          <div className="card h-100">
+          <div className={`card h-100 ${styles.mbSmall}`}>
             <div className="card-header d-flex justify-content-between align-items-center">
               <h5 className="mb-0">🎯 Latest Opportunities</h5>
-              <Link to="/opportunities" className="btn btn-sm btn-success">Browse</Link>
+              <Link to="/opportunities" className={`btn btn-sm btn-success ${styles.brandButton}`}>Browse</Link>
             </div>
             <div className="card-body">
               {latestOpportunities.length === 0 ? (
@@ -249,10 +249,10 @@ export default function Dashboard() {
 
         {/* Resources Section */}
         <div className="col-md-6">
-          <div className="card h-100">
+          <div className={`card h-100 ${styles.mbSmall}`}>
             <div className="card-header d-flex justify-content-between align-items-center">
               <h5 className="mb-0">📚 Recommended Resources</h5>
-              <Link to="/resources" className="btn btn-sm btn-info">View All</Link>
+              <Link to="/resources" className={`btn btn-sm btn-info ${styles.brandButton}`}>View All</Link>
             </div>
             <div className="card-body">
               <div className="list-group list-group-flush">
