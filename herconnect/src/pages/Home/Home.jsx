@@ -95,23 +95,23 @@ export default function Home() {
         <section className="mb-5">
           <div className="card border-0" style={{ background: 'linear-gradient(135deg, #E84393 0%, #c33764 100%)' }}>
             <div className="card-body text-white p-5 text-center">
-              <h2 className="display-6 fw-bold mb-4">{t('why_join_herraise')}</h2>
+              <h2 className="display-6 fw-bold mb-4">{t('why join herraise')}</h2>
               <div className="row g-4 text-start">
                 <div className="col-md-6">
                   <div className="d-flex align-items-start gap-3">
                     <div className="fs-3">✨</div>
                     <div>
-                      <h5 className="fw-bold">{t('build_your_network')}</h5>
-                      <p className="mb-0">{t('build_your_network_desc')}</p>
+                      <h5 className="fw-bold">{t('build your network')}</h5>
+                      <p className="mb-0">{t('build your network')}</p>
                     </div>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="d-flex align-items-start gap-3">
-                    <div className="fs-3">💪</div>
+                    <div className="fs-3"></div>
                     <div>
-                      <h5 className="fw-bold">{t('develop_your_skills')}</h5>
-                      <p className="mb-0">{t('develop_your_skills_desc')}</p>
+                      <h5 className="fw-bold">{t('develop your skills')}</h5>
+                      <p className="mb-0">{t('develop your skills')}</p>
                     </div>
                   </div>
                 </div>
@@ -120,16 +120,16 @@ export default function Home() {
                     <div className="fs-3">🎓</div>
                     <div>
                       <h5 className="fw-bold">{t('unlock_opportunities')}</h5>
-                      <p className="mb-0">{t('unlock_opportunities_desc')}</p>
+                      <p className="mb-0">{t('unlock_opportunities')}</p>
                     </div>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="d-flex align-items-start gap-3">
-                    <div className="fs-3">🤝</div>
+                    <div className="fs-3"></div>
                     <div>
-                      <h5 className="fw-bold">{t('join_a_supportive_community')}</h5>
-                      <p className="mb-0">{t('join_a_supportive_community_desc')}</p>
+                      <h5 className="fw-bold">{t('Join our supportive community')}</h5>
+                      <p className="mb-0">{t('Join')}</p>
                     </div>
                   </div>
                 </div>
@@ -145,27 +145,27 @@ export default function Home() {
 
         {/* How It Works */}
         <section className="mb-5">
-          <h2 className="text-center fw-bold mb-5">{t('how_it_works')}</h2>
+          <h2 className="text-center fw-bold mb-5">{t('how it works')}</h2>
           <div className="row g-4">
             <div className="col-md-3 text-center">
               <div className="mb-3" style={{ fontSize: '2.5rem' }}>1️⃣</div>
               <h5 className="fw-bold">{t('sign_up')}</h5>
-              <p className="text-muted small">{t('sign_up_desc')}</p>
+              <p className="text-muted small">{t('signup')}</p>
             </div>
             <div className="col-md-3 text-center">
               <div className="mb-3" style={{ fontSize: '2.5rem' }}>2️⃣</div>
-              <h5 className="fw-bold">{t('build_your_profile')}</h5>
-              <p className="text-muted small">{t('build_your_profile_desc')}</p>
+              <h5 className="fw-bold">{t('build your profile')}</h5>
+              <p className="text-muted small">{t('build your profile')}</p>
             </div>
             <div className="col-md-3 text-center">
               <div className="mb-3" style={{ fontSize: '2.5rem' }}>3️⃣</div>
               <h5 className="fw-bold">{t('connect_learn')}</h5>
-              <p className="text-muted small">{t('connect_learn_desc')}</p>
+              <p className="text-muted small">{t('connect learn')}</p>
             </div>
             <div className="col-md-3 text-center">
               <div className="mb-3" style={{ fontSize: '2.5rem' }}>4️⃣</div>
-              <h5 className="fw-bold">{t('achieve_your_goals')}</h5>
-              <p className="text-muted small">{t('achieve_your_goals_desc')}</p>
+              <h5 className="fw-bold">{t('Achieve your goals')}</h5>
+              <p className="text-muted small">{t('Achieve your goals')}</p>
             </div>
           </div>
         </section>
@@ -174,7 +174,7 @@ export default function Home() {
         <section className="text-center mb-5">
           <div className="card border-0 bg-light">
             <div className="card-body p-5">
-              <h2 className="display-6 fw-bold mb-3">{t('ready_to_start_your_journey')}</h2>
+              <h2 className="display-6 fw-bold mb-3">{t(' Star your journey')}</h2>
               <p className="lead text-muted mb-4">
                 {t('join_thousands_of_young_women')}
               </p>
@@ -187,7 +187,7 @@ export default function Home() {
                 </Link>
               </div>
               <p className="text-muted small mt-3 mb-0">
-                {t('already_have_an_account')} <Link to="/login">{t('login_here')}</Link>
+                {t('already_have_an_account')} <Link to="/login">{t('login here')}</Link>
               </p>
             </div>
           </div>

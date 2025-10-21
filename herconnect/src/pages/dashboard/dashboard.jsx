@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styles from '../../styles/Pages.module.css'
+import styles from './dashboard.module.css'
 
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -88,11 +88,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.dashboardContainer}>
       {/* Welcome Section */}
-      <div className={styles.mbSmall}>
-        <h2>Welcome back, {user?.name}! 👋</h2>
-        <p className="text-muted">
+      <div className={styles.welcomeSection}>
+        <h1 className={styles.welcomeTitle}>Welcome back, {user?.name}! </h1>
+        <p className={styles.welcomeSubtitle}>
           {user?.role === 'mentor' 
             ? 'Ready to inspire and guide young women today?' 
             : 'Discover opportunities and connect with mentors!'}
@@ -100,175 +100,157 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className={`row ${styles.mbSmall} g-3`}>
-        <div className="col-md-3">
-          <div className={`card text-center h-100 ${styles.mbSmall}`}>
-            <div className="card-body">
-              <h3 className="text-primary mb-1">{user?.totalPoints || 0}</h3>
-              <small className="text-muted">Points</small>
-            </div>
-          </div>
+      <div className={styles.statsGrid}>
+        <div className={`${styles.statCard} ${styles.purple}`}>
+          <span className={styles.statIcon}></span>
+          <h3 className={styles.statValue}>{user?.totalPoints || 0}</h3>
+          <p className={styles.statLabel}>Points Earned</p>
         </div>
-        <div className="col-md-3">
-          <div className={`card text-center h-100 ${styles.mbSmall}`}>
-            <div className="card-body">
-              <h3 className="text-success mb-1">Level {user?.level || 1}</h3>
-              <small className="text-muted">Your Level</small>
-            </div>
-          </div>
+        <div className={`${styles.statCard} ${styles.blue}`}>
+          <span className={styles.statIcon}>⭐</span>
+          <h3 className={styles.statValue}>Level {user?.level || 1}</h3>
+          <p className={styles.statLabel}>Your Level</p>
         </div>
-        <div className="col-md-3">
-          <div className={`card text-center h-100 ${styles.mbSmall}`}>
-            <div className="card-body">
-              <h3 className="text-info mb-1">{recentPosts.length}</h3>
-              <small className="text-muted">My Posts</small>
-            </div>
-          </div>
+        <div className={`${styles.statCard} ${styles.pink}`}>
+          <span className={styles.statIcon}></span>
+          <h3 className={styles.statValue}>{recentPosts.length}</h3>
+          <p className={styles.statLabel}>Forum Posts</p>
         </div>
-        <div className="col-md-3">
-          <div className={`card text-center h-100 ${styles.mbSmall}`}>
-            <div className="card-body">
-              <h3 className="text-warning mb-1">0</h3>
-              <small className="text-muted">Saved</small>
-            </div>
-          </div>
+        <div className={`${styles.statCard} ${styles.green}`}>
+          <span className={styles.statIcon}>💾</span>
+          <h3 className={styles.statValue}>0</h3>
+          <p className={styles.statLabel}>Saved Items</p>
         </div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="row g-4">
+      <div className={styles.contentGrid}>
         {/* Forum Section */}
-        <div className="col-lg-8">
-          <div className={`card h-100 ${styles.mbSmall}`}>
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">🗨️ Recent Discussions</h5>
-              <Link to="/forum" className={`btn btn-sm btn-primary ${styles.footerButton}`}>View All</Link>
-            </div>
-            <div className="card-body">
-              {recentPosts.length === 0 ? (
-                <div className="text-center text-muted py-4">
-                  <p className="mb-3">No recent discussions yet.</p>
-                  <Link to="/forum/create" className={`btn btn-outline-primary ${styles.brandButton}`}>
-                    Start a Discussion
-                  </Link>
-                </div>
-              ) : (
-                <div className="list-group list-group-flush">
-                  {recentPosts.map(post => (
-                    <Link 
-                      key={post.id} 
-                      to={`/forum/post/${post.id}`}
-                      className="list-group-item list-group-item-action"
-                    >
-                      <div className="d-flex justify-content-between align-items-start">
-                        <div className="flex-grow-1">
-                          <h6 className="mb-1">{post.title}</h6>
-                          <small className="text-muted">
-                            by {post.author?.name} • {new Date(post.createdAt).toLocaleDateString()}
-                          </small>
-                        </div>
-                        <span className="badge bg-primary">{post.type}</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+        <div className={`${styles.featureCard} ${styles.purple}`}>
+          <div className={styles.cardHeader}>
+            <h3 className={styles.cardTitle}>💬 Recent Discussions</h3>
+            <Link to="/forum" className={styles.viewAllBtn}>View All</Link>
           </div>
-        </div>
-
-        {/* Quick Links Sidebar */}
-        <div className="col-lg-4">
-          <div className={`card mb-3 ${styles.mbSmall}`}>
-            <div className="card-header">
-              <h6 className="mb-0">Quick Actions</h6>
-            </div>
-            <div className="list-group list-group-flush">
-              <Link to="/profile" className="list-group-item list-group-item-action">
-                👤 My Profile
-              </Link>
-              <Link to="/forum" className="list-group-item list-group-item-action">
-                🗨️ Forum
-              </Link>
-              <Link to="/opportunities" className="list-group-item list-group-item-action">
-                🎯 Opportunities
-              </Link>
-              <Link to="/resources" className="list-group-item list-group-item-action">
-                📚 Resources
-              </Link>
-            </div>
-          </div>
-
-          {/* Mentor Badge (if user is mentor) */}
-          {user?.role === 'mentor' && (
-            <div className={`card border-primary ${styles.mbSmall}`}>
-              <div className="card-body">
-                <h6 className="card-title">🌟 Mentor Dashboard</h6>
-                <p className="card-text small text-muted">
-                  Access mentor-specific features and manage your mentees.
-                </p>
-                <Link to="/mentor/dashboard" className={`btn btn-sm btn-primary w-100 ${styles.brandButton}`}>
-                  Go to Mentor Tools
+          <div className={styles.cardBody}>
+            {recentPosts.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}></div>
+                <h4 className={styles.emptyTitle}>No recent discussions yet</h4>
+                <p className={styles.emptyDescription}>Start engaging with the community!</p>
+                <Link to="/forum" className={styles.emptyAction}>
+                  Join Forum
                 </Link>
               </div>
-            </div>
-          )}
+            ) : (
+              <div>
+                {recentPosts.map(post => (
+                  <div key={post.id} className={styles.listItem}>
+                    <div className={styles.listItemHeader}>
+                      <div>
+                        <h6 className={styles.listItemTitle}>{post.title}</h6>
+                        <p className={styles.listItemMeta}>
+                          by {post.author?.name} • {new Date(post.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <span className={`${styles.listItemBadge} ${styles.purple}`}>{post.type}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
+        {/* Quick Actions Sidebar */}
+        <div className={styles.quickActions}>
+          <Link to="/profile" className={`${styles.actionCard} ${styles.purple}`}>
+            <span className={styles.actionIcon}></span>
+            <h4 className={styles.actionTitle}>My Profile</h4>
+            <p className={styles.actionDescription}>View and edit your profile</p>
+          </Link>
+          
+          <Link to="/forum" className={`${styles.actionCard} ${styles.blue}`}>
+            <span className={styles.actionIcon}></span>
+            <h4 className={styles.actionTitle}>Forum</h4>
+            <p className={styles.actionDescription}>Join discussions</p>
+          </Link>
+          
+          <Link to="/opportunities" className={`${styles.actionCard} ${styles.pink}`}>
+            <span className={styles.actionIcon}></span>
+            <h4 className={styles.actionTitle}>Opportunities</h4>
+            <p className={styles.actionDescription}>Find internships & scholarships</p>
+          </Link>
+          
+          <Link to="/resources" className={`${styles.actionCard} ${styles.green}`}>
+            <span className={styles.actionIcon}>📚</span>
+            <h4 className={styles.actionTitle}>Resources</h4>
+            <p className={styles.actionDescription}>Access learning materials</p>
+          </Link>
+          
+          {user?.role === 'mentor' && (
+            <Link to="/mentor/dashboard" className={`${styles.actionCard} ${styles.purple}`}>
+              <span className={styles.actionIcon}>🌟</span>
+              <h4 className={styles.actionTitle}>Mentor Tools</h4>
+              <p className={styles.actionDescription}>Manage your mentees</p>
+            </Link>
+          )}
+        </div>
+      </div>
+      
+      {/* Bottom Section */}
+      <div className={styles.bottomGrid}>
         {/* Opportunities Section */}
-        <div className="col-md-6">
-          <div className={`card h-100 ${styles.mbSmall}`}>
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">🎯 Latest Opportunities</h5>
-              <Link to="/opportunities" className={`btn btn-sm btn-success ${styles.brandButton}`}>Browse</Link>
-            </div>
-            <div className="card-body">
-              {latestOpportunities.length === 0 ? (
-                <div className="text-center text-muted py-4">
-                  <p className="mb-3">No opportunities posted yet.</p>
-                  <small>Check back soon for internships, scholarships, and events!</small>
-                </div>
-              ) : (
-                <div className="list-group list-group-flush">
-                  {latestOpportunities.map((opp, idx) => (
-                    <div key={idx} className="list-group-item">
-                      <div className="d-flex justify-content-between align-items-start">
-                        <div>
-                          <h6 className="mb-1">{opp.title}</h6>
-                          <small className="text-muted">{opp.organization}</small>
-                        </div>
-                        <span className="badge bg-success">{opp.type}</span>
+        <div className={`${styles.featureCard} ${styles.blue}`}>
+          <div className={styles.cardHeader}>
+            <h3 className={styles.cardTitle}> Latest Opportunities</h3>
+            <Link to="/opportunities" className={styles.viewAllBtn}>Browse All</Link>
+          </div>
+          <div className={styles.cardBody}>
+            {latestOpportunities.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}></div>
+                <h4 className={styles.emptyTitle}>No opportunities yet</h4>
+                <p className={styles.emptyDescription}>Check back soon for internships and scholarships!</p>
+                <Link to="/opportunities" className={styles.emptyAction}>
+                  Browse Opportunities
+                </Link>
+              </div>
+            ) : (
+              <div>
+                {latestOpportunities.map((opp, idx) => (
+                  <div key={idx} className={styles.listItem}>
+                    <div className={styles.listItemHeader}>
+                      <div>
+                        <h6 className={styles.listItemTitle}>{opp.title}</h6>
+                        <p className={styles.listItemMeta}>{opp.organization}</p>
                       </div>
+                      <span className={`${styles.listItemBadge} ${styles.blue}`}>{opp.type}</span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Resources Section */}
-        <div className="col-md-6">
-          <div className={`card h-100 ${styles.mbSmall}`}>
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">📚 Recommended Resources</h5>
-              <Link to="/resources" className={`btn btn-sm btn-info ${styles.brandButton}`}>View All</Link>
-            </div>
-            <div className="card-body">
-              <div className="list-group list-group-flush">
-                {recommendedResources.map((resource, idx) => (
-                  <a 
-                    key={idx} 
-                    href={resource.link}
-                    className="list-group-item list-group-item-action"
-                  >
-                    <div className="d-flex justify-content-between align-items-center">
-                      <span>{resource.title}</span>
-                      <span className="badge bg-light text-dark">{resource.type}</span>
+        <div className={`${styles.featureCard} ${styles.pink}`}>
+          <div className={styles.cardHeader}>
+            <h3 className={styles.cardTitle}>📚 Recommended Resources</h3>
+            <Link to="/resources" className={styles.viewAllBtn}>View All</Link>
+          </div>
+          <div className={styles.cardBody}>
+            <div>
+              {recommendedResources.map((resource, idx) => (
+                <div key={idx} className={styles.listItem}>
+                  <div className={styles.listItemHeader}>
+                    <div>
+                      <h6 className={styles.listItemTitle}>{resource.title}</h6>
                     </div>
-                  </a>
-                ))}
-              </div>
+                    <span className={`${styles.listItemBadge} ${styles.pink}`}>{resource.type}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
