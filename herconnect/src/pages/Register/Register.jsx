@@ -1,18 +1,20 @@
 // Try to POST to backend, fallback to simulated response on error
 	import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import ImageUpload from '../../components/ImageUpload/ImageUpload.jsx'
 import '../../styles/BootstrapVars.module.css'
 import styles from '../../styles/Pages.module.css'
 
 export default function Register(){
 	const navigate = useNavigate()
+	const { t, i18n } = useTranslation()
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
 		password: '',
 		role: 'mentee',
-		language: 'en',
+		language: i18n.language || 'en',
 		phoneNumber: '',
 		location: { city: '', state: '' },
 		dateOfBirth: '',
@@ -36,13 +38,18 @@ export default function Register(){
 		}
 	}
 
+	const handleLangSwitch = (lang) => {
+		i18n.changeLanguage(lang)
+		setForm(prev => ({ ...prev, language: lang }))
+	}
+
 	const validate = (role) => {
 		const err = {}
-		if (!form.name.trim()) err.name = 'Name required'
+		if (!form.name.trim()) err.name = t('name_required')
 		if (!form.email.trim()) err.email = 'Email required'
 		if (!form.password) err.password = 'Password required'
 		if (role === 'mentor') {
-			if (!form.educationLevel) err.educationLevel = 'Education level required for mentors'
+			if (!form.educationLevel) err.educationLevel = t('education_required')
 			if (!form.location.city.trim()) err.city = 'City required for mentors'
 		}
 		setErrors(err)
@@ -136,7 +143,7 @@ export default function Register(){
 				email: '',
 				password: '',
 				role: 'mentee',
-				language: 'en',
+				language: i18n.language || 'en',
 				phoneNumber: '',
 				location: { city: '', state: '' },
 				dateOfBirth: '',
@@ -164,70 +171,79 @@ export default function Register(){
 
 	return (
 		<div className={`mx-auto ${styles.container}`}>
-			<h3>Create account</h3>
+			{/* Language Switcher */}
+			<div className="mb-3 d-flex gap-2 align-items-center">
+				<span>{t('language')}:</span>
+				<button type="button" className={`btn btn-sm btn-outline-primary ${form.language === 'en' ? 'active' : ''}`} onClick={() => handleLangSwitch('en')}>
+					{t('english')}
+				</button>
+				<button type="button" className={`btn btn-sm btn-outline-primary ${form.language === 'ar' ? 'active' : ''}`} onClick={() => handleLangSwitch('ar')}>
+					{t('juba_arabic')}
+				</button>
+			</div>
+			<h3>{t('create_account')}</h3>
 			<form onSubmit={e => e.preventDefault()}>
 				{/* Profile Picture Upload */}
 				<ImageUpload 
 					onImageUpload={handleImageUpload}
 					currentImage={form.profilePicture}
-					label="Profile Picture (Optional)"
+					label={t('profile_picture_optional')}
 				/>
 
 				<div className="mb-2">
-					<label className="form-label">Name</label>
+					<label className="form-label">{t('name')}</label>
 					<input name="name" value={form.name} onChange={handleChange} className="form-control" autoComplete="name" />
 					{errors.name && <div className="text-danger small">{errors.name}</div>}
 				</div>
 
 				<div className="mb-2">
-					<label className="form-label">Email</label>
+					<label className="form-label">{t('email')}</label>
 					<input name="email" value={form.email} onChange={handleChange} className="form-control" autoComplete="email" />
 					{errors.email && <div className="text-danger small">{errors.email}</div>}
 				</div>
 
 				<div className="mb-2">
-					<label className="form-label">Password</label>
+					<label className="form-label">{t('password')}</label>
 					<input type="password" name="password" value={form.password} onChange={handleChange} className="form-control" autoComplete="new-password" />
 					{errors.password && <div className="text-danger small">{errors.password}</div>}
 				</div>
 
 				<div className="mb-3">
-					<label className="form-label">Phone number</label>
+					<label className="form-label">{t('phone_number')}</label>
 					<input 
 						type="tel"
 						name="phoneNumber" 
 						value={form.phoneNumber} 
 						onChange={handleChange} 
 						className="form-control" 
-						placeholder="+211 912 345 678"
+						placeholder={t('phone_placeholder')}
 						pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"
-						title="Enter a valid phone number (e.g., +211 912 345 678)"
+						title={t('phone_title')}
 						autoComplete="tel"
 					/>
-					<small className="text-muted">Include country code (e.g., +211 for South Sudan)</small>
+					<small className="text-muted">{t('phone_hint')}</small>
 				</div>
 
 				<div className="mb-3">
-					<label className="form-label">Preferred language</label>
+					<label className="form-label">{t('preferred_language')}</label>
 					<select name="language" value={form.language} onChange={handleChange} className="form-select" >
-						<option value="en">English</option>
-						<option value="ar">Arabic</option>
-						<option value="sw">Swahili</option>
+						<option value="en">{t('english')}</option>
+						<option value="ar">{t('juba_arabic')}</option>
 					</select>
 				</div>
 
 				<div className="mb-2">
-					<label className="form-label">City</label>
+					<label className="form-label">{t('city')}</label>
 					<input name="city" value={form.location.city} onChange={handleChange} className="form-control" autoComplete="address-level2" />
 					{errors.city && <div className="text-danger small">{errors.city}</div>}
 				</div>
 				<div className="mb-2">
-					<label className="form-label">State / Country</label>
+					<label className="form-label">{t('state_country')}</label>
 					<input name="state" value={form.location.state} onChange={handleChange} className="form-control" autoComplete="address-level1" />
 				</div>
 
 				<div className="mb-2">
-					<label className="form-label">Date of birth</label>
+					<label className="form-label">{t('date_of_birth')}</label>
 					<input 
 						type="date" 
 						name="dateOfBirth" 
@@ -236,47 +252,47 @@ export default function Register(){
 						className="form-control"
 						max={new Date().toISOString().split('T')[0]}
 					/>
-					<small className="text-muted">You must be at least 13 years old to register</small>
+					<small className="text-muted">{t('dob_hint')}</small>
 				</div>
 
 				<div className="mb-2">
-					<label className="form-label">Interests (comma separated)</label>
-					<input name="interests" value={form.interests} onChange={handleChange} className="form-control" placeholder="e.g. leadership, career development" />
+					<label className="form-label">{t('interests')}</label>
+					<input name="interests" value={form.interests} onChange={handleChange} className="form-control" placeholder={t('interests_placeholder')} />
 				</div>
 
 				<div className="mb-3">
-					<label className="form-label">Education level</label>
+					<label className="form-label">{t('education_level')}</label>
 					<select name="educationLevel" value={form.educationLevel} onChange={handleChange} className="form-select">
-						<option value="">Select...</option>
-						<option value="secondary">Secondary</option>
-						<option value="bachelor">Bachelor</option>
-						<option value="master">Master</option>
-						<option value="other">Other</option>
+						<option value="">{t('select')}</option>
+						<option value="secondary">{t('secondary')}</option>
+						<option value="bachelor">{t('bachelor')}</option>
+						<option value="master">{t('master')}</option>
+						<option value="other">{t('other')}</option>
 					</select>
 					{errors.educationLevel && <div className="text-danger small">{errors.educationLevel}</div>}
 				</div>
 
 				<div className="d-flex gap-2">
 					<button type="button" className="btn btn-outline-primary" onClick={() => handleSubmit('mentee')} disabled={submitting}>
-						{submitting ? 'Submitting…' : 'Join as Mentee'}
+						{submitting ? t('submitting') : t('join_as_mentee')}
 					</button>
 					<button type="button" className={`btn ${styles.brandButton}`} onClick={() => handleSubmit('mentor')} disabled={submitting}>
-						{submitting ? 'Submitting…' : 'Join as Mentor'}
+						{submitting ? t('submitting') : t('join_as_mentor')}
 					</button>
 				</div>
 			</form>
 
 			{(debugInfo || error) && (
 				<div className="mt-3 alert alert-warning">
-					{error && <div className="text-danger"><strong>Error:</strong> {error}</div>}
+					{error && <div className="text-danger"><strong>{t('error')}:</strong> {error}</div>}
 					{debugInfo && <div className="text-warning"><strong>Debug:</strong> {debugInfo}</div>}
-					<div className="small mt-1">Check browser console (F12) for more details.</div>
+					<div className="small mt-1">{t('check_console')}</div>
 				</div>
 			)}
 
 			{result && (
 				<div className="mt-4 alert alert-light">
-					<strong>Response:</strong>
+					<strong>{t('response')}:</strong>
 					<pre className={styles.responsePre}>{JSON.stringify(result, null, 2)}</pre>
 				</div>
 			)}
