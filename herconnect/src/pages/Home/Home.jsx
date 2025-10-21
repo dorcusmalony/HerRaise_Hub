@@ -78,7 +78,7 @@ export default function Home() {
             {/* Feature 3: Opportunities */}
             <div className="col-md-4">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
-                <div className="mb-3" style={{ fontSize: '3rem' }}>🎯</div>
+                <div className="mb-3" style={{ fontSize: '3rem' }}></div>
                 <h4 className="fw-bold mb-3">{t('discover_opportunities')}</h4>
                 <p className="text-muted">
                   {t('discover_opportunities_desc')}
