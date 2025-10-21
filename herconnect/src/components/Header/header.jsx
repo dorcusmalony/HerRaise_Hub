@@ -333,17 +333,6 @@ export default function Header() {
 				</div>
 			</div>
 
-			{/* Language Switcher */}
-			<div className="d-flex align-items-center gap-2 ms-auto me-3">
-				<span>{t('language')}:</span>
-				<button className={`btn btn-sm btn-outline-primary${i18n.language === 'en' ? ' active' : ''}`} onClick={() => i18n.changeLanguage('en')}>
-					{t('english')}
-				</button>
-				<button className={`btn btn-sm btn-outline-primary${i18n.language === 'ar' ? ' active' : ''}`} onClick={() => i18n.changeLanguage('ar')}>
-					{t('juba_arabic')}
-				</button>
-			</div>
-
 			{/* Add hover effect CSS */}
 			<style>{`
 				.hover-bg-light:hover {
