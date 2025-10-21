@@ -38,9 +38,9 @@ export default function Home() {
       <div className="container py-5">
         {/* What We Do Section */}
         <section className="text-center mb-5">
-          <h2 className="display-5 fw-bold mb-4">{t('what_we_do')}</h2>
+          <h2 className="display-5 fw-bold mb-4">{t('what we do')}</h2>
           <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            {t('what_we_do_desc')}
+            {t('what we doc')}
           </p>
         </section>
 
@@ -51,12 +51,12 @@ export default function Home() {
             <div className="col-md-4">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
                 <div className="mb-3" style={{ fontSize: '3rem' }}>👩‍🏫</div>
-                <h4 className="fw-bold mb-3">{t('find_a_mentor')}</h4>
+                <h4 className="fw-bold mb-3">{t('Find mentorship here')}</h4>
                 <p className="text-muted">
                   {t('find_a_mentor_desc')}
                 </p>
                 <Link to="/register" className="btn btn-outline-primary mt-auto">
-                  {t('get_started')}
+                  {t('get started')}
                 </Link>
               </div>
             </div>
@@ -65,7 +65,7 @@ export default function Home() {
             <div className="col-md-4">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
                 <div className="mb-3" style={{ fontSize: '3rem' }}>📚</div>
-                <h4 className="fw-bold mb-3">{t('access_resources')}</h4>
+                <h4 className="fw-bold mb-3">{t('access resources')}</h4>
                 <p className="text-muted">
                   {t('access_resources_desc')}
                 </p>
@@ -79,7 +79,7 @@ export default function Home() {
             <div className="col-md-4">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
                 <div className="mb-3" style={{ fontSize: '3rem' }}></div>
-                <h4 className="fw-bold mb-3">{t('discover_opportunities')}</h4>
+                <h4 className="fw-bold mb-3">{t('discover opportunities')}</h4>
                 <p className="text-muted">
                   {t('discover_opportunities_desc')}
                 </p>
@@ -136,7 +136,7 @@ export default function Home() {
               </div>
               <div className="mt-4">
                 <Link to="/register" className="btn btn-light btn-lg fw-bold">
-                  {t('join_our_community_today')}
+                  {t('join our community today')}
                 </Link>
               </div>
             </div>
@@ -159,7 +159,7 @@ export default function Home() {
             </div>
             <div className="col-md-3 text-center">
               <div className="mb-3" style={{ fontSize: '2.5rem' }}>3️⃣</div>
-              <h5 className="fw-bold">{t('connect_learn')}</h5>
+              <h5 className="fw-bold">{t('connect with peers')}</h5>
               <p className="text-muted small">{t('connect learn')}</p>
             </div>
             <div className="col-md-3 text-center">
