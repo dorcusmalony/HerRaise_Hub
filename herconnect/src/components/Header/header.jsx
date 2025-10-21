@@ -4,7 +4,7 @@ import { disconnectSocket } from '../../services/socketService'
 import { useTranslation } from 'react-i18next'
 
 export default function Header() {
-	const { t, i18n } = useTranslation()
+	const { t } = useTranslation()
 	const logoUrl = new URL('../../images/her-logo.jpg', import.meta.url).href
 	const navigate = useNavigate()
 	const API = import.meta.env.VITE_API_URL || '/api'

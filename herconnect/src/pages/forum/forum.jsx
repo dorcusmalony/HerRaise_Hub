@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
-import styles from '../../styles/Pages.module.css'
+import styles from './forum.module.css'
 
 export default function Forum() {
   const { t } = useTranslation()
@@ -17,6 +17,7 @@ export default function Forum() {
   const [expandedPost, setExpandedPost] = useState(null)
   const [commentText, setCommentText] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
+  const [successMessage, setSuccessMessage] = useState('')
 
   // Load current user
   useEffect(() => {
@@ -116,6 +117,8 @@ export default function Forum() {
 
       if (response.ok) {
         setCommentText(prev => ({ ...prev, [postId]: '' }))
+        setSuccessMessage('Comment posted successfully!')
+        setTimeout(() => setSuccessMessage(''), 3000)
         fetchPosts()
       }
     } catch (error) {
@@ -224,17 +227,6 @@ export default function Forum() {
     return icons[type] || ''
   }
 
-  const getPostTypeBadge = (type) => {
-    const badges = {
-      project: 'primary',
-      question: 'warning',
-      essay: 'info',
-      video: 'danger',
-      discussion: 'success'
-    }
-    return badges[type] || 'secondary'
-  }
-
   if (loading) {
     return (
       <div className="text-center py-5">
@@ -246,78 +238,82 @@ export default function Forum() {
   }
 
   return (
-    <div className={styles.container}>
-      {/* Header */}
-      <div className={`d-flex justify-content-between align-items-center mb-4 ${styles.mbSmall}`}>
-        <div>
-          <h2 className={styles.heroTitle}>{t('discussion_forum')}</h2>
-          <p className="text-muted mb-0">{t('be_first')}</p>
+    <div className={styles.forumContainer}>
+      {/* Success Message */}
+      {successMessage && (
+        <div className={styles.successMessage}>
+          ✅ {successMessage}
         </div>
-        {/* Always show Create Post button */}
-        <button 
-          onClick={() => setShowCreateForm(true)}
-          className={`btn text-white ${styles.brandButton}`}
-        >
-          + {t('create_post')}
-        </button>
-      </div>
-
-      {/* Filter & Sort Bar */}
-      <div className={`card mb-4 ${styles.mbSmall}`}>
-        <div className="card-body">
-          <div className="row g-3">
-            {/* Filter by Type */}
-            <div className="col-md-6">
-              <label className="form-label small text-muted">{t('filter_by')}:</label>
-              <div className="btn-group w-100" role="group">
-                {['all', 'discussion', 'project', 'question'].map(f => (
-                  <div key={f}>
-                    <input 
-                      type="radio" 
-                      className="btn-check" 
-                      name="filter" 
-                      id={`filter-${f}`}
-                      value={f}
-                      checked={filter === f}
-                      onChange={(e) => setFilter(e.target.value)}
-                    />
-                    <label className="btn btn-outline-primary" htmlFor={`filter-${f}`}>
-                      {f.charAt(0).toUpperCase() + f.slice(1)}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Sort By */}
-            <div className="col-md-6">
-              <label className="form-label small text-muted">{t('sort_by')}:</label>
-              <select 
-                className="form-select" 
-                value={sortBy} 
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="recent">{t('most_recent')}</option>
-                <option value="popular">{t('most_popular')}</option>
-                <option value="trending">{t('trending')}</option>
-              </select>
+      )}
+      {/* Professional Header */}
+      <div className={styles.forumHeader}>
+        <div className={styles.headerContent}>
+          <div className={styles.headerText}>
+            <h1 className={styles.forumTitle}>{t('discussion_forum')}</h1>
+            <p className={styles.forumSubtitle}>{t('be_first')}</p>
+            <div className={styles.forumStats}>
+              <span className={styles.statItem}>
+                💬 {posts.length} Posts
+              </span>
+              <span className={styles.statItem}>
+                👥 {new Set(posts.map(p => p.author?.id)).size} Contributors
+              </span>
             </div>
           </div>
+          <button 
+            onClick={() => setShowCreateForm(true)}
+            className={styles.createPostBtn}
+          >
+            ➕ {t('create_post')}
+          </button>
+        </div>
+      </div>
+
+      {/* Professional Filter & Sort Bar */}
+      <div className={styles.filterBar}>
+        <div className={styles.filterSection}>
+          <label className={styles.filterLabel}>{t('filter_by')}:</label>
+          <div className={styles.filterButtons}>
+            {['all', 'discussion', 'project', 'question'].map(f => (
+              <button
+                key={f}
+                className={`${styles.filterBtn} ${filter === f ? styles.active : ''}`}
+                onClick={() => setFilter(f)}
+              >
+                {f.charAt(0).toUpperCase() + f.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className={styles.sortSection}>
+          <label className={styles.sortLabel}>{t('sort_by')}:</label>
+          <select 
+            className={styles.sortSelect} 
+            value={sortBy} 
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="recent">{t('most_recent')}</option>
+            <option value="popular">{t('most_popular')}</option>
+            <option value="trending">{t('trending')}</option>
+          </select>
         </div>
       </div>
 
       {/* Create/Edit Post Form */}
       {(showCreateForm || editingPost) && (
-        <div className={`mx-auto ${styles.container}`}>
+        <div className={styles.postFormContainer}>
           <CreatePostForm
             editPost={editingPost}
             onSuccess={(post) => {
               if (editingPost) {
                 handleUpdatePost(post)
+                setSuccessMessage('Post updated successfully!')
               } else {
                 setShowCreateForm(false)
+                setSuccessMessage('Post created successfully!')
                 fetchPosts()
               }
+              setTimeout(() => setSuccessMessage(''), 3000)
             }}
             onCancel={() => {
               setShowCreateForm(false)
@@ -330,193 +326,176 @@ export default function Forum() {
       {/* Posts List */}
       {!showCreateForm && !editingPost && (
         posts.length === 0 ? (
-          <div className={`card ${styles.mbSmall}`}>
-            <div className="card-body text-center py-5">
-              <h4 className="text-muted mb-3">{t('no_posts_yet')}</h4>
-              <p className="text-muted mb-4">
-                {t('be_first_to_start')}
-              </p>
-              <button 
-                onClick={() => setShowCreateForm(true)}
-                className={`btn text-white ${styles.brandButton}`}
-              >
-                {t('create_first_post')}
-              </button>
-            </div>
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>💬</div>
+            <h4 className={styles.emptyTitle}>{t('no_posts_yet')}</h4>
+            <p className={styles.emptySubtitle}>{t('be_first_to_start')}</p>
+            <button 
+              onClick={() => setShowCreateForm(true)}
+              className={styles.createPostBtn}
+            >
+              ➕ {t('create_first_post')}
+            </button>
           </div>
         ) : (
-          posts.map(post => (
-            <div key={post.id} className={`card mb-4 shadow-sm hover-shadow-lg transition ${styles.mbSmall}`}>
-              <div className="card-body">
-                <div className="d-flex gap-3">
-                  {/* Author Avatar */}
-                  <img 
-                    src={post.author?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name || 'User')}&background=E84393&color=fff`}
-                    alt={post.author?.name}
-                    className="rounded-circle"
-                    style={{ width: 50, height: 50, objectFit: 'cover' }}
-                  />
-
-                  {/* Post Content */}
-                  <div className="flex-grow-1">
-                    <div className="d-flex justify-content-between align-items-start mb-2">
-                      <div className="flex-grow-1">
-                        <h5 className="mb-1">
-                          {getPostTypeIcon(post.type)} {post.title}
-                        </h5>
-                        <div className="d-flex align-items-center gap-2 text-muted small">
-                          <strong>{post.author?.name}</strong>
-                          <span>•</span>
-                          <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+          <div className={styles.postsList}>
+            {posts.map(post => (
+              <article key={post.id} className={styles.postCard}>
+                <div className={styles.postContent}>
+                  <div className={styles.postHeader}>
+                    <div className={styles.authorInfo}>
+                      <img 
+                        src={post.author?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name || 'User')}&background=8B5CF6&color=fff`}
+                        alt={post.author?.name}
+                        className={styles.authorAvatar}
+                      />
+                      <div className={styles.authorDetails}>
+                        <h6 className={styles.authorName}>{post.author?.name}</h6>
+                        <div className={styles.postMeta}>
+                          <span className={styles.postDate}>{new Date(post.createdAt).toLocaleDateString()}</span>
                           {post.createdAt !== post.updatedAt && (
-                            <>
-                              <span>•</span>
-                              <span className="fst-italic">{t('edited')}</span>
-                            </>
+                            <span className={styles.editedBadge}>• {t('edited')}</span>
                           )}
-                          <span className={`badge bg-${getPostTypeBadge(post.type)}`}>
-                            {post.type}
+                          <span className={`${styles.postTypeBadge} ${styles[post.type]}`}>
+                            {getPostTypeIcon(post.type)} {post.type}
                           </span>
                         </div>
                       </div>
-
-                      {/* Edit/Delete for post author or admin */}
-                      {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
-                        <div className="dropdown">
-                          <button 
-                            className="btn btn-sm btn-link text-muted p-1" 
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                              <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                            </svg>
-                          </button>
-                          <ul className="dropdown-menu dropdown-menu-end shadow">
-                            <li>
-                              <button className="dropdown-item" onClick={() => setEditingPost(post)}>
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2">
-                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                  <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                </svg>
-                                {t('edit_post')}
-                              </button>
-                            </li>
-                            <li>
-                              <button className="dropdown-item text-danger" onClick={() => handleDeletePost(post.id)}>
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2">
-                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                  <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                </svg>
-                                {t('delete_post')}
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
                     </div>
 
-                    <p className="text-muted mb-3" style={{ whiteSpace: 'pre-wrap' }}>{post.content}</p>
+                    {/* Edit/Delete for post author or admin */}
+                    {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
+                      <div className={styles.postActionsMenu}>
+                        <button 
+                          className={styles.menuTrigger} 
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          ⋯
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <button className="dropdown-item" onClick={() => setEditingPost(post)}>
+                              ✏️ {t('edit_post')}
+                            </button>
+                          </li>
+                          <li>
+                            <button className="dropdown-item text-danger" onClick={() => handleDeletePost(post.id)}>
+                              🗑️ {t('delete_post')}
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.postBody}>
+                    <h3 className={styles.postTitle}>{post.title}</h3>
+                    <p className={styles.postText}>{post.content}</p>
 
                     {/* Tags */}
                     {post.tags && post.tags.length > 0 && (
-                      <div className="d-flex flex-wrap gap-2 mb-3">
+                      <div className={styles.postTags}>
                         {post.tags.map((tag, index) => (
-                          <span key={index} className="badge bg-light text-dark border">
+                          <span key={index} className={styles.tag}>
                             #{tag}
                           </span>
                         ))}
                       </div>
                     )}
 
-                    {/* Action Buttons */}
-                    <div className="d-flex gap-4 align-items-center pt-3 border-top">
-                      <button 
-                        onClick={() => handleLikePost(post.id)}
-                        className={`btn btn-link btn-sm p-0 text-decoration-none ${post.likes?.some(l => l.userId === currentUser?.id) ? 'text-danger' : 'text-muted'}`}
-                        title={t('like_post')}
-                      >
-                        ❤️ <span className="ms-1">{post.likes?.length || 0}</span>
-                      </button>
+                  </div>
 
-                      <button 
-                        onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
-                        className="btn btn-link btn-sm p-0 text-decoration-none text-muted"
-                        title={t('view_comments')}
-                      >
-                        💬 <span className="ms-1">{post.ForumComments?.length || 0} {t('comments')}</span>
-                      </button>
+                  {/* Action Buttons */}
+                  <div className={styles.postActions}>
+                    <button 
+                      onClick={() => handleLikePost(post.id)}
+                      className={`${styles.actionBtn} ${styles.likeBtn} ${post.likes?.some(l => l.userId === currentUser?.id) ? styles.liked : ''}`}
+                      title={t('like_post')}
+                    >
+                      ❤️ <span className={styles.count}>{post.likes?.length || 0}</span>
+                      <span className={styles.label}>Likes</span>
+                    </button>
 
-                      <span className="text-muted small ms-auto" title={t('views')}>
-                         {post.views || 0}
-                      </span>
+                    <button 
+                      onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                      className={`${styles.actionBtn} ${styles.commentBtn}`}
+                      title={t('view_comments')}
+                    >
+                      💬 <span className={styles.count}>{post.ForumComments?.length || 0}</span>
+                      <span className={styles.label}>Comments</span>
+                    </button>
+
+                    <div className={styles.viewsCount}>
+                      👁️ <span>{post.views || 0} views</span>
                     </div>
+                  </div>
 
-                    {/* Comments Section */}
-                    {expandedPost === post.id && (
-                      <div className="mt-4 pt-4 border-top">
-                        {/* Add Comment Form */}
-                        <div className="mb-4">
+                  {/* Comments Section */}
+                  {expandedPost === post.id && (
+                    <div className={styles.commentsSection}>
+                      {/* Add Comment Form */}
+                      <div className={styles.commentForm}>
+                        <div className={styles.commentInputWrapper}>
+                          <img 
+                            src={currentUser?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'User')}&background=8B5CF6&color=fff`}
+                            alt={currentUser?.name}
+                            className={styles.commentAvatar}
+                          />
                           <textarea
                             value={commentText[post.id] || ''}
                             onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
                             placeholder={t('write_comment')}
                             rows="3"
-                            className="form-control mb-2"
+                            className={styles.commentTextarea}
                           />
-                          <div className="d-flex justify-content-end">
-                            <button
-                              onClick={() => handleAddComment(post.id)}
-                              disabled={!commentText[post.id]?.trim()}
-                              className={`btn text-white ${styles.brandButton}`}
-                            >
-                              {t('post_comment')}
-                            </button>
-                          </div>
                         </div>
-
-                        {/* Comments List */}
-                        {post.ForumComments && post.ForumComments.length > 0 ? (
-                          <div className="comments-section">
-                            <h6 className="mb-3 text-muted">
-                              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2">
-                                <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
-                              </svg>
-                              {t('comments')} ({post.ForumComments.length})
-                            </h6>
-                            {post.ForumComments
-                              .filter(c => !c.parentCommentId)
-                              .map(comment => (
-                                <CommentItem
-                                  key={comment.id}
-                                  comment={{
-                                    ...comment,
-                                    replies: post.ForumComments.filter(c => c.parentCommentId === comment.id)
-                                  }}
-                                  onReply={handleReplyToComment}
-                                  onUpdate={handleUpdateComment}
-                                  onLike={handleLikeComment}
-                                  onDelete={handleDeleteComment}
-                                  currentUser={currentUser}
-                                  postAuthorId={post.author?.id}
-                                />
-                              ))}
-                          </div>
-                        ) : (
-                          <div className="text-center py-4">
-                            <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16" className="text-muted mb-2">
-                              <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
-                            </svg>
-                            <p className="text-muted">{t('no_comments_yet')}</p>
-                          </div>
-                        )}
+                        <div className={styles.commentFormActions}>
+                          <button
+                            onClick={() => handleAddComment(post.id)}
+                            disabled={!commentText[post.id]?.trim()}
+                            className={styles.postCommentBtn}
+                          >
+                            📤 {t('post_comment')}
+                          </button>
+                        </div>
                       </div>
-                    )}
-                  </div>
+
+                      {/* Comments List */}
+                      {post.ForumComments && post.ForumComments.length > 0 ? (
+                        <div className={styles.commentsList}>
+                          <h6 className={styles.commentsHeader}>
+                            💬 {t('comments')} ({post.ForumComments.length})
+                          </h6>
+                          {post.ForumComments
+                            .filter(c => !c.parentCommentId)
+                            .map(comment => (
+                              <CommentItem
+                                key={comment.id}
+                                comment={{
+                                  ...comment,
+                                  replies: post.ForumComments.filter(c => c.parentCommentId === comment.id)
+                                }}
+                                onReply={handleReplyToComment}
+                                onUpdate={handleUpdateComment}
+                                onLike={handleLikeComment}
+                                onDelete={handleDeleteComment}
+                                currentUser={currentUser}
+                                postAuthorId={post.author?.id}
+                              />
+                            ))}
+                        </div>
+                      ) : (
+                        <div className={styles.noComments}>
+                          💬 <p>{t('no_comments_yet')}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
-            </div>
-          ))
+              </article>
+            ))}
+          </div>
         )
       )}
     </div>
