@@ -17,17 +17,17 @@ export default function Home() {
           <div className={styles.heroOverlay}>
             <div className="container text-center">
               <h1 className={`${styles.heroTitle} display-2 fw-bold text-white mb-4`}>
-                {t('empowering_title')}
+                {t('empowerment')}
               </h1>
               <p className="lead text-white mb-4 mx-auto" style={{ maxWidth: '700px', fontSize: '1.3rem' }}>
-                {t('empowering_subtitle')}
+                {t('empowerment')}
               </p>
               <div className="d-flex gap-3 justify-content-center flex-wrap">
                 <Link to="/register" className={`btn btn-lg ${styles.brandButton}`} style={{ fontSize: '1.2rem', padding: '0.8rem 2rem' }}>
-                  {t('join_hub')}
+                  {t('join hub')}
                 </Link>
                 <Link to="/about" className="btn btn-lg btn-outline-light" style={{ fontSize: '1.2rem', padding: '0.8rem 2rem' }}>
-                  {t('learn_more')}
+                  {t('learn more')}
                 </Link>
               </div>
             </div>
@@ -40,7 +40,7 @@ export default function Home() {
         <section className="text-center mb-5">
           <h2 className="display-5 fw-bold mb-4">{t('what we do')}</h2>
           <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            {t('what we doc')}
+            {t('What we do')}
           </p>
         </section>
 
@@ -53,7 +53,7 @@ export default function Home() {
                 <div className="mb-3" style={{ fontSize: '3rem' }}>👩‍🏫</div>
                 <h4 className="fw-bold mb-3">{t('Find mentorship here')}</h4>
                 <p className="text-muted">
-                  {t('find_a_mentor_desc')}
+                  {t('find mentor')}
                 </p>
                 <Link to="/register" className="btn btn-outline-primary mt-auto">
                   {t('get started')}
@@ -101,7 +101,7 @@ export default function Home() {
                   <div className="d-flex align-items-start gap-3">
                     <div className="fs-3">✨</div>
                     <div>
-                      <h5 className="fw-bold">{t('build your network')}</h5>
+                      <h5 className="fw-bold">{t('Build your network')}</h5>
                       <p className="mb-0">{t('build your network')}</p>
                     </div>
                   </div>
@@ -110,7 +110,7 @@ export default function Home() {
                   <div className="d-flex align-items-start gap-3">
                     <div className="fs-3"></div>
                     <div>
-                      <h5 className="fw-bold">{t('develop your skills')}</h5>
+                      <h5 className="fw-bold">{t('Develop your skills')}</h5>
                       <p className="mb-0">{t('develop your skills')}</p>
                     </div>
                   </div>
@@ -119,8 +119,8 @@ export default function Home() {
                   <div className="d-flex align-items-start gap-3">
                     <div className="fs-3">🎓</div>
                     <div>
-                      <h5 className="fw-bold">{t('unlock_opportunities')}</h5>
-                      <p className="mb-0">{t('unlock_opportunities')}</p>
+                      <h5 className="fw-bold">{t('Unlock opportunities')}</h5>
+                      <p className="mb-0">{t('Unlock opportunities')}</p>
                     </div>
                   </div>
                 </div>
