@@ -53,7 +53,7 @@ export default function Home() {
                 <div className="mb-3" style={{ fontSize: '3rem' }}>👩‍🏫</div>
                 <h4 className="fw-bold mb-3">{t('Find mentorship here')}</h4>
                 <p className="text-muted">
-                  {t('find mentor')}
+                  {t('Connect with Peers')}
                 </p>
                 <Link to="/register" className="btn btn-outline-primary mt-auto">
                   {t('get started')}
@@ -67,10 +67,10 @@ export default function Home() {
                 <div className="mb-3" style={{ fontSize: '3rem' }}>📚</div>
                 <h4 className="fw-bold mb-3">{t('access resources')}</h4>
                 <p className="text-muted">
-                  {t('access_resources_desc')}
+                  {t('access resources')}
                 </p>
                 <Link to="/resources" className="btn btn-outline-primary mt-auto">
-                  {t('browse_resources')}
+                  {t('browse resources')}
                 </Link>
               </div>
             </div>
@@ -81,10 +81,10 @@ export default function Home() {
                 <div className="mb-3" style={{ fontSize: '3rem' }}></div>
                 <h4 className="fw-bold mb-3">{t('discover opportunities')}</h4>
                 <p className="text-muted">
-                  {t('discover_opportunities_desc')}
+                  {t('discover opportunities')}
                 </p>
                 <Link to="/opportunities" className="btn btn-outline-primary mt-auto">
-                  {t('view_opportunities')}
+                  {t('view opportunities')}
                 </Link>
               </div>
             </div>
@@ -99,7 +99,7 @@ export default function Home() {
               <div className="row g-4 text-start">
                 <div className="col-md-6">
                   <div className="d-flex align-items-start gap-3">
-                    <div className="fs-3">✨</div>
+                    <div className="fs-3"></div>
                     <div>
                       <h5 className="fw-bold">{t('Build your network')}</h5>
                       <p className="mb-0">{t('build your network')}</p>
@@ -149,7 +149,7 @@ export default function Home() {
           <div className="row g-4">
             <div className="col-md-3 text-center">
               <div className="mb-3" style={{ fontSize: '2.5rem' }}>1️⃣</div>
-              <h5 className="fw-bold">{t('sign_up')}</h5>
+              <h5 className="fw-bold">{t('signup')}</h5>
               <p className="text-muted small">{t('signup')}</p>
             </div>
             <div className="col-md-3 text-center">
