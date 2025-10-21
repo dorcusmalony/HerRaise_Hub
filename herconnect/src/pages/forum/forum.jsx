@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
 import styles from '../../styles/Pages.module.css'
 
 export default function Forum() {
+  const { t } = useTranslation()
   const API = import.meta.env.VITE_API_URL || ''
   
   const [posts, setPosts] = useState([])
@@ -270,14 +272,14 @@ export default function Forum() {
       {/* Header */}
       <div className={`d-flex justify-content-between align-items-center mb-4 ${styles.mbSmall}`}>
         <div>
-          <h2 className={styles.heroTitle}>Discussion Forum</h2>
-          <p className="text-muted mb-0">Share ideas, ask questions, and connect with peers</p>
+          <h2 className={styles.heroTitle}>{t('discussion_forum')}</h2>
+          <p className="text-muted mb-0">{t('be_first')}</p>
         </div>
         <button 
           onClick={() => setShowCreateForm(true)}
           className={`btn text-white ${styles.brandButton}`}
         >
-          + Create Post
+          + {t('create_post')}
         </button>
       </div>
 
@@ -287,7 +289,7 @@ export default function Forum() {
           <div className="row g-3">
             {/* Filter by Type */}
             <div className="col-md-6">
-              <label className="form-label small text-muted">Filter by:</label>
+              <label className="form-label small text-muted">{t('filter_by')}:</label>
               <div className="btn-group w-100" role="group">
                 {['all', 'discussion', 'project', 'question'].map(f => (
                   <div key={f}>
@@ -310,15 +312,15 @@ export default function Forum() {
 
             {/* Sort By */}
             <div className="col-md-6">
-              <label className="form-label small text-muted">Sort by:</label>
+              <label className="form-label small text-muted">{t('sort_by')}:</label>
               <select 
                 className="form-select" 
                 value={sortBy} 
                 onChange={(e) => setSortBy(e.target.value)}
               >
-                <option value="recent">Most Recent</option>
-                <option value="popular">Most Popular</option>
-                <option value="trending">Trending</option>
+                <option value="recent">{t('most_recent')}</option>
+                <option value="popular">{t('most_popular')}</option>
+                <option value="trending">{t('trending')}</option>
               </select>
             </div>
           </div>
@@ -329,15 +331,15 @@ export default function Forum() {
       {posts.length === 0 ? (
         <div className={`card ${styles.mbSmall}`}>
           <div className="card-body text-center py-5">
-            <h4 className="text-muted mb-3">No posts yet</h4>
+            <h4 className="text-muted mb-3">{t('no_posts_yet')}</h4>
             <p className="text-muted mb-4">
-              Be the first to start a discussion!
+              {t('be_first_to_start')}
             </p>
             <button 
               onClick={() => setShowCreateForm(true)}
               className={`btn text-white ${styles.brandButton}`}
             >
-              Create First Post
+              {t('create_first_post')}
             </button>
           </div>
         </div>
@@ -368,7 +370,7 @@ export default function Forum() {
                         {post.createdAt !== post.updatedAt && (
                           <>
                             <span>•</span>
-                            <span className="fst-italic">Edited</span>
+                            <span className="fst-italic">{t('edited')}</span>
                           </>
                         )}
                         <span className={`badge bg-${getPostTypeBadge(post.type)}`}>
@@ -395,7 +397,7 @@ export default function Forum() {
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                               </svg>
-                              Edit Post
+                              {t('edit_post')}
                             </button>
                           </li>
                           <li>
@@ -404,7 +406,7 @@ export default function Forum() {
                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                                 <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
                               </svg>
-                              Delete Post
+                              {t('delete_post')}
                             </button>
                           </li>
                         </ul>
@@ -430,7 +432,7 @@ export default function Forum() {
                     <button 
                       onClick={() => handleLikePost(post.id)}
                       className={`btn btn-link btn-sm p-0 text-decoration-none ${post.likes?.some(l => l.userId === currentUser?.id) ? 'text-danger' : 'text-muted'}`}
-                      title="Like post"
+                      title={t('like_post')}
                     >
                       ❤️ <span className="ms-1">{post.likes?.length || 0}</span>
                     </button>
@@ -438,12 +440,12 @@ export default function Forum() {
                     <button 
                       onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
                       className="btn btn-link btn-sm p-0 text-decoration-none text-muted"
-                      title="View comments"
+                      title={t('view_comments')}
                     >
-                      💬 <span className="ms-1">{post.ForumComments?.length || 0} Comments</span>
+                      💬 <span className="ms-1">{post.ForumComments?.length || 0} {t('comments')}</span>
                     </button>
 
-                    <span className="text-muted small ms-auto" title="Views">
+                    <span className="text-muted small ms-auto" title={t('views')}>
                        {post.views || 0}
                     </span>
                   </div>
@@ -456,7 +458,7 @@ export default function Forum() {
                         <textarea
                           value={commentText[post.id] || ''}
                           onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
-                          placeholder="Write a thoughtful comment..."
+                          placeholder={t('write_comment')}
                           rows="3"
                           className="form-control mb-2"
                         />
@@ -466,7 +468,7 @@ export default function Forum() {
                             disabled={!commentText[post.id]?.trim()}
                             className={`btn text-white ${styles.brandButton}`}
                           >
-                            Post Comment
+                            {t('post_comment')}
                           </button>
                         </div>
                       </div>
@@ -478,7 +480,7 @@ export default function Forum() {
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="me-2">
                               <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
                             </svg>
-                            Comments ({post.ForumComments.length})
+                            {t('comments')} ({post.ForumComments.length})
                           </h6>
                           {post.ForumComments
                             .filter(c => !c.parentCommentId)
@@ -503,7 +505,7 @@ export default function Forum() {
                           <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16" className="text-muted mb-2">
                             <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
                           </svg>
-                          <p className="text-muted">No comments yet. Be the first to comment!</p>
+                          <p className="text-muted">{t('no_comments_yet')}</p>
                         </div>
                       )}
                     </div>

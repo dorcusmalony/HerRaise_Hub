@@ -1,0 +1,21 @@
+{
+  "welcome": "Welcome",
+  "login": "Login",
+  "register": "Register",
+  "forum": "Forum",
+  "opportunities": "Opportunities",
+  "resources": "Resources",
+  "profile": "Profile",
+  "logout": "Logout",
+  "post_comment": "Post Comment",
+  "create_post": "Create Post",
+  "discussion_forum": "Discussion Forum",
+  "no_posts": "No posts yet",
+  "be_first": "Be the first to start a discussion!",
+  "apply_now": "Apply Now",
+  "save": "Save",
+  "language": "Language",
+  "english": "English",
+  "juba_arabic": "Juba Arabic"
+  
+}
