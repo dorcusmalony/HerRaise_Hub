@@ -152,7 +152,7 @@ export default function Register(){
 				profilePicture: ''
 			})
 
-			// ✅ Redirect to login page after 2 seconds
+			//  Redirect to login page after 2 seconds
 			setTimeout(() => {
 				navigate('/login', { replace: true })
 			}, 2000)
