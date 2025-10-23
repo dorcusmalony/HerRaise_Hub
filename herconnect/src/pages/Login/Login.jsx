@@ -62,14 +62,14 @@ export default function Login() {
       }
 
       // Success!
-      console.log('✅ Login successful!', data)
+      console.log(' Login successful!', data)
       setResult(data)
 
       // Store token and user data
       if (data?.token) {
         try {
           localStorage.setItem('token', data.token)
-          console.log('✅ Token saved successfully')
+          console.log(' Token saved successfully')
           
           // Initialize WebSocket connection
           initializeSocket(data.token)
@@ -85,15 +85,15 @@ export default function Login() {
       if (data?.user) {
         try {
           localStorage.setItem('user', JSON.stringify(data.user))
-          console.log('✅ User data saved successfully:', data.user)
+          console.log(' User data saved successfully:', data.user)
           
-          // ✅ Dispatch event to update Header
+          //  Dispatch event to update Header
           window.dispatchEvent(new Event('user-login'))
         } catch (e) {
-          console.error('❌ Failed to save user data:', e)
+          console.error(' Failed to save user data:', e)
         }
       } else {
-        console.warn('⚠️ No user data in login response')
+        console.warn(' No user data in login response')
       }
 
       // Redirect based on role
@@ -183,7 +183,7 @@ export default function Login() {
       }
     }
 
-    if (!success) {
+    if (success) {
       setForgotStatus({ 
         ok: false, 
         message: lastError || 'Forgot password feature not available. Please contact support.' 
@@ -195,7 +195,7 @@ export default function Login() {
 
   return (
     <div className={`mx-auto ${styles.container}`}>
-      <h3>Login</h3>
+      
 
       <form onSubmit={handleLogin}>
         <div className="mb-2">
@@ -254,7 +254,7 @@ export default function Login() {
       {/* Show response like Register page */}
       {result && result.success && (
         <div className="mt-4 alert alert-success">
-          <strong>Success!</strong> Login successful. Redirecting to your profile...
+          <strong>Success!</strong> Login successfully
         </div>
       )}
 

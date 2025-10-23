@@ -51,8 +51,8 @@ export default function Profile() {
     console.log(' Checking auth token:', token ? 'Token exists' : 'No token found')
     
     if (!token) {
-      console.warn(' No token - redirecting to login')
-      navigate('/login')
+      console.warn(' No token - redirecting to home')
+      navigate('/')
       return
     }
 
@@ -107,7 +107,7 @@ export default function Profile() {
         console.warn(' Unauthorized - clearing auth and redirecting')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
-        navigate('/login')
+        navigate('/')
       } else {
         // Try to use cached data as fallback
         const cachedUser = localStorage.getItem('user')
@@ -290,7 +290,7 @@ export default function Profile() {
             </button>
             <button className="btn btn-outline-danger" onClick={() => {
               localStorage.clear()
-              navigate('/login')
+              navigate('/')
             }}>
                Logout
             </button>

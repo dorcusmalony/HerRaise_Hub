@@ -80,3 +80,9 @@
 /* Additional helpers if needed */
 .mtSmall { margin-top: 0.5rem; }
 .mbSmall { margin-bottom: 0.5rem; }
+
+.navLink {
+	/* First-letter uppercase for each word  */
+	text-transform: capitalize;
+	
+}

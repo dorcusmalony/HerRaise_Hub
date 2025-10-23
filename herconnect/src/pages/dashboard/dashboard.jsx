@@ -58,8 +58,8 @@ export default function Dashboard() {
     const userData = localStorage.getItem('user')
 
     if (!token) {
-      // Not logged in, redirect to login
-      navigate('/login', { replace: true })
+      // Not logged in, redirect to home page
+      navigate('/', { replace: true })
       return
     }
 
@@ -69,7 +69,7 @@ export default function Dashboard() {
       fetchDashboardData(token)
     } catch (e) {
       console.error('Error parsing user data:', e)
-      navigate('/login', { replace: true })
+      navigate('/', { replace: true })
     }
 
     setLoading(false)
