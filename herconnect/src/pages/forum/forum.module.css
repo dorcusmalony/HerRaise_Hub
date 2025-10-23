@@ -35,12 +35,12 @@
 
 /* Professional Header */
 .forumHeader {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
   border-radius: 16px;
   padding: 2.5rem;
   margin-bottom: 2rem;
   color: white;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
 }
 
 .headerContent {
@@ -221,14 +221,16 @@
 .postCard {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.1);
+  border-left: 4px solid #8B5CF6;
   transition: all 0.3s ease;
   overflow: hidden;
 }
 
 .postCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+  border-left-color: #EC4899;
 }
 
 .postContent {
@@ -297,8 +299,8 @@
 }
 
 .postTypeBadge.project {
-  background: #dbeafe;
-  color: #1e40af;
+  background: #f3e8ff;
+  color: #7C3AED;
 }
 
 .postTypeBadge.question {
@@ -352,12 +354,65 @@
 }
 
 .tag {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: linear-gradient(135deg, #f3e8ff 0%, #fdf2f8 100%);
+  color: #7C3AED;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.875rem;
   font-weight: 500;
+  border: 1px solid #e9d5ff;
+}
+
+/* Attachments */
+.attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.attachment {
+  display: flex;
+  align-items: center;
+}
+
+.attachmentImage {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.attachmentVideo {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.attachmentLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 2px solid #8B5CF6;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #8B5CF6;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.attachmentLink:hover {
+  background: #8B5CF6;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
 /* Post Actions */
@@ -389,12 +444,12 @@
 }
 
 .likeBtn.liked {
-  color: #dc2626;
-  background: #fef2f2;
+  color: #EC4899;
+  background: #fdf2f8;
 }
 
 .likeBtn.liked:hover {
-  background: #fee2e2;
+  background: #fce7f3;
 }
 
 .count {
@@ -436,7 +491,7 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #8B5CF6;
+  border: 2px solid #EC4899;
   flex-shrink: 0;
 }
 
@@ -461,7 +516,7 @@
 }
 
 .postCommentBtn {
-  background: #8B5CF6;
+  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -472,11 +527,13 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
 }
 
 .postCommentBtn:hover:not(:disabled) {
-  background: #7C3AED;
+  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 .postCommentBtn:disabled {

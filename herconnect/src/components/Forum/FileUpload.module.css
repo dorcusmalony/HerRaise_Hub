@@ -1,0 +1,112 @@
+/* File Upload Container */
+.uploadContainer {
+  margin: 1rem 0;
+}
+
+.dropZone {
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.dropZone:hover {
+  border-color: #8B5CF6;
+  background: #f8f6ff;
+}
+
+.dropZone.dragActive {
+  border-color: #8B5CF6;
+  background: linear-gradient(135deg, #f3e8ff 0%, #fdf2f8 100%);
+  transform: scale(1.02);
+}
+
+.dropZone.uploading {
+  border-color: #10B981;
+  background: #f0fdf4;
+  cursor: not-allowed;
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadLabel {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+}
+
+.uploadPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.uploadIcon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+.uploadText {
+  font-size: 1.1rem;
+  color: #374151;
+  margin: 0;
+}
+
+.uploadText strong {
+  color: #8B5CF6;
+}
+
+.uploadHint {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.uploadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #8B5CF6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.uploadingState p {
+  margin: 0;
+  color: #10B981;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dropZone {
+    padding: 1.5rem;
+  }
+  
+  .uploadIcon {
+    font-size: 2.5rem;
+  }
+  
+  .uploadText {
+    font-size: 1rem;
+  }
+}

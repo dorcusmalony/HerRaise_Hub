@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import FileUpload from './FileUpload'
+import styles from './CreatePostForm.module.css'
 
 export default function CreatePostForm({ onSuccess, onCancel, editPost = null }) {
   const navigate = useNavigate()
@@ -9,7 +11,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
     title: editPost?.title || '',
     content: editPost?.content || '',
     type: editPost?.type || 'discussion',
-    tags: editPost?.tags?.join(', ') || ''
+    tags: editPost?.tags?.join(', ') || '',
+    attachments: editPost?.attachments || []
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
@@ -41,7 +44,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
           title: formData.title,
           content: formData.content,
           type: formData.type,
-          tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+          tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+          attachments: formData.attachments
         })
       })
 
@@ -65,21 +69,21 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card shadow-sm">
-      <div className="card-body p-4">
-        <h3 className="mb-4">{editPost ? 'Edit Post' : 'Create New Post'}</h3>
+    <form onSubmit={handleSubmit} className={styles.formContainer}>
+      <div className={styles.formBody}>
+        <h3 className={styles.formTitle}>{editPost ? 'Edit Post' : 'Create New Post'}</h3>
 
         {error && (
-          <div className="alert alert-danger">{error}</div>
+          <div className={styles.errorAlert}>{error}</div>
         )}
 
         {/* Post Type */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">Post Type</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Post Type</label>
           <select
             value={formData.type}
             onChange={(e) => setFormData({...formData, type: e.target.value})}
-            className="form-select"
+            className={styles.formSelect}
           >
             <option value="discussion"> Discussion</option>
             <option value="question"> Question</option>
@@ -90,8 +94,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
         </div>
 
         {/* Title */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">Title *</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Title *</label>
           <input
             type="text"
             value={formData.title}
@@ -99,55 +103,73 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
             required
             maxLength={200}
             placeholder="Enter a descriptive title..."
-            className="form-control"
+            className={styles.formInput}
           />
         </div>
 
         {/* Content */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">Content *</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Content *</label>
           <textarea
             value={formData.content}
             onChange={(e) => setFormData({...formData, content: e.target.value})}
             required
             rows="8"
             placeholder="Share your thoughts, questions, or ideas..."
-            className="form-control"
+            className={styles.formTextarea}
           />
-          <small className="text-muted">
+          <div className={styles.characterCount}>
             {formData.content.length} characters
-          </small>
+          </div>
         </div>
 
         {/* Tags */}
-        <div className="mb-4">
-          <label className="form-label fw-bold">Tags (comma separated)</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Tags (comma separated)</label>
           <input
             type="text"
             value={formData.tags}
             onChange={(e) => setFormData({...formData, tags: e.target.value})}
             placeholder="e.g., technology, education, leadership"
-            className="form-control"
+            className={styles.formInput}
           />
-          <small className="text-muted">
+          <div className={styles.formHint}>
             Add relevant tags to help others find your post
-          </small>
+          </div>
         </div>
 
+        {/* File Upload for Projects/Essays */}
+        {(formData.type === 'project' || formData.type === 'essay' || formData.type === 'video') && (
+          <div className={styles.uploadSection}>
+            <label className={styles.formLabel}>
+              {formData.type === 'project' ? 'Upload Project Files' : 
+               formData.type === 'essay' ? 'Upload Essay/Document' : 
+               'Upload Video'}
+            </label>
+            <FileUpload 
+              onFilesUploaded={(files) => setFormData({...formData, attachments: files})}
+            />
+            {formData.attachments.length > 0 && (
+              <div className={styles.uploadSuccess}>
+                ✅ {formData.attachments.length} file(s) uploaded
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Buttons */}
-        <div className="d-flex gap-2">
+        <div className={styles.formActions}>
           <button
             type="submit"
             disabled={submitting}
-            className="btn text-white"
-            style={{ background: 'var(--brand-magenta)' }}
+            className={styles.submitBtn}
           >
             {submitting ? 'Saving...' : editPost ? 'Update Post' : 'Submit Post'}
           </button>
           <button
             type="button"
             onClick={onCancel || (() => navigate('/forum'))}
-            className="btn btn-primary"
+            className={styles.cancelBtn}
           >
             Cancel
           </button>

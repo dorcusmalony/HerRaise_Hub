@@ -393,6 +393,40 @@ export default function Forum() {
                     <h3 className={styles.postTitle}>{post.title}</h3>
                     <p className={styles.postText}>{post.content}</p>
 
+                    {/* Attachments */}
+                    {post.attachments && post.attachments.length > 0 && (
+                      <div className={styles.attachments}>
+                        {post.attachments.map((file, index) => (
+                          <div key={index} className={styles.attachment}>
+                            {file.category === 'image' && (
+                              <img 
+                                src={file.url} 
+                                alt={file.originalName}
+                                className={styles.attachmentImage}
+                              />
+                            )}
+                            {file.category === 'video' && (
+                              <video 
+                                src={file.url} 
+                                controls 
+                                className={styles.attachmentVideo}
+                              />
+                            )}
+                            {file.category === 'document' && (
+                              <a 
+                                href={file.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className={styles.attachmentLink}
+                              >
+                                📄 {file.originalName}
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     {/* Tags */}
                     {post.tags && post.tags.length > 0 && (
                       <div className={styles.postTags}>

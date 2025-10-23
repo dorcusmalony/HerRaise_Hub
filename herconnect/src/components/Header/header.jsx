@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { disconnectSocket } from '../../services/socketService'
 import { useTranslation } from 'react-i18next'
+import styles from '../../styles/Pages.module.css' // <-- added
 
 export default function Header() {
 	const { t } = useTranslation()
@@ -136,11 +137,11 @@ export default function Header() {
 
 				{/* Navigation */}
 				<nav className="d-none d-md-flex align-items-center gap-4">
-					<Link to="/" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>{t('home')}</Link>
-					<Link to="/about" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>{t('about')}</Link>
-					<Link to="/forum" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>{t('forum')}</Link>
-					<Link to="/opportunities" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>{t('opportunities')}</Link>
-					<Link to="/resources" className="text-decoration-none" style={{color: 'var(--text-dark)'}}>{t('resources')}</Link>
+					<Link to="/" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('home')}</Link>
+					<Link to="/about" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('about')}</Link>
+					<Link to="/forum" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('forum')}</Link>
+					<Link to="/opportunities" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('opportunities')}</Link>
+					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('resources')}</Link>
 				</nav>
 
 				{/* Right Side: Notification + Avatar */}
