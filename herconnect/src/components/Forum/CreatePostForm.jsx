@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import FileUpload from './FileUpload'
 import styles from './CreatePostForm.module.css'
 
-export default function CreatePostForm({ onSuccess, onCancel, editPost = null }) {
+export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project' }) {
   const navigate = useNavigate()
   const API_URL = import.meta.env.VITE_API_URL || ''
   
   const [formData, setFormData] = useState({
     title: editPost?.title || '',
     content: editPost?.content || '',
-    type: editPost?.type || 'discussion',
+    type: editPost?.type || initialType,
     tags: editPost?.tags?.join(', ') || '',
     attachments: editPost?.attachments || []
   })
@@ -68,29 +68,62 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
     }
   }
 
+  const getAcceptedFileTypes = (type) => {
+    switch(type) {
+      case 'project':
+        return 'image/*,video/*,.pdf,.doc,.docx,.txt,.zip,.rar,.py,.js,.html,.css,.json'
+      case 'essay':
+        return '.pdf,.doc,.docx,.txt,.rtf'
+      case 'video':
+        return 'video/*,.mp4,.avi,.mov,.wmv,.ppt,.pptx'
+      default:
+        return 'image/*,video/*,.pdf,.doc,.docx,.txt'
+    }
+  }
+
+  const getContentPlaceholder = (type) => {
+    switch(type) {
+      case 'project':
+        return 'Describe your project: What did you build? What technologies did you use? What challenges did you face? What feedback are you looking for?'
+      case 'essay':
+        return 'Tell us about your essay: What topic did you explore? What are your main arguments? What feedback would help you improve?'
+      case 'video':
+        return 'Describe your video content: What is it about? Who is your target audience? What kind of feedback are you seeking?'
+      case 'question':
+        return 'Ask your question clearly: Provide context, what you\'ve tried, and what specific help you need...'
+      default:
+        return 'Share your thoughts, start a discussion, or ask for advice from the community...'
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className={styles.formContainer}>
       <div className={styles.formBody}>
-        <h3 className={styles.formTitle}>{editPost ? 'Edit Post' : 'Create New Post'}</h3>
+        <h3 className={styles.formTitle}>
+          {editPost ? '✏️ Edit Post' : '✨ Share Your Work'}
+        </h3>
+        <p className={styles.formSubtitle}>
+          💪 Showcase your projects, essays, or ideas to get feedback from peers and mentors
+        </p>
 
         {error && (
           <div className={styles.errorAlert}>{error}</div>
         )}
 
-        {/* Post Type */}
-        <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Post Type</label>
-          <select
-            value={formData.type}
-            onChange={(e) => setFormData({...formData, type: e.target.value})}
-            className={styles.formSelect}
-          >
-            <option value="discussion"> Discussion</option>
-            <option value="question"> Question</option>
-            <option value="project"> Project Showcase</option>
-            <option value="essay"> Essay/Article</option>
-            <option value="video"> Video</option>
-          </select>
+        {/* Post Type Display */}
+        <div className={styles.typeDisplay}>
+          <span className={styles.typeIcon}>
+            {formData.type === 'project' ? '🚀' :
+             formData.type === 'essay' ? '📝' :
+             formData.type === 'video' ? '🎥' :
+             formData.type === 'question' ? '❓' : '💬'}
+          </span>
+          <span className={styles.typeName}>
+            {formData.type === 'project' ? 'Project Showcase' :
+             formData.type === 'essay' ? 'Essay Upload' :
+             formData.type === 'video' ? 'Video Upload' :
+             formData.type === 'question' ? 'Ask Question' : 'Discussion'}
+          </span>
         </div>
 
         {/* Title */}
@@ -107,15 +140,15 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
           />
         </div>
 
-        {/* Content */}
+        {/* Enhanced Content */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Content *</label>
+          <label className={styles.formLabel}>Description *</label>
           <textarea
             value={formData.content}
             onChange={(e) => setFormData({...formData, content: e.target.value})}
             required
             rows="8"
-            placeholder="Share your thoughts, questions, or ideas..."
+            placeholder={getContentPlaceholder(formData.type)}
             className={styles.formTextarea}
           />
           <div className={styles.characterCount}>
@@ -138,20 +171,21 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null })
           </div>
         </div>
 
-        {/* File Upload for Projects/Essays */}
+        {/* Upload Section - Only for specific types */}
         {(formData.type === 'project' || formData.type === 'essay' || formData.type === 'video') && (
           <div className={styles.uploadSection}>
             <label className={styles.formLabel}>
-              {formData.type === 'project' ? 'Upload Project Files' : 
-               formData.type === 'essay' ? 'Upload Essay/Document' : 
-               'Upload Video'}
+              {formData.type === 'video' ? '🎥 Upload Video *' :
+               formData.type === 'essay' ? '📝 Upload Essay/Document *' :
+               '🚀 Upload Project Files *'}
             </label>
             <FileUpload 
               onFilesUploaded={(files) => setFormData({...formData, attachments: files})}
+              acceptedTypes={getAcceptedFileTypes(formData.type)}
             />
             {formData.attachments.length > 0 && (
               <div className={styles.uploadSuccess}>
-                ✅ {formData.attachments.length} file(s) uploaded
+                ✅ {formData.attachments.length} file(s) ready to share!
               </div>
             )}
           </div>

@@ -67,6 +67,29 @@
   margin: 0 0 1rem 0;
 }
 
+.contributionHighlight {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.highlightItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.highlightIcon {
+  font-size: 1.1rem;
+}
+
 .forumStats {
   display: flex;
   gap: 2rem;
@@ -211,6 +234,19 @@
   margin-bottom: 2rem;
 }
 
+.emptyActions {
+  margin-bottom: 1.5rem;
+}
+
+.emptyTips {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 1rem;
+  color: #3e0e5a;
+  font-size: 0.9rem;
+}
+
 /* Posts List */
 .postsList {
   display: flex;
@@ -225,6 +261,21 @@
   border-left: 4px solid #8B5CF6;
   transition: all 0.3s ease;
   overflow: hidden;
+}
+
+.postCard[data-type="essay"] {
+  background: white;
+  border-left-color: #10B981;
+}
+
+.postCard[data-type="video"] {
+  background: white;
+  border-left-color: #F59E0B;
+}
+
+.postCard[data-type="project"] {
+  background: white;
+  border-left-color: #8B5CF6;
 }
 
 .postCard:hover {
@@ -295,7 +346,7 @@
 
 .postTypeBadge.discussion {
   background: #dcfce7;
-  color: #166534;
+  color: #3e0e5a;
 }
 
 .postTypeBadge.project {
@@ -305,25 +356,114 @@
 
 .postTypeBadge.question {
   background: #fef3c7;
-  color: #92400e;
+  color: #3e0e5a;
 }
 
 .postActionsMenu {
   position: relative;
 }
 
-.menuTrigger {
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editPostBtn,
+.deletePostBtn {
   background: none;
   border: none;
   padding: 0.5rem;
   border-radius: 6px;
   cursor: pointer;
-  color: #6b7280;
   transition: all 0.2s ease;
+  font-size: 1rem;
 }
 
-.menuTrigger:hover {
-  background: #f3f4f6;
+.editPostBtn {
+  color: #8B5CF6;
+}
+
+.editPostBtn:hover {
+  background: #f3e8ff;
+  transform: scale(1.1);
+}
+
+.deletePostBtn {
+  color: #EF4444;
+}
+
+.deletePostBtn:hover {
+  background: #fef2f2;
+  transform: scale(1.1);
+}
+
+.quickCreateSection {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.createButtons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.createBtn {
+  background: white;
+  color: #8B5CF6;
+  border: 2px solid #8B5CF6;
+  padding: 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.createBtn:hover {
+  background: #8B5CF6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.btnIcon {
+  font-size: 2rem;
+}
+
+.btnText {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btnCount {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+.typeDisplay {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.typeIcon {
+  font-size: 2rem;
+}
+
+.typeName {
+  font-size: 1.2rem;
+  font-weight: 600;
   color: #374151;
 }
 

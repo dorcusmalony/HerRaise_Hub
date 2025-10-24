@@ -9,23 +9,23 @@
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
-  background: #fafafa;
+  background: whitesmoke;
   cursor: pointer;
 }
 
 .dropZone:hover {
-  border-color: #8B5CF6;
+  border-color: purple;
   background: #f8f6ff;
 }
 
 .dropZone.dragActive {
-  border-color: #8B5CF6;
+  border-color: purple;
   background: linear-gradient(135deg, #f3e8ff 0%, #fdf2f8 100%);
   transform: scale(1.02);
 }
 
 .dropZone.uploading {
-  border-color: #10B981;
+  border-color: purple;
   background: #f0fdf4;
   cursor: not-allowed;
 }
@@ -55,17 +55,17 @@
 
 .uploadText {
   font-size: 1.1rem;
-  color: #374151;
+  color: purple;
   margin: 0;
 }
 
 .uploadText strong {
-  color: #8B5CF6;
+  color: purple;
 }
 
 .uploadHint {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: purple;
   margin: 0;
 }
 
@@ -80,7 +80,7 @@
   width: 2rem;
   height: 2rem;
   border: 3px solid #e5e7eb;
-  border-top: 3px solid #8B5CF6;
+  border-top: 3px solid purple;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -92,7 +92,7 @@
 
 .uploadingState p {
   margin: 0;
-  color: #10B981;
+  color: purple;
   font-weight: 600;
 }
 

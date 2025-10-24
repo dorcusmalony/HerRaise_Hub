@@ -14,7 +14,14 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.formSubtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
   margin: 0 0 1.5rem 0;
+  line-height: 1.5;
 }
 
 .errorAlert {
@@ -52,7 +59,7 @@
 .formInput:focus,
 .formTextarea:focus {
   outline: none;
-  border-color: #8B5CF6;
+  border-color: purple;
 }
 
 .formTextarea {
@@ -68,7 +75,7 @@
 
 .formHint {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: black;
   margin-top: 0.25rem;
 }
 
@@ -78,8 +85,70 @@
 
 .uploadSuccess {
   font-size: 0.875rem;
-  color: #10b981;
+  color: white;
   margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid purple;
+}
+
+.typeDisplay {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #e5e7eb;
+}
+
+.typeIcon {
+  font-size: 2rem;
+}
+
+.typeName {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: black;
+}
+
+.uploadedFiles {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.uploadedFile {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #d1fae5;
+  font-size: 0.8rem;
+}
+
+.fileIcon {
+  font-size: 1rem;
+}
+
+.fileName {
+  color: black;
+  font-weight: 500;
+}
+
+.uploadHint {
+  font-size: 0.875rem;
+  color: purple;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: #faf5ff;
+  border-radius: 6px;
+  border-left: 3px solid purple;
 }
 
 .formActions {
@@ -88,7 +157,7 @@
 }
 
 .submitBtn {
-  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  background: linear-gradient(135deg, purple 0%, purple 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -96,13 +165,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 2px 8px purple;
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+  background: linear-gradient(135deg, pur 0%, purple 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 12px purple;
 }
 
 .submitBtn:disabled {
@@ -112,7 +181,7 @@
 }
 
 .cancelBtn {
-  background: #6b7280;
+  background: purple;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -123,5 +192,5 @@
 }
 
 .cancelBtn:hover {
-  background: #4b5563;
+  background: white;
 }
