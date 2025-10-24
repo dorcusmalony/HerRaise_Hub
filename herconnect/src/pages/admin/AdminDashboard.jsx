@@ -9,7 +9,6 @@ export default function AdminDashboard() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
-
   
   // Data states
   const [posts, setPosts] = useState([])
@@ -26,6 +25,37 @@ export default function AdminDashboard() {
     url: '',
     category: 'career'
   })
+
+  const fetchAdminData = useCallback(async (token) => {
+    try {
+      const [postsRes, usersRes, resourcesRes] = await Promise.all([
+        fetch(`${API}/api/forum/posts?limit=50`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }),
+        fetch(`${API}/api/admin/users`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }),
+        fetch(`${API}/api/resources`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+      ])
+
+      if (postsRes.ok) {
+        const data = await postsRes.json()
+        setPosts(data.posts || [])
+      }
+      if (usersRes.ok) {
+        const data = await usersRes.json()
+        setUsers(data.users || [])
+      }
+      if (resourcesRes.ok) {
+        const data = await resourcesRes.json()
+        setResources(data.resources || [])
+      }
+    } catch (error) {
+      console.error('Error fetching admin data:', error)
+    }
+  }, [API])
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -50,40 +80,6 @@ export default function AdminDashboard() {
 
     setLoading(false)
   }, [navigate, fetchAdminData])
-
-  const fetchAdminData = useCallback(async (token) => {
-    try {
-      // Fetch posts
-      const postsRes = await fetch(`${API}/api/forum/posts?limit=50`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      if (postsRes.ok) {
-        const data = await postsRes.json()
-        setPosts(data.posts || [])
-      }
-
-      // Fetch users
-      const usersRes = await fetch(`${API}/api/admin/users`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      if (usersRes.ok) {
-        const data = await usersRes.json()
-        setUsers(data.users || [])
-      }
-      
-      // Fetch resources
-      const resourcesRes = await fetch(`${API}/api/resources`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      if (resourcesRes.ok) {
-        const data = await resourcesRes.json()
-        setResources(data.resources || [])
-      }
-
-    } catch (error) {
-      console.error('Error fetching admin data:', error)
-    }
-  }, [API])
 
   const handleDeletePost = async (postId) => {
     if (!confirm('Delete this post? This action cannot be undone.')) return
@@ -169,13 +165,11 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.adminContainer}>
-      {/* Header */}
       <div className={styles.adminHeader}>
-        <h1 className={styles.adminTitle}> Admin Dashboard</h1>
+        <h1 className={styles.adminTitle}>👑 Admin Dashboard</h1>
         <p className={styles.adminSubtitle}>Welcome back, {user?.name}</p>
       </div>
 
-      {/* Stats Cards */}
       <div className={styles.statsGrid}>
         <div className={`${styles.statCard} ${styles.purple}`}>
           <div className={styles.statIcon}>👥</div>
@@ -192,14 +186,8 @@ export default function AdminDashboard() {
           <div className={styles.statValue}>{resources.length}</div>
           <div className={styles.statLabel}>Resources</div>
         </div>
-        <div className={`${styles.statCard} ${styles.green}`}>
-          <div className={styles.statIcon}></div>
-          <div className={styles.statValue}>5</div>
-          <div className={styles.statLabel}>Opportunities</div>
-        </div>
       </div>
 
-      {/* Navigation Tabs */}
       <div className={styles.tabNav}>
         {['overview', 'posts', 'users', 'resources'].map(tab => (
           <button
@@ -212,16 +200,15 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* Tab Content */}
       <div className={styles.tabContent}>
         {activeTab === 'overview' && (
           <div className={styles.overviewGrid}>
             <div className={styles.overviewCard}>
-              <h3>Recent Activity</h3>
+              <h3>📊 Recent Activity</h3>
               <p>Latest posts and user registrations</p>
             </div>
             <div className={styles.overviewCard}>
-              <h3>System Health</h3>
+              <h3>✅ System Health</h3>
               <p>All systems operational</p>
             </div>
           </div>
@@ -229,7 +216,7 @@ export default function AdminDashboard() {
 
         {activeTab === 'posts' && (
           <div className={styles.postsSection}>
-            <h3>Forum Posts Management</h3>
+            <h3>💬 Forum Posts Management</h3>
             <div className={styles.postsList}>
               {posts.map(post => (
                 <div key={post.id} className={styles.postItem}>
@@ -242,7 +229,7 @@ export default function AdminDashboard() {
                     onClick={() => handleDeletePost(post.id)}
                     className={styles.deleteBtn}
                   >
-                     Delete
+                    🗑️ Delete
                   </button>
                 </div>
               ))}
@@ -252,7 +239,7 @@ export default function AdminDashboard() {
 
         {activeTab === 'users' && (
           <div className={styles.usersSection}>
-            <h3>Users Management</h3>
+            <h3>👥 Users Management</h3>
             <div className={styles.usersList}>
               {users.map(user => (
                 <div key={user.id} className={styles.userItem}>
@@ -270,7 +257,7 @@ export default function AdminDashboard() {
         {activeTab === 'resources' && (
           <div className={styles.resourcesSection}>
             <div className={styles.sectionHeader}>
-              <h3>Resources Management</h3>
+              <h3>📚 Resources Management</h3>
               <button 
                 onClick={() => setShowResourceForm(true)}
                 className={styles.addBtn}
@@ -301,7 +288,6 @@ export default function AdminDashboard() {
                   <option value="PDF">PDF</option>
                   <option value="Article">Article</option>
                   <option value="Video">Video</option>
-                  <option value="Presentation">Presentation</option>
                 </select>
                 <input
                   type="url"

@@ -18,6 +18,7 @@ export default function Forum() {
   const [commentText, setCommentText] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
+  const [selectedType, setSelectedType] = useState('project')
 
   // Load current user
   useEffect(() => {
@@ -242,21 +243,39 @@ export default function Forum() {
       {/* Success Message */}
       {successMessage && (
         <div className={styles.successMessage}>
-          ✅ {successMessage}
+           {successMessage}
         </div>
       )}
-      {/* Professional Header */}
+      {/* Enhanced Header for Content Contribution */}
       <div className={styles.forumHeader}>
         <div className={styles.headerContent}>
           <div className={styles.headerText}>
-            <h1 className={styles.forumTitle}>{t('discussion_forum')}</h1>
-            <p className={styles.forumSubtitle}>{t('be_first')}</p>
+            <h1 className={styles.forumTitle}> Share Your Work & Get Feedback</h1>
+            <p className={styles.forumSubtitle}>Upload projects, essays, videos and connect with peers and mentors</p>
+            <div className={styles.contributionHighlight}>
+              <div className={styles.highlightItem}>
+                <span className={styles.highlightIcon}></span>
+                <span>Share Projects</span>
+              </div>
+              <div className={styles.highlightItem}>
+                <span className={styles.highlightIcon}></span>
+                <span>Upload Essays</span>
+              </div>
+              <div className={styles.highlightItem}>
+                <span className={styles.highlightIcon}></span>
+                <span>upload Videos</span>
+              </div>
+              <div className={styles.highlightItem}>
+                <span className={styles.highlightIcon}></span>
+                
+              </div>
+            </div>
             <div className={styles.forumStats}>
               <span className={styles.statItem}>
-                💬 {posts.length} Posts
+                 {posts.length} Posts
               </span>
               <span className={styles.statItem}>
-                👥 {new Set(posts.map(p => p.author?.id)).size} Contributors
+                 {new Set(posts.map(p => p.author?.id)).size} Contributors
               </span>
             </div>
           </div>
@@ -264,23 +283,30 @@ export default function Forum() {
             onClick={() => setShowCreateForm(true)}
             className={styles.createPostBtn}
           >
-            ➕ {t('create_post')}
+            ✨ Share Your Work
           </button>
         </div>
       </div>
 
-      {/* Professional Filter & Sort Bar */}
+      {/* Enhanced Filter Bar */}
       <div className={styles.filterBar}>
         <div className={styles.filterSection}>
-          <label className={styles.filterLabel}>{t('filter_by')}:</label>
+          <label className={styles.filterLabel}>Browse by type:</label>
           <div className={styles.filterButtons}>
-            {['all', 'discussion', 'project', 'question'].map(f => (
+            {[
+              { key: 'all', label: ' All', desc: 'All posts' },
+              { key: 'project', label: ' Projects', desc: 'Code & creative work' },
+              { key: 'essay', label: ' Essays', desc: 'Written content' },
+              { key: 'video', label: ' Videos', desc: 'Video content' },
+              { key: 'question', label: ' Questions', desc: 'Need help' }
+            ].map(f => (
               <button
-                key={f}
-                className={`${styles.filterBtn} ${filter === f ? styles.active : ''}`}
-                onClick={() => setFilter(f)}
+                key={f.key}
+                className={`${styles.filterBtn} ${filter === f.key ? styles.active : ''}`}
+                onClick={() => setFilter(f.key)}
+                title={f.desc}
               >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
+                {f.label}
               </button>
             ))}
           </div>
@@ -292,8 +318,8 @@ export default function Forum() {
             value={sortBy} 
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="recent">{t('most_recent')}</option>
-            <option value="popular">{t('most_popular')}</option>
+            <option value="recent">{t('recent')}</option>
+            <option value="popular">{t('popular')}</option>
             <option value="trending">{t('trending')}</option>
           </select>
         </div>
@@ -304,13 +330,14 @@ export default function Forum() {
         <div className={styles.postFormContainer}>
           <CreatePostForm
             editPost={editingPost}
+            initialType={selectedType}
             onSuccess={(post) => {
               if (editingPost) {
                 handleUpdatePost(post)
-                setSuccessMessage('Post updated successfully!')
+                setSuccessMessage('Post update')
               } else {
                 setShowCreateForm(false)
-                setSuccessMessage('Post created successfully!')
+                setSuccessMessage('Post created!')
                 fetchPosts()
               }
               setTimeout(() => setSuccessMessage(''), 3000)
@@ -323,24 +350,81 @@ export default function Forum() {
         </div>
       )}
 
+      {/* Quick Create Button - Always Visible */}
+      {!showCreateForm && !editingPost && (
+        <div className={styles.quickCreateSection}>
+          <div className={styles.createButtons}>
+            <button 
+              onClick={() => {
+                setSelectedType('project')
+                setShowCreateForm(true)
+              }}
+              className={styles.createBtn}
+            >
+              <div className={styles.btnIcon}></div>
+              <div className={styles.btnText}>Share Project</div>
+              <div className={styles.btnCount}>{posts.filter(p => p.type === 'project').length} shared</div>
+            </button>
+            <button 
+              onClick={() => {
+                setSelectedType('essay')
+                setShowCreateForm(true)
+              }}
+              className={styles.createBtn}
+            >
+              <div className={styles.btnIcon}></div>
+              <div className={styles.btnText}>Upload Essay</div>
+              <div className={styles.btnCount}>{posts.filter(p => p.type === 'essay').length} uploaded</div>
+            </button>
+            <button 
+              onClick={() => {
+                setSelectedType('video')
+                setShowCreateForm(true)
+              }}
+              className={styles.createBtn}
+            >
+              <div className={styles.btnIcon}>🎥</div>
+              <div className={styles.btnText}>Upload Video</div>
+              <div className={styles.btnCount}>{posts.filter(p => p.type === 'video').length} uploaded</div>
+            </button>
+            <button 
+              onClick={() => {
+                setSelectedType('question')
+                setShowCreateForm(true)
+              }}
+              className={styles.createBtn}
+            >
+              <div className={styles.btnIcon}></div>
+              <div className={styles.btnText}>Ask Question</div>
+              <div className={styles.btnCount}>{posts.filter(p => p.type === 'question').length} asked</div>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Posts List */}
       {!showCreateForm && !editingPost && (
         posts.length === 0 ? (
           <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>💬</div>
-            <h4 className={styles.emptyTitle}>{t('no_posts_yet')}</h4>
-            <p className={styles.emptySubtitle}>{t('be_first_to_start')}</p>
-            <button 
-              onClick={() => setShowCreateForm(true)}
-              className={styles.createPostBtn}
-            >
-              ➕ {t('create_first_post')}
-            </button>
+            <div className={styles.emptyIcon}></div>
+            <h4 className={styles.emptyTitle}>Ready to share your amazing work?</h4>
+            <p className={styles.emptySubtitle}>Upload your projects, essays, or videos to get valuable feedback from peers and mentors</p>
+            <div className={styles.emptyActions}>
+              <button 
+                onClick={() => setShowCreateForm(true)}
+                className={styles.createPostBtn}
+              >
+                 Share Your First Project
+              </button>
+            </div>
+            <div className={styles.emptyTips}>
+              <p> <strong>Tips:</strong> Projects with files get 3x more engagement!</p>
+            </div>
           </div>
         ) : (
           <div className={styles.postsList}>
             {posts.map(post => (
-              <article key={post.id} className={styles.postCard}>
+              <article key={post.id} className={styles.postCard} data-type={post.type}>
                 <div className={styles.postContent}>
                   <div className={styles.postHeader}>
                     <div className={styles.authorInfo}>
@@ -366,25 +450,22 @@ export default function Forum() {
                     {/* Edit/Delete for post author or admin */}
                     {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
                       <div className={styles.postActionsMenu}>
-                        <button 
-                          className={styles.menuTrigger} 
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          ⋯
-                        </button>
-                        <ul className="dropdown-menu dropdown-menu-end">
-                          <li>
-                            <button className="dropdown-item" onClick={() => setEditingPost(post)}>
-                              ✏️ {t('edit_post')}
-                            </button>
-                          </li>
-                          <li>
-                            <button className="dropdown-item text-danger" onClick={() => handleDeletePost(post.id)}>
-                              🗑️ {t('delete_post')}
-                            </button>
-                          </li>
-                        </ul>
+                        <div className={styles.actionButtons}>
+                          <button 
+                            className={styles.editPostBtn}
+                            onClick={() => setEditingPost(post)}
+                            title="Edit post"
+                          >
+                            
+                          </button>
+                          <button 
+                            className={styles.deletePostBtn}
+                            onClick={() => handleDeletePost(post.id)}
+                            title="Delete post"
+                          >
+                            
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -419,7 +500,7 @@ export default function Forum() {
                                 rel="noopener noreferrer"
                                 className={styles.attachmentLink}
                               >
-                                📄 {file.originalName}
+                                 {file.originalName}
                               </a>
                             )}
                           </div>
@@ -454,14 +535,14 @@ export default function Forum() {
                     <button 
                       onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
                       className={`${styles.actionBtn} ${styles.commentBtn}`}
-                      title={t('view_comments')}
+                      title={t('view comments')}
                     >
-                      💬 <span className={styles.count}>{post.ForumComments?.length || 0}</span>
+                       <span className={styles.count}>{post.ForumComments?.length || 0}</span>
                       <span className={styles.label}>Comments</span>
                     </button>
 
                     <div className={styles.viewsCount}>
-                      👁️ <span>{post.views || 0} views</span>
+                       <span>{post.views || 0} views</span>
                     </div>
                   </div>
 
@@ -479,7 +560,7 @@ export default function Forum() {
                           <textarea
                             value={commentText[post.id] || ''}
                             onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
-                            placeholder={t('write_comment')}
+                            placeholder={t('comment')}
                             rows="3"
                             className={styles.commentTextarea}
                           />
@@ -490,7 +571,7 @@ export default function Forum() {
                             disabled={!commentText[post.id]?.trim()}
                             className={styles.postCommentBtn}
                           >
-                            📤 {t('post_comment')}
+                             {t('post comment')}
                           </button>
                         </div>
                       </div>
@@ -499,7 +580,7 @@ export default function Forum() {
                       {post.ForumComments && post.ForumComments.length > 0 ? (
                         <div className={styles.commentsList}>
                           <h6 className={styles.commentsHeader}>
-                            💬 {t('comments')} ({post.ForumComments.length})
+                             {t('comments')} ({post.ForumComments.length})
                           </h6>
                           {post.ForumComments
                             .filter(c => !c.parentCommentId)
@@ -521,7 +602,7 @@ export default function Forum() {
                         </div>
                       ) : (
                         <div className={styles.noComments}>
-                          💬 <p>{t('no_comments_yet')}</p>
+                           <p>{t('no comments ')}</p>
                         </div>
                       )}
                     </div>

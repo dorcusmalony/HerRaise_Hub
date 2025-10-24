@@ -80,7 +80,7 @@
 }
 
 .statCard.green::before {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  background: linear-gradient(135deg, #3e0e5a 0%, #3e0e5a 100%);
 }
 
 .statCard:hover {
@@ -226,7 +226,7 @@
 
 .badge.discussion {
   background: #dcfce7;
-  color: #166534;
+  color: #3d09fa;
 }
 
 .badge.project {
@@ -236,7 +236,7 @@
 
 .badge.question {
   background: #fef3c7;
-  color: #92400e;
+  color: #3e0e5a;
 }
 
 .badge.mentee {
@@ -256,17 +256,17 @@
 
 .badge.article {
   background: #dcfce7;
-  color: #166534;
+  color: #3e0e5a;
 }
 
 .badge.video {
   background: #fef3c7;
-  color: #92400e;
+  color: #3e0e5a;
 }
 
 /* Buttons */
 .deleteBtn {
-  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  background: linear-gradient(135deg, #3e0e5a 0%, #3e0e5a 100%);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -282,7 +282,7 @@
 }
 
 .editBtn {
-  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  background: linear-gradient(135deg, #e91981 0%, #e91981 100%);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -299,7 +299,7 @@
 }
 
 .addBtn {
-  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  background: linear-gradient(135deg, #3e0e5a 0%, #3e0e5a 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -360,7 +360,7 @@
 }
 
 .saveBtn {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  background: linear-gradient(135deg, #3e0e5a 0%, #3e0e5a 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -372,7 +372,7 @@
 
 .saveBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(49, 35, 243, 0.3);
 }
 
 .cancelBtn {

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './FileUpload.module.css'
 
-const FileUpload = ({ onFilesUploaded }) => {
+const FileUpload = ({ onFilesUploaded, acceptedTypes = 'image/*,video/*,.pdf,.doc,.docx,.txt,.ppt,.pptx' }) => {
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
 
@@ -64,7 +64,7 @@ const FileUpload = ({ onFilesUploaded }) => {
         <input 
           type="file" 
           multiple 
-          accept="image/*,video/*,.pdf,.doc,.docx,.txt,.ppt,.pptx"
+          accept={acceptedTypes}
           onChange={(e) => handleUpload(e.target.files)}
           disabled={uploading}
           className={styles.fileInput}
