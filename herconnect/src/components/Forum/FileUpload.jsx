@@ -69,6 +69,7 @@ const FileUpload = ({ onFilesUploaded, acceptedTypes = 'image/*,video/*,.pdf,.do
           disabled={uploading}
           className={styles.fileInput}
           id="file-upload"
+          name="file-upload"
         />
         <label htmlFor="file-upload" className={styles.uploadLabel}>
           {uploading ? (

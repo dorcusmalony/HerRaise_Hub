@@ -128,9 +128,11 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
 
         {/* Title */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Title *</label>
+          <label htmlFor="post-title" className={styles.formLabel}>Title *</label>
           <input
             type="text"
+            id="post-title"
+            name="title"
             value={formData.title}
             onChange={(e) => setFormData({...formData, title: e.target.value})}
             required
