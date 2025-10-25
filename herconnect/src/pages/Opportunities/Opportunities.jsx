@@ -59,9 +59,14 @@ export default function Opportunities() {
       if (response.ok) {
         const data = await response.json()
         setOpportunities(data.opportunities || [])
+      } else if (response.status === 401 || response.status === 404) {
+        // Backend doesn't support opportunities yet
+        console.warn('Opportunities endpoint not available')
+        setOpportunities([])
       }
     } catch (error) {
       console.error('Error fetching opportunities:', error)
+      setOpportunities([])
     } finally {
       setLoading(false)
     }
