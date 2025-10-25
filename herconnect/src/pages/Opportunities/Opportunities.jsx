@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getSocket, requestNotificationPermission } from '../../services/socketService'
+import ScholarshipTracker from '../../components/ScholarshipTracker'
 import styles from '../../styles/Pages.module.css'
 
 export default function Opportunities() {
@@ -8,12 +10,46 @@ export default function Opportunities() {
   const [opportunities, setOpportunities] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all') // all, internship, scholarship, event
+  const [status, setStatus] = useState('active')
+  const [priority, setPriority] = useState('')
+  const [search, setSearch] = useState('')
+  const [applications, setApplications] = useState({})
+  const [reminders, setReminders] = useState([])
+  const [showTracker, setShowTracker] = useState(false)
 
+  // Real-time updates
+  useEffect(() => {
+    requestNotificationPermission()
+    const socket = getSocket()
+    if (socket) {
+      socket.on('opportunity:new', (data) => {
+        setOpportunities(prev => [data, ...prev])
+      })
+      socket.on('opportunity:deadline_reminder', (data) => {
+        setReminders(prev => [...prev, data])
+      })
+      // Clean up listeners
+      return () => {
+        socket.off('opportunity:new')
+        socket.off('opportunity:deadline_reminder')
+      }
+    }
+  }, [])
+
+  // Fetch opportunities
   const fetchOpportunities = useCallback(async () => {
     const token = localStorage.getItem('token')
     const lang = i18n.language || 'en'
+    const params = new URLSearchParams({
+      filter,
+      type: filter !== 'all' ? filter : '',
+      status,
+      priority,
+      search,
+      lang
+    })
     try {
-      const response = await fetch(`${API}/api/opportunities?filter=${filter}&lang=${lang}`, {
+      const response = await fetch(`${API}/api/opportunities?${params.toString()}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -29,11 +65,59 @@ export default function Opportunities() {
     } finally {
       setLoading(false)
     }
-  }, [API, filter, i18n.language])
+  }, [API, filter, status, priority, search, i18n.language])
 
   useEffect(() => {
     fetchOpportunities()
   }, [fetchOpportunities])
+
+  // Fetch application status for current user
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    async function fetchApplications() {
+      try {
+        const res = await fetch(`${API}/api/opportunities/applications`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        if (res.ok) {
+          const data = await res.json()
+          setApplications(data.applications || {})
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+    fetchApplications()
+  }, [API])
+
+  // Apply for opportunity
+  const handleApply = async (oppId) => {
+    const token = localStorage.getItem('token')
+    try {
+      const res = await fetch(`${API}/api/opportunities/${oppId}/apply`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setApplications(prev => ({
+          ...prev,
+          [oppId]: data.application
+        }))
+        alert('Application submitted!')
+      } else {
+        alert('Failed to apply. Try again.')
+      }
+    } catch (e) {
+      alert('Error applying.')
+    }
+  }
 
   const getOpportunityBadge = (type) => {
     const badges = {
@@ -61,56 +145,76 @@ export default function Opportunities() {
           <h2 className={styles.heroTitle}>{t('opportunities')}</h2>
           <p className="text-muted mb-0">{t('opportunities_subtitle')}</p>
         </div>
+        <button 
+          className="btn btn-outline-primary"
+          onClick={() => setShowTracker(!showTracker)}
+        >
+          {showTracker ? 'Hide' : 'Show'} My Applications
+        </button>
       </div>
 
-      {/* Filter Bar */}
+      {showTracker && (
+        <div className="mb-4">
+          <ScholarshipTracker />
+        </div>
+      )}
+
+      {/* Reminders */}
+      {reminders.length > 0 && (
+        <div className="alert alert-warning">
+          <strong>Reminders:</strong>
+          <ul>
+            {reminders.map((r, idx) => (
+              <li key={idx}>{r.message || 'Deadline approaching!'}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Enhanced Filter Bar */}
       <div className={`card mb-4 ${styles.mbSmall}`}>
         <div className="card-body">
-          <label className="form-label small text-muted">{t('filter_by_type')}:</label>
-          <div className="btn-group w-100" role="group">
-            <input 
-              type="radio" 
-              className="btn-check" 
-              name="opp-filter" 
-              id="opp-all" 
-              value="all"
-              checked={filter === 'all'}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-            <label className="btn btn-outline-primary" htmlFor="opp-all">{t('all')}</label>
-
-            <input 
-              type="radio" 
-              className="btn-check" 
-              name="opp-filter" 
-              id="opp-internship" 
-              value="internship"
-              checked={filter === 'internship'}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-            <label className="btn btn-outline-primary" htmlFor="opp-internship">{t('internships')}</label>
-
-            <input 
-              type="radio" 
-              className="btn-check" 
-              name="opp-filter" 
-              id="opp-scholarship" 
-              value="scholarship"
-              checked={filter === 'scholarship'}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-            <label className="btn btn-outline-primary" htmlFor="opp-scholarship">{t('scholarships')}</label>
-
-            <input 
-              type="radio" 
-              className="btn-check" 
-              name="opp-filter" 
-              id="opp-event" 
-              value="event"
-              checked={filter === 'event'}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-            <label className="btn btn-outline-primary" htmlFor="opp-event">{t('events')}</label>
+          <div className="row g-3">
+            {/* Type Filter */}
+            <div className="col-md-3">
+              <label className="form-label small text-muted">{t('type')}:</label>
+              <select className="form-select" value={filter} onChange={e => setFilter(e.target.value)}>
+                <option value="all">{t('all')}</option>
+                <option value="internship">{t('internships')}</option>
+                <option value="scholarship">{t('scholarships')}</option>
+                <option value="event">{t('events')}</option>
+              </select>
+            </div>
+            {/* Status Filter */}
+            <div className="col-md-3">
+              <label className="form-label small text-muted">{t('status')}:</label>
+              <select className="form-select" value={status} onChange={e => setStatus(e.target.value)}>
+                <option value="active">{t('active')}</option>
+                <option value="closed">{t('closed')}</option>
+                <option value="upcoming">{t('upcoming')}</option>
+              </select>
+            </div>
+            {/* Priority Filter */}
+            <div className="col-md-3">
+              <label className="form-label small text-muted">{t('priority')}:</label>
+              <select className="form-select" value={priority} onChange={e => setPriority(e.target.value)}>
+                <option value="">{t('all')}</option>
+                <option value="high">{t('high')}</option>
+                <option value="medium">{t('medium')}</option>
+                <option value="low">{t('low')}</option>
+              </select>
+            </div>
+            {/* Search */}
+            <div className="col-md-3">
+              <label className="form-label small text-muted">{t('search')}:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder={t('search_placeholder')}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -134,6 +238,9 @@ export default function Opportunities() {
                   <div className="d-flex justify-content-between align-items-start mb-2">
                     <h5 className="mb-0">
                       {opp.title}
+                      {opp.isFeatured && (
+                        <span className="badge bg-warning text-dark ms-2">Featured</span>
+                      )}
                     </h5>
                     <span className={`badge ${getOpportunityBadge(opp.type)}`}>
                       {t(opp.type)}
@@ -142,6 +249,18 @@ export default function Opportunities() {
                   <p className="text-muted small mb-2">{opp.organization}</p>
                   <p className="mb-3">{opp.description?.substring(0, 150)}...</p>
                   
+                  {/* Amount and Priority */}
+                  {opp.amount && (
+                    <div className="mb-2">
+                      <span className="badge bg-success me-2">Amount: {opp.amount}</span>
+                    </div>
+                  )}
+                  {opp.priority && (
+                    <div className="mb-2">
+                      <span className={`badge ${opp.priority === 'high' ? 'bg-danger' : 'bg-secondary'}`}>Priority: {opp.priority}</span>
+                    </div>
+                  )}
+
                   <div className="mb-3">
                     <small className="text-muted">
                        {opp.location || t('remote')} • 
@@ -149,9 +268,40 @@ export default function Opportunities() {
                     </small>
                   </div>
 
+                  {/* Tags */}
+                  {opp.tags && opp.tags.length > 0 && (
+                    <div className="mb-2">
+                      {opp.tags.map((tag, idx) => (
+                        <span key={idx} className="badge bg-light text-dark border me-1">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Application section */}
+                  <div className="mb-3">
+                    {applications[opp.id] ? (
+                      <div>
+                        <span className="badge bg-success">Applied</span>
+                        <span className="ms-2">Status: {applications[opp.id].status}</span>
+                        {applications[opp.id].reminder && (
+                          <span className="ms-2 text-warning">{applications[opp.id].reminder}</span>
+                        )}
+                      </div>
+                    ) : (
+                      <button 
+                        className="btn btn-sm btn-primary"
+                        onClick={() => handleApply(opp.id)}
+                      >
+                        Apply Now
+                      </button>
+                    )}
+                  </div>
+
                   <div className="d-flex gap-2">
-                    <a href={opp.link} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-primary">
-                      {t('apply_now')}
+                    <a href={opp.link} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-secondary">
+                      {t('details')}
                     </a>
                     <button className="btn btn-sm btn-outline-secondary">
                       {t('save')}

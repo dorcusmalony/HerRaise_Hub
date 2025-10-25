@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { adminAPI } from '../../services/adminAPI'
+import CreateOpportunityModal from '../../components/admin/CreateOpportunityModal'
+import OpportunityList from '../../components/admin/OpportunityList'
+import OpportunityStats from '../../components/admin/OpportunityStats'
 import styles from './AdminDashboard.module.css'
 
 export default function AdminDashboard() {
@@ -14,6 +18,7 @@ export default function AdminDashboard() {
   const [posts, setPosts] = useState([])
   const [users, setUsers] = useState([])
   const [resources, setResources] = useState([])
+  const [scholarships, setScholarships] = useState([])
   
   // Form states
   const [showResourceForm, setShowResourceForm] = useState(false)
@@ -25,10 +30,14 @@ export default function AdminDashboard() {
     url: '',
     category: 'career'
   })
+  
+  // Scholarship form states
+  const [showScholarshipForm, setShowScholarshipForm] = useState(false)
+  const [editingScholarship, setEditingScholarship] = useState(null)
 
-  const fetchAdminData = useCallback(async (token) => {
+  const fetchAdminData = useCallback(async (token = localStorage.getItem('token')) => {
     try {
-      const [postsRes, usersRes, resourcesRes] = await Promise.all([
+      const [postsRes, usersRes, resourcesRes, scholarshipsData] = await Promise.all([
         fetch(`${API}/api/forum/posts?limit=50`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
@@ -37,7 +46,8 @@ export default function AdminDashboard() {
         }),
         fetch(`${API}/api/resources`, {
           headers: { 'Authorization': `Bearer ${token}` }
-        })
+        }),
+        adminAPI.getOpportunities()
       ])
 
       if (postsRes.ok) {
@@ -52,6 +62,7 @@ export default function AdminDashboard() {
         const data = await resourcesRes.json()
         setResources(data.resources || [])
       }
+      setScholarships(scholarshipsData.opportunities || [])
     } catch (error) {
       console.error('Error fetching admin data:', error)
     }
@@ -153,6 +164,8 @@ export default function AdminDashboard() {
     }
   }
 
+
+
   if (loading) {
     return (
       <div className={styles.loading}>
@@ -186,10 +199,15 @@ export default function AdminDashboard() {
           <div className={styles.statValue}>{resources.length}</div>
           <div className={styles.statLabel}>Resources</div>
         </div>
+        <div className={`${styles.statCard} ${styles.green}`}>
+          <div className={styles.statIcon}>🎓</div>
+          <div className={styles.statValue}>{scholarships.length}</div>
+          <div className={styles.statLabel}>Scholarships</div>
+        </div>
       </div>
 
       <div className={styles.tabNav}>
-        {['overview', 'posts', 'users', 'resources'].map(tab => (
+        {['overview', 'posts', 'users', 'resources', 'scholarships'].map(tab => (
           <button
             key={tab}
             className={`${styles.tabBtn} ${activeTab === tab ? styles.active : ''}`}
@@ -348,6 +366,43 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+
+        {activeTab === 'scholarships' && (
+          <div className={styles.scholarshipsSection}>
+            <div className={styles.sectionHeader}>
+              <h3>🎓 Scholarship & Opportunities Management</h3>
+              <button 
+                onClick={() => setShowScholarshipForm(true)}
+                className={styles.addBtn}
+              >
+                ➕ Add Opportunity
+              </button>
+            </div>
+
+            <OpportunityStats />
+
+            {showScholarshipForm && (
+              <CreateOpportunityModal
+                opportunity={editingScholarship}
+                onClose={() => {
+                  setShowScholarshipForm(false)
+                  setEditingScholarship(null)
+                }}
+                onSuccess={fetchAdminData}
+              />
+            )}
+
+            <OpportunityList
+              onEdit={(opportunity) => {
+                setEditingScholarship(opportunity)
+                setShowScholarshipForm(true)
+              }}
+              onDelete={() => fetchAdminData()}
+            />
+          </div>
+        )}
+
+
       </div>
     </div>
   )
