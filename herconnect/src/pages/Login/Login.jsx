@@ -96,16 +96,12 @@ export default function Login() {
         console.warn(' No user data in login response')
       }
 
-      // Redirect based on role
-      setTimeout(() => {
-        if (data.user?.role === 'admin') {
-          navigate('/admin/dashboard')
-        } else if (data.user?.role === 'mentor') {
-          navigate('/dashboard')
-        } else {
-          navigate('/dashboard')
-        }
-      }, 800)
+      // Direct navigation
+      if (data.user?.role === 'admin') {
+        navigate('/admin/dashboard')
+      } else {
+        navigate('/dashboard')
+      }
       
     } catch (err) {
       console.error('Login error:', err)
@@ -233,7 +229,7 @@ export default function Login() {
 
         <div className="d-flex gap-2 mb-3">
           <button className="btn btn-primary" type="submit" disabled={loading}>
-            {loading ? 'Signing in…' : 'Login'}
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
           <button
             type="button"
@@ -252,11 +248,7 @@ export default function Login() {
       </div>
 
       {/* Show response like Register page */}
-      {result && result.success && (
-        <div className="mt-4 alert alert-success">
-          <strong>Success!</strong> Login successfully
-        </div>
-      )}
+
 
       {forgotOpen && (
         <div className="contact-overlay" role="dialog" aria-modal="true" aria-labelledby="forgot-heading">

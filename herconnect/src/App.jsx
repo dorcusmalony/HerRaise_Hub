@@ -16,6 +16,7 @@ import Opportunities from './pages/Opportunities/Opportunities.jsx'
 import SafetyReport from './pages/SafetyReport/SafetyReport'
 import SafetyButton from './components/SafetyButton/SafetyButton'
 import { initializeSocket, disconnectSocket } from './services/socketService'
+import { pushNotificationService } from './services/pushNotificationService'
 import './App.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
 
@@ -34,6 +35,8 @@ export default function App() {
     const token = localStorage.getItem('token')
     if (token) {
       initializeSocket(token)
+      // Initialize push notifications
+      pushNotificationService.initialize()
     }
 
     // Cleanup on unmount

@@ -20,8 +20,9 @@ export default function Register(){
 		dateOfBirth: '',
 		interests: '',
 		educationLevel: '',
-		profilePicture: '' // Add profile picture field
+		profilePicture: ''
 	})
+	const [loading, setLoading] = useState(false)
 	const [errors, setErrors] = useState({})
 	const [result, setResult] = useState(null)
 	const [submitting, setSubmitting] = useState(false)
@@ -94,7 +95,7 @@ export default function Register(){
 		
 		const endpoint = `${API}/api/auth/register`
 		
-		setSubmitting(true)
+		setLoading(true)
 		setResult(null)
 		setErrors({})
 		setDebugInfo(null)
@@ -161,7 +162,7 @@ export default function Register(){
 			console.error("Registration error:", err)
 			setError(err.message || 'Registration failed. Please try again.')
 		} finally {
-			setSubmitting(false)
+			setLoading(false)
 		}
 	}
 
@@ -272,14 +273,17 @@ export default function Register(){
 					{errors.educationLevel && <div className="text-danger small">{errors.educationLevel}</div>}
 				</div>
 
-				<div className="d-flex gap-2">
-					<button type="button" className="btn btn-outline-primary" onClick={() => handleSubmit('mentee')} disabled={submitting}>
-						{submitting ? t('submitting') : t('join_as_mentee')}
-					</button>
-					<button type="button" className={`btn ${styles.brandButton}`} onClick={() => handleSubmit('mentor')} disabled={submitting}>
-						{submitting ? t('submitting') : t('join_as_mentor')}
-					</button>
+				<div className="mb-3">
+					<label className="form-label">{t('role')}</label>
+					<select name="role" value={form.role} onChange={handleChange} className="form-select">
+						<option value="mentee">{t('mentee')}</option>
+						<option value="mentor">{t('mentor')}</option>
+					</select>
 				</div>
+
+				<button type="submit" className={`btn ${styles.brandButton} w-100`} onClick={(e) => { e.preventDefault(); submitToServer(form.role); }} disabled={loading}>
+					{loading ? 'Submitting...' : 'Create Account'}
+				</button>
 			</form>
 
 			{(debugInfo || error) && (
