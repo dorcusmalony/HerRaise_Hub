@@ -37,63 +37,67 @@ export default function AdminRegister() {
   }
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h3>👑 Create Admin Account</h3>
-            </div>
-            <div className="card-body">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Full Name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Admin Key (use: ADMIN123)"
-                    value={formData.adminKey}
-                    onChange={(e) => setFormData({...formData, adminKey: e.target.value})}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary w-100">
-                  Create Admin Account
-                </button>
-              </form>
-            </div>
-          </div>
+    <div style={{padding: '50px', maxWidth: '500px', margin: '0 auto'}}>
+      <h2>👑 Create Admin Account</h2>
+      <form onSubmit={handleSubmit} style={{marginTop: '30px'}}>
+        <div style={{marginBottom: '15px'}}>
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            required
+            style={{width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px'}}
+          />
         </div>
-      </div>
+        <div style={{marginBottom: '15px'}}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) => setFormData({...formData, email: e.target.value})}
+            required
+            style={{width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px'}}
+          />
+        </div>
+        <div style={{marginBottom: '15px'}}>
+          <input
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) => setFormData({...formData, password: e.target.value})}
+            required
+            style={{width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px'}}
+          />
+        </div>
+        <div style={{marginBottom: '15px'}}>
+          <input
+            type="text"
+            placeholder="Admin Key (use: ADMIN123)"
+            value={formData.adminKey}
+            onChange={(e) => setFormData({...formData, adminKey: e.target.value})}
+            required
+            style={{width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px'}}
+          />
+        </div>
+        <button 
+          type="submit" 
+          style={{
+            width: '100%', 
+            padding: '12px', 
+            backgroundColor: '#007bff', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Create Admin Account
+        </button>
+      </form>
+      <p style={{marginTop: '20px', color: '#666'}}>
+        Note: Your backend must support /api/auth/admin-register endpoint
+      </p>
     </div>
   )
 }
