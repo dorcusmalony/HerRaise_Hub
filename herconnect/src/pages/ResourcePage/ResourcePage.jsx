@@ -1,104 +1,301 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-export default function ResourcePage(){
-  // grouped resource data (replace links with real URLs later)
-  const groupedResources = {
-    'CV & Cover Letter Guides': [
-      { title: 'CV Templates & Examples', desc: 'Modern and traditional CV templates to get you started.', type: 'PDF', link: '#' },
-      { title: 'Cover Letter Samples', desc: 'Cover letters tailored for internships, entry roles and scholarships.', type: 'Article', link: '#' }
+export default function ResourcePage() {
+  const { t } = useTranslation()
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const resources = {
+    'Career Development': [
+      { 
+        title: 'CV Templates & Examples', 
+        desc: 'Professional CV templates designed for young women entering the workforce.', 
+        type: 'PDF', 
+        category: 'career',
+        icon: '📄',
+        link: '#',
+        downloadCount: '2.3k',
+        rating: 4.8
+      },
+      { 
+        title: 'Cover Letter Samples', 
+        desc: 'Compelling cover letter examples for internships and entry-level positions.', 
+        type: 'Article', 
+        category: 'career',
+        icon: '📝',
+        link: '#',
+        downloadCount: '1.8k',
+        rating: 4.6
+      },
+      { 
+        title: 'Interview Preparation Guide', 
+        desc: 'Complete guide to ace your interviews with confidence and preparation tips.', 
+        type: 'PDF', 
+        category: 'career',
+        icon: '🎯',
+        link: '#',
+        downloadCount: '3.1k',
+        rating: 4.9
+      }
     ],
-    'Resume Guides': [
-      { title: 'Resume Writing Best Practices', desc: 'How to craft a concise resume that gets noticed.', type: 'Article', link: '#' },
-      { title: 'ATS-Friendly Resume Tips', desc: 'Formatting and keywords to pass applicant tracking systems.', type: 'PDF', link: '#' }
+    'Leadership & Skills': [
+      { 
+        title: 'Leadership Fundamentals', 
+        desc: 'Essential leadership skills for young women in professional environments.', 
+        type: 'Presentation', 
+        category: 'leadership',
+        icon: '👑',
+        link: '#',
+        downloadCount: '1.5k',
+        rating: 4.7
+      },
+      { 
+        title: 'Public Speaking Mastery', 
+        desc: 'Overcome speaking anxiety and deliver impactful presentations.', 
+        type: 'Video', 
+        category: 'leadership',
+        icon: '🎤',
+        link: '#',
+        downloadCount: '2.7k',
+        rating: 4.8
+      },
+      { 
+        title: 'Networking Strategies', 
+        desc: 'Build meaningful professional relationships and expand your network.', 
+        type: 'Article', 
+        category: 'leadership',
+        icon: '🤝',
+        link: '#',
+        downloadCount: '1.9k',
+        rating: 4.5
+      }
     ],
-    'Leadership & Development': [
-      { title: 'Leadership Fundamentals', desc: 'Short guide on leading teams and peer mentorship.', type: 'Presentation', link: '#' },
-      { title: 'Career Growth Planning', desc: 'Worksheet to set goals and map career milestones.', type: 'DOC', link: '#' }
+    'Education & Learning': [
+      { 
+        title: 'Study Techniques Guide', 
+        desc: 'Effective study methods and time management for academic success.', 
+        type: 'PDF', 
+        category: 'education',
+        icon: '📚',
+        link: '#',
+        downloadCount: '4.2k',
+        rating: 4.9
+      },
+      { 
+        title: 'Scholarship Application Tips', 
+        desc: 'Step-by-step guide to writing winning scholarship applications.', 
+        type: 'Article', 
+        category: 'education',
+        icon: '🎓',
+        link: '#',
+        downloadCount: '3.8k',
+        rating: 4.8
+      }
     ],
-    'Presentations & Slides': [
-      { title: 'Public Speaking Slides', desc: 'Templates and tips for confident presentations.', type: 'Slides', link: '#' }
+    'Personal Development': [
+      { 
+        title: 'Goal Setting Workbook', 
+        desc: 'Interactive workbook to set and achieve your personal and professional goals.', 
+        type: 'Workbook', 
+        category: 'personal',
+        icon: '🎯',
+        link: '#',
+        downloadCount: '2.1k',
+        rating: 4.6
+      },
+      { 
+        title: 'Confidence Building Guide', 
+        desc: 'Practical exercises to build self-confidence and overcome imposter syndrome.', 
+        type: 'PDF', 
+        category: 'personal',
+        icon: '💪',
+        link: '#',
+        downloadCount: '2.9k',
+        rating: 4.7
+      }
     ]
   }
 
-  const videos = [
-    { title: 'Values by Example — Michelle Obama (Highlights)', src: 'https://www.youtube.com/embed/4Qm7x1k8b6U' },
-    { title: 'Leadership for Young Women — Talk', src: 'https://www.youtube.com/embed/2X4Qx0g9n3k' },
-    { title: 'Career Stories — Pathways to STEM', src: 'https://www.youtube.com/embed/dQw4w9WgXcQ' } // replace with real video links
-  ]
+  const getTypeColor = (type) => {
+    const colors = {
+      'PDF': '#dc3545',
+      'Article': '#28a745',
+      'Video': '#007bff',
+      'Presentation': '#fd7e14',
+      'Workbook': '#6f42c1'
+    }
+    return colors[type] || '#6c757d'
+  }
 
-  const styles = {
-    page: { padding: '2rem 0' },
-    header: { marginBottom: '1rem' },
-    lead: { color: '#6c757d', marginBottom: '1.5rem' },
-    card: { padding: '1rem', borderRadius: 12, boxShadow: '0 8px 24px rgba(12,20,40,0.06)', background: '#fff', height: '100%' },
-    badge: { fontSize: '0.75rem', padding: '0.25rem 0.6rem', borderRadius: 8, background: 'rgba(0,0,0,0.06)', color: '#333' },
-    sectionTitle: { margin: '1.5rem 0 1rem', fontSize: '1.25rem' },
-    iframeWrapper: { position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 10, boxShadow: '0 8px 18px rgba(12,20,40,0.06)' },
-    iframe: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }
+  const getFilteredResources = () => {
+    let filtered = []
+    Object.entries(resources).forEach(([category, items]) => {
+      const categoryItems = items.filter(item => {
+        const matchesFilter = activeFilter === 'all' || item.category === activeFilter
+        const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             item.desc.toLowerCase().includes(searchTerm.toLowerCase())
+        return matchesFilter && matchesSearch
+      })
+      if (categoryItems.length > 0) {
+        filtered.push([category, categoryItems])
+      }
+    })
+    return filtered
   }
 
   return (
-    <div className="container" style={styles.page}>
-      <header style={styles.header}>
-        <h1>Resources</h1>
-        <p className="lead" style={styles.lead}>
-          A curated library of articles, templates, presentations and videos to support learning, leadership and career growth.
+    <div className="container py-5">
+      {/* Header Section */}
+      <div className="text-center mb-5">
+        <h1 className="display-4 fw-bold text-primary mb-3">📚 Resource Library</h1>
+        <p className="lead text-muted mb-4">
+          Curated resources to empower your journey in education, career, and personal development
         </p>
-      </header>
-
-      {/* Articles / Documents / Presentations section */}
-      <section aria-labelledby="resources-heading">
-        <h2 id="resources-heading" style={styles.sectionTitle}>Guides, Templates & Presentations</h2>
-
-        {Object.entries(groupedResources).map(([category, items]) => (
-          <div key={category} className="mb-4">
-            <h3 className="mb-3" style={{fontSize: '1.05rem'}}>{category}</h3>
-            <div className="row g-3">
-              {items.map((r, idx) => (
-                <div key={idx} className="col-12 col-md-6 col-lg-4">
-                  <article style={styles.card} aria-label={r.title}>
-                    <div className="d-flex justify-content-between align-items-start mb-2">
-                      <strong>{r.title}</strong>
-                      <span style={styles.badge}>{r.type}</span>
-                    </div>
-                    <p className="small text-muted" style={{marginBottom: '1rem'}}>{r.desc}</p>
-                    <div className="mt-auto d-flex gap-2">
-                      <a href={r.link} className="btn btn-sm btn-outline-primary" role="button">Open / Download</a>
-                      <a href="#" className="btn btn-sm btn-light">Save</a>
-                    </div>
-                  </article>
-                </div>
-              ))}
+        
+        {/* Search Bar */}
+        <div className="row justify-content-center mb-4">
+          <div className="col-md-6">
+            <div className="input-group input-group-lg">
+              <span className="input-group-text bg-white border-end-0">
+                <i className="fas fa-search text-muted"></i>
+              </span>
+              <input
+                type="text"
+                className="form-control border-start-0 ps-0"
+                placeholder="Search resources..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
           </div>
-        ))}
-      </section>
+        </div>
 
-      {/* Videos section */}
-      <section aria-labelledby="videos-heading" className="mt-5">
-        <h2 id="videos-heading" style={styles.sectionTitle}>Videos & Talks</h2>
-        <p className="small text-muted">Watch short talks and examples  great for inspiration and learning on the go.</p>
-
-        <div className="row g-4 mt-2">
-          {videos.map((v, i) => (
-            <div key={i} className="col-12 col-md-6 col-lg-4">
-              <div>
-                <div style={styles.iframeWrapper}>
-                  <iframe
-                    title={v.title}
-                    src={v.src}
-                    style={styles.iframe}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-                <h4 style={{fontSize: '1rem', marginTop: '.75rem'}}>{v.title}</h4>
-                <p className="small text-muted mb-0">Short description or takeaways can be added here.</p>
-              </div>
-            </div>
+        {/* Filter Buttons */}
+        <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
+          {['all', 'career', 'leadership', 'education', 'personal'].map(filter => (
+            <button
+              key={filter}
+              className={`btn ${
+                activeFilter === filter ? 'btn-primary' : 'btn-outline-primary'
+              } btn-sm px-3`}
+              onClick={() => setActiveFilter(filter)}
+            >
+              {filter === 'all' ? 'All Resources' : 
+               filter === 'career' ? '💼 Career' :
+               filter === 'leadership' ? '👑 Leadership' :
+               filter === 'education' ? '🎓 Education' : '🌟 Personal'}
+            </button>
           ))}
         </div>
-      </section>
+      </div>
+
+      {/* Resources Grid */}
+      {getFilteredResources().map(([category, items]) => (
+        <div key={category} className="mb-5">
+          <div className="d-flex align-items-center mb-4">
+            <div className="flex-grow-1">
+              <h2 className="h3 mb-1 text-dark">{category}</h2>
+              <p className="text-muted mb-0">{items.length} resources available</p>
+            </div>
+          </div>
+
+          <div className="row g-4">
+            {items.map((resource, idx) => (
+              <div key={idx} className="col-12 col-md-6 col-lg-4">
+                <div className="card h-100 shadow-sm border-0 hover-shadow transition-all">
+                  <div className="card-body p-4">
+                    <div className="d-flex justify-content-between align-items-start mb-3">
+                      <div className="resource-icon">
+                        <span style={{ fontSize: '2rem' }}>{resource.icon}</span>
+                      </div>
+                      <span 
+                        className="badge px-2 py-1 text-white fw-normal"
+                        style={{ backgroundColor: getTypeColor(resource.type) }}
+                      >
+                        {resource.type}
+                      </span>
+                    </div>
+                    
+                    <h5 className="card-title mb-2 text-dark">{resource.title}</h5>
+                    <p className="card-text text-muted small mb-3 line-height-relaxed">
+                      {resource.desc}
+                    </p>
+                    
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <span className="text-warning">{'★'.repeat(Math.floor(resource.rating))}</span>
+                        <small className="text-muted">{resource.rating}</small>
+                      </div>
+                      <small className="text-muted">
+                        <i className="fas fa-download me-1"></i>
+                        {resource.downloadCount}
+                      </small>
+                    </div>
+                    
+                    <div className="d-grid gap-2">
+                      <a 
+                        href={resource.link} 
+                        className="btn btn-primary btn-sm"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <i className="fas fa-external-link-alt me-2"></i>
+                        Access Resource
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {/* Empty State */}
+      {getFilteredResources().length === 0 && (
+        <div className="text-center py-5">
+          <div className="mb-4">
+            <i className="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 className="text-muted">No resources found</h4>
+            <p className="text-muted">Try adjusting your search or filter criteria</p>
+          </div>
+          <button 
+            className="btn btn-outline-primary"
+            onClick={() => {
+              setSearchTerm('')
+              setActiveFilter('all')
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
+
+      <style jsx>{`
+        .hover-shadow {
+          transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        }
+        .transition-all {
+          transition: all 0.3s ease;
+        }
+        .line-height-relaxed {
+          line-height: 1.6;
+        }
+        .resource-icon {
+          width: 60px;
+          height: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(13, 110, 253, 0.1);
+          border-radius: 12px;
+        }
+      `}</style>
     </div>
   )
 }
