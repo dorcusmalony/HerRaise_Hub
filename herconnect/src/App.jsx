@@ -12,8 +12,6 @@ import ResetPassword from './pages/Auth/ResetPassword'
 import Profile from './pages/Profile/Profile.jsx'
 import Forum from './pages/forum/forum.jsx'
 import Dashboard from './pages/dashboard/dashboard.jsx'
-import AdminDashboard from './pages/admin/AdminDashboard.jsx'
-import AdminRegister from './pages/AdminRegister.jsx'
 import Opportunities from './pages/Opportunities/Opportunities.jsx'
 import SafetyReport from './pages/SafetyReport/SafetyReport'
 import SafetyButton from './components/SafetyButton/SafetyButton'
@@ -61,8 +59,6 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forum" element={<Forum />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/opportunities" element={<Opportunities />} />
           <Route path="/safety-report" element={<SafetyReport />} />
         </Routes>
