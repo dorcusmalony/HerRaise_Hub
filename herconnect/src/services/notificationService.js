@@ -126,6 +126,31 @@ class NotificationService {
         timestamp: new Date()
       })
     })
+
+    // Opportunity update notifications
+    socket.on('opportunity:updated', (data) => {
+      this.handleNotification({
+        type: 'opportunity_update',
+        title: '📢 Opportunity Updated',
+        message: `${data.title} has been updated - Check new requirements`,
+        data: { opportunityId: data.id, url: `/opportunities` },
+        timestamp: new Date(),
+        priority: 'normal'
+      })
+    })
+
+    // New application notifications (for opportunity creators)
+    socket.on('application:new', (data) => {
+      this.handleNotification({
+        type: 'application_new',
+        title: '📝 New Application Received',
+        message: `${data.applicant.name} applied to ${data.opportunityTitle}`,
+        data: { applicationId: data.id, url: `/dashboard` },
+        timestamp: new Date(),
+        avatar: data.applicant.avatar,
+        priority: 'high'
+      })
+    })
   }
 
   // Handle incoming notifications
@@ -198,7 +223,9 @@ class NotificationService {
       forum_comment: 'info',
       forum_like: 'primary',
       opportunity: 'success',
+      opportunity_update: 'warning',
       application: 'warning',
+      application_new: 'success',
       reminder: 'warning',
       mentorship: 'primary'
     }

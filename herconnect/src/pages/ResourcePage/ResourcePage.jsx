@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export default function ResourcePage() {
-  const { t } = useTranslation()
+  const { t: _t } = useTranslation()
   const [activeFilter, setActiveFilter] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -272,7 +272,7 @@ export default function ResourcePage() {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .hover-shadow {
           transition: all 0.3s ease;
         }

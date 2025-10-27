@@ -1,3 +1,5 @@
+/* eslint-env serviceworker */
+/* global clients */
 // Service Worker for Push Notifications
 self.addEventListener('push', function(event) {
   if (event.data) {
@@ -62,7 +64,7 @@ function doBackgroundSync() {
   // Sync notifications when back online
   return fetch('/api/notifications/sync')
     .then(response => response.json())
-    .then(data => {
+    .then(_data => {
       // Process any missed notifications
       console.log('Background sync completed')
     })

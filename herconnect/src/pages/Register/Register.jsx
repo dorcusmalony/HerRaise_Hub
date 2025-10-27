@@ -25,7 +25,7 @@ export default function Register(){
 	const [loading, setLoading] = useState(false)
 	const [errors, setErrors] = useState({})
 	const [result, setResult] = useState(null)
-	const [submitting, setSubmitting] = useState(false)
+	const [_submitting, _setSubmitting] = useState(false)
 	const [debugInfo, setDebugInfo] = useState(null)
 	const [success, setSuccess] = useState(null)
 	const [error, setError] = useState(null)
@@ -166,7 +166,7 @@ export default function Register(){
 		}
 	}
 
-	const handleSubmit = (role) => {
+	const _handleSubmit = (role) => {
 		submitToServer(role)
 	}
 

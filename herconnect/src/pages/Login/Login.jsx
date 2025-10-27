@@ -13,7 +13,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [debugInfo, setDebugInfo] = useState(null)
-  const [result, setResult] = useState(null)
+  const [_result, setResult] = useState(null)
 
   // Forgot password flow
   const [forgotOpen, setForgotOpen] = useState(false)

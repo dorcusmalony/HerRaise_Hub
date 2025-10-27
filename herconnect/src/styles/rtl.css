@@ -1,0 +1,76 @@
+/* RTL Support for Arabic */
+[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] .navbar {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .navbar-nav {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .btn {
+  text-align: center;
+}
+
+[dir="rtl"] .form-control {
+  text-align: right;
+}
+
+[dir="rtl"] .card {
+  text-align: right;
+}
+
+[dir="rtl"] .opportunity-card {
+  text-align: right;
+}
+
+[dir="rtl"] .opportunity-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .opportunity-actions {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .forum-post {
+  text-align: right;
+}
+
+[dir="rtl"] .post-actions {
+  flex-direction: row-reverse;
+}
+
+/* Arabic Font Support */
+[dir="rtl"] {
+  font-family: 'Noto Sans Arabic', 'Arial', sans-serif;
+}
+
+/* Margin and Padding Adjustments for RTL */
+[dir="rtl"] .me-2 {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+[dir="rtl"] .ms-2 {
+  margin-left: 0 !important;
+  margin-right: 0.5rem !important;
+}
+
+[dir="rtl"] .pe-3 {
+  padding-right: 0 !important;
+  padding-left: 1rem !important;
+}
+
+[dir="rtl"] .ps-3 {
+  padding-left: 0 !important;
+  padding-right: 1rem !important;
+}
