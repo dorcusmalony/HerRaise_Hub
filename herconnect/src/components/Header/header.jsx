@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { disconnectSocket } from '../../services/socketService'
-import { useTranslation } from 'react-i18next'
-import styles from '../../styles/Pages.module.css' // <-- added
+import { useLanguage } from '../../hooks/useLanguage'
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
+import styles from '../../styles/Pages.module.css'
 
 export default function Header() {
-	const { t } = useTranslation()
+	const { t } = useLanguage()
 	const logoUrl = new URL('../../images/her-logo.jpg', import.meta.url).href
 	const navigate = useNavigate()
 	const API = import.meta.env.VITE_API_URL || '/api'
@@ -144,8 +145,9 @@ export default function Header() {
 					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('resources')}</Link>
 				</nav>
 
-				{/* Right Side: Notification + Avatar */}
+				{/* Right Side: Language + Notification + Avatar */}
 				<div className="d-flex align-items-center gap-3">
+					<LanguageSwitcher />
 					{user ? (
 						<>
 							{/* Notification Bell */}

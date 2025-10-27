@@ -71,6 +71,18 @@ export const initializeSocket = (token) => {
     showNotification('New Comment', `${data.author.name} commented on your post`)
   })
 
+  // Listen for opportunity updates
+  socket.on('opportunity:updated', (data) => {
+    console.log('📢 Opportunity updated:', data)
+    showNotification('Opportunity Updated', `${data.title} has new updates`)
+  })
+
+  // Listen for new applications
+  socket.on('application:new', (data) => {
+    console.log('📝 New application:', data)
+    showNotification('New Application', `Someone applied to ${data.opportunityTitle}`)
+  })
+
   return socket
 }
 

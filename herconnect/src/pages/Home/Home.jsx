@@ -1,41 +1,28 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import styles from '../../styles/Pages.module.css'
+import { useLanguage } from '../../hooks/useLanguage'
+import styles from './Home.module.css'
 
-// image assets from src/images
-const heroImg = new URL('../../images/girl2.jpg', import.meta.url).href
+
 
 export default function Home() {
-  const { t } = useTranslation()
+  const { t } = useLanguage()
   return (
-    <div className="home-page">
+    <div className={styles.container}>
       {/* Hero Section */}
-      <section className="position-relative mb-5">
-        <div className={styles.heroWrapper}>
-          <img src={heroImg} alt={t('empowering_img_alt')} className={`img-fluid w-100 ${styles.heroImg}`} />
-          <div className={styles.heroOverlay}>
-            <div className="container text-center">
-              <h1 className={`${styles.heroTitle} display-2 fw-bold text-white mb-4`}>
-                {t('empowerment')}
-              </h1>
-              <p className="lead text-white mb-4 mx-auto" style={{ maxWidth: '700px', fontSize: '1.3rem' }}>
-                {t('empowerment')}
-              </p>
-              <div className="d-flex gap-3 justify-content-center flex-wrap">
-                <Link to="/register" className={`btn btn-lg ${styles.brandButton}`} style={{ fontSize: '1.2rem', padding: '0.8rem 2rem' }}>
-                  {t('join hub')}
-                </Link>
-                <Link to="/about" className="btn btn-lg btn-outline-light" style={{ fontSize: '1.2rem', padding: '0.8rem 2rem' }}>
-                  {t('learn more')}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
+      <section className={styles.hero}>
+        <h1 className={styles.heroTitle}>
+          {t('nav.home')} - Empowering Young Women
+        </h1>
+        <p className={styles.heroSubtitle}>
+          Connect, learn, and grow with our supportive community
+        </p>
+        <Link to="/register" className={styles.ctaButton}>
+          Get Started Today
+        </Link>
       </section>
 
-      <div className="container py-5">
+      <section className={styles.features}>
         {/* What We Do Section */}
         <section className="text-center mb-5">
           <h2 className="display-5 fw-bold mb-4">{t('what we do')}</h2>
@@ -192,7 +179,8 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </div>
+      {/* Close the features div */}
+      </section>
     </div>
   )
 }

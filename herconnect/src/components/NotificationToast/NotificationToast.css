@@ -164,11 +164,16 @@
 }
 
 /* Mobile responsive */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .notification-container {
+    top: 70px;
     right: 10px;
     left: 10px;
     max-width: none;
+  }
+  
+  .notification-toast {
+    margin-bottom: 8px;
   }
   
   .notification-content {
@@ -178,5 +183,13 @@
   .notification-avatar img {
     width: 32px;
     height: 32px;
+  }
+  
+  .notification-header strong {
+    font-size: 13px;
+  }
+  
+  .notification-body {
+    font-size: 12px;
   }
 }

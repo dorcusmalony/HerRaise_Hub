@@ -59,7 +59,8 @@
 .formInput:focus,
 .formTextarea:focus {
   outline: none;
-  border-color: purple;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 .formTextarea {
@@ -75,7 +76,7 @@
 
 .formHint {
   font-size: 0.875rem;
-  color: black;
+  color: #6b7280;
   margin-top: 0.25rem;
 }
 
@@ -85,19 +86,19 @@
 
 .uploadSuccess {
   font-size: 0.875rem;
-  color: white;
+  color: #059669;
   margin-top: 0.5rem;
   padding: 0.75rem;
-  background: white;
+  background: #f0fdf4;
   border-radius: 8px;
-  border: 1px solid purple;
+  border: 1px solid #10b981;
 }
 
 .typeDisplay {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: white;
+  background: #f9fafb;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
@@ -111,7 +112,7 @@
 .typeName {
   font-size: 1.2rem;
   font-weight: 600;
-  color: black;
+  color: #374151;
 }
 
 .uploadedFiles {
@@ -125,7 +126,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  background: white;
+  background: #f0fdf4;
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
   border: 1px solid #d1fae5;
@@ -137,18 +138,18 @@
 }
 
 .fileName {
-  color: black;
+  color: #374151;
   font-weight: 500;
 }
 
 .uploadHint {
   font-size: 0.875rem;
-  color: purple;
+  color: #7c3aed;
   margin-bottom: 0.75rem;
   padding: 0.5rem;
   background: #faf5ff;
   border-radius: 6px;
-  border-left: 3px solid purple;
+  border-left: 3px solid #7c3aed;
 }
 
 .formActions {
@@ -157,7 +158,7 @@
 }
 
 .submitBtn {
-  background: linear-gradient(135deg, purple 0%, purple 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -165,13 +166,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px purple;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: linear-gradient(135deg, pur 0%, purple 100%);
+  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px purple;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
 }
 
 .submitBtn:disabled {
@@ -181,9 +182,9 @@
 }
 
 .cancelBtn {
-  background: purple;
-  color: white;
-  border: none;
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #e5e7eb;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -192,5 +193,6 @@
 }
 
 .cancelBtn:hover {
-  background: white;
+  background: #e5e7eb;
+  border-color: #d1d5db;
 }
