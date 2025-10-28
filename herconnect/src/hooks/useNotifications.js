@@ -1,43 +1,53 @@
 import { useState, useEffect } from 'react'
-import { notificationService } from '../services/notificationService'
+import { notificationAPI } from '../services/notificationAPI'
 
-export const useNotifications = () => {
-  const [notifications, setNotifications] = useState([])
+export function useNotifications() {
   const [unreadCount, setUnreadCount] = useState(0)
 
+  const fetchUnreadCount = async () => {
+    try {
+      const data = await notificationAPI.getUnreadCount()
+      if (data.success) {
+        setUnreadCount(data.unreadCount)
+      }
+    } catch (error) {
+      console.error('Failed to fetch unread count:', error)
+    }
+  }
+
+  const markAsRead = async (notificationId) => {
+    try {
+      await notificationAPI.markAsRead(notificationId)
+      setUnreadCount(prev => Math.max(0, prev - 1))
+    } catch (error) {
+      console.error('Failed to mark as read:', error)
+    }
+  }
+
+  const markAllAsRead = async () => {
+    try {
+      await notificationAPI.markAllAsRead()
+      setUnreadCount(0)
+    } catch (error) {
+      console.error('Failed to mark all as read:', error)
+    }
+  }
+
   useEffect(() => {
-    // Subscribe to notification updates
-    const unsubscribe = notificationService.subscribe((newNotifications) => {
-      setNotifications(newNotifications)
-      setUnreadCount(notificationService.getUnreadCount())
-    })
-
-    // Load initial notifications
-    setNotifications(notificationService.getNotifications())
-    setUnreadCount(notificationService.getUnreadCount())
-
-    return unsubscribe
+    const token = localStorage.getItem('token')
+    if (token) {
+      fetchUnreadCount()
+      
+      // Poll for updates every 30 seconds
+      const interval = setInterval(fetchUnreadCount, 30000)
+      return () => clearInterval(interval)
+    }
   }, [])
 
-  const markAsRead = (notificationId) => {
-    notificationService.markAsRead(notificationId)
-  }
-
-  const markAllAsRead = () => {
-    notificationService.markAllAsRead()
-  }
-
-  const showNotification = (title, message, type = 'info', priority = 'normal') => {
-    window.dispatchEvent(new CustomEvent('show-notification', {
-      detail: { title, message, type, priority }
-    }))
-  }
-
   return {
-    notifications,
     unreadCount,
+    fetchUnreadCount,
     markAsRead,
-    markAllAsRead,
-    showNotification
+    markAllAsRead
   }
 }

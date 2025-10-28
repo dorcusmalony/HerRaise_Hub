@@ -24,17 +24,36 @@ export default function MediaUpload({ onUpload, multiple = false }) {
 
     setUploading(true)
     const formData = new FormData()
-    formData.append('media', file)
+    formData.append('file', file)
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/media/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/upload/single`,
+        formData,
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }
-      })
+      )
 
-      onUpload(response.data)
+      if (response.data && response.data.success) {
+        const fileData = response.data.files?.[0] || response.data
+        onUpload({
+          url: fileData.url,
+          publicId: fileData.publicId || fileData.fileId,
+          resourceType: fileData.resourceType,
+          format: fileData.format,
+          width: fileData.width,
+          height: fileData.height,
+          duration: fileData.duration,
+          originalName: fileData.originalName,
+          size: fileData.size,
+          mimetype: fileData.mimetype
+        })
+      } else {
+        alert('Upload failed. Please try again.')
+      }
     } catch (error) {
       console.error('Upload failed:', error)
       alert('Upload failed. Please try again.')

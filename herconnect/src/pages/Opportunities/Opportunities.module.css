@@ -12,7 +12,7 @@
 .title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #333;
+  color: black;
   margin-bottom: 1rem;
 }
 
@@ -27,7 +27,7 @@
   background: white;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: #E84393 ;
   margin-bottom: 2rem;
 }
 
@@ -62,12 +62,12 @@
 .select:focus,
 .input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #2349f5;
 }
 
 .bookmarkButton {
   background: #f3f4f6;
-  color: #374151;
+  color: #E84393 ;
   border: 2px solid #e5e7eb;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -77,9 +77,9 @@
 }
 
 .bookmarkButton.active {
-  background: #667eea;
+  background: #2349f5;
   color: white;
-  border-color: #667eea;
+  border-color: #2349f5;
 }
 
 .opportunitiesGrid {

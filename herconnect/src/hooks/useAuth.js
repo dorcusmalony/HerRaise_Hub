@@ -5,18 +5,13 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
+    const userData = localStorage.getItem('user')
+    if (userData) {
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]))
-        setUser({
-          id: payload.id || payload.userId,
-          name: payload.name,
-          email: payload.email
-        })
+        setUser(JSON.parse(userData))
       } catch (error) {
-        console.error('Invalid token:', error)
-        localStorage.removeItem('token')
+        console.error('Invalid user data:', error)
+        localStorage.removeItem('user')
       }
     }
     setLoading(false)

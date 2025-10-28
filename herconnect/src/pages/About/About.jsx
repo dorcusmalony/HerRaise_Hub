@@ -61,9 +61,7 @@ export default function Home() {
               <h1 className={`${styles.heroTitle} display-3 fw-bold text-white mb-4`}>
                 Every Girl Deserves Education & A Bright Future
               </h1>
-              <p className="lead text-white mb-4" style={{ maxWidth: '600px' }}>
-                Empowering young women in South Sudan through mentorship, resources, and opportunities
-              </p>
+              
               <div className="d-flex gap-3">
                 <Link to="/register" className={`btn btn-lg ${styles.brandButton}`}>
                   Join Our Community
@@ -80,13 +78,17 @@ export default function Home() {
       <div className="container py-5">
         {/* Mission Statement */}
         <section className="mb-5 text-center">
-          <h2 className="display-5 fw-bold mb-4" style={{ color: 'var(--brand-magenta)' }}>
+          <h2 className="display-5 fw-bold mb-4">
             Our Mission
           </h2>
           <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            HerRaise Hub bridges the gap by connecting primary, high school girls and school dropout girls with life-changing opportunities,
-            dedicated mentors, and supportive peer networks. Together, we expand opportunities for the next generation
-            of women leaders to succeed.
+            To empower and mentor young women and girls in South Sudan to rise beyond societal limitations through education, storytelling, and mentorship  helping them realize their worth and build independent, confident lives.
+          </p>
+          <h2 className="display-5 fw-bold mb-4">
+            Our Vision
+          </h2>
+          <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
+            A South Sudan where every girl grows with courage, education, and purpose , free to dream, lead, and transform her community.
           </p>
         </section>
 

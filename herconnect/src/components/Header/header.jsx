@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { disconnectSocket } from '../../services/socketService'
 import { useLanguage } from '../../hooks/useLanguage'
+import { useNotifications } from '../../hooks/useNotifications'
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
+import NotificationPanel from '../Notifications/NotificationPanel'
 import styles from '../../styles/Pages.module.css'
 
 export default function Header() {
@@ -13,8 +15,10 @@ export default function Header() {
 	
 	const [user, setUser] = useState(null)
 	const [showDropdown, setShowDropdown] = useState(false)
-	const [notifications] = useState([]) // Remove setNotifications since it's not used yet
+	const [showNotifications, setShowNotifications] = useState(false)
+	const { unreadCount } = useNotifications()
 	const dropdownRef = useRef(null)
+	const notificationRef = useRef(null)
 
 	// Load user data on mount AND when storage changes
 	useEffect(() => {
@@ -151,24 +155,29 @@ export default function Header() {
 					{user ? (
 						<>
 							{/* Notification Bell */}
-							<div className="position-relative">
+							<div className="position-relative" ref={notificationRef}>
 								<button 
 									className="btn btn-link text-decoration-none p-2"
 									style={{color: 'var(--text-dark)'}}
 									title="Notifications"
+									onClick={() => setShowNotifications(!showNotifications)}
 								>
 									<svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
 										<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
 									</svg>
-									{notifications.length > 0 && (
+									{unreadCount > 0 && (
 										<span 
 											className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
 											style={{fontSize: '0.6rem'}}
 										>
-											{notifications.length}
+											{unreadCount}
 										</span>
 									)}
 								</button>
+								<NotificationPanel 
+									isOpen={showNotifications} 
+									onClose={() => setShowNotifications(false)} 
+								/>
 							</div>
 
 							{/* Avatar Dropdown */}
@@ -183,7 +192,7 @@ export default function Header() {
 										style={{
 											width: '40px',
 											height: '40px',
-											background: 'var(--brand-magenta)',
+											background: 'var(--brand-pink)',
 											overflow: 'hidden',
 											cursor: 'pointer'
 										}}
@@ -218,7 +227,7 @@ export default function Header() {
 													style={{
 														width: '48px',
 														height: '48px',
-														background: 'var(--brand-magenta)',
+														background: 'var(--brand-pink)',
 														overflow: 'hidden'
 													}}
 												>
@@ -237,10 +246,10 @@ export default function Header() {
 													<p className="mb-0 small text-muted text-truncate">{user?.email || 'user@example.com'}</p>
 													<span 
 														className="badge mt-1"
-														style={{background: 'var(--brand-magenta)', fontSize: '0.7rem'}}
+														style={{background: 'var(--brand-pink)', fontSize: '0.7rem'}}
 													>
-														{user?.role === 'mentee' ? '🎓 Mentee' : 
-														 user?.role === 'mentor' ? '👩‍🏫 Mentor' : '👑 Admin'}
+														{user?.role === 'mentee' ? ' Mentee' : 
+														 user?.role === 'mentor' ? ' Mentor' : ' Admin'}
 													</span>
 												</div>
 											</div>
@@ -330,7 +339,7 @@ export default function Header() {
 					) : (
 						<>
 							<Link to="/login" className="btn btn-sm btn-outline-primary">{t('login')}</Link>
-							<Link to="/register" className="btn btn-sm text-white" style={{background: 'var(--brand-magenta)'}}>{t('register')}</Link>
+							<Link to="/register" className="btn btn-sm text-white" style={{background: 'var(--brand-pink)'}}>{t('register')}</Link>
 						</>
 					)}
 				</div>

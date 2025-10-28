@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { likeAPI } from '../../services/likeAPI'
 import './LikeButton.css'
 
 export default function LikeButton({ postId, initialLikes = [], currentUserId, type = 'post' }) {
@@ -18,17 +18,14 @@ export default function LikeButton({ postId, initialLikes = [], currentUserId, t
     setLikesCount(prev => newLiked ? prev + 1 : prev - 1)
     
     try {
-      const endpoint = type === 'comment' 
-        ? `/api/forum/comments/${postId}/like`
-        : `/api/forum/posts/${postId}/like`
-        
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}${endpoint}`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
+      const response = type === 'comment' 
+        ? await likeAPI.toggleCommentLike(postId)
+        : await likeAPI.togglePostLike(postId)
 
-      // Update with server response
-      setLiked(response.data.liked)
-      setLikesCount(response.data.likesCount)
+      if (response.success) {
+        setLiked(response.liked)
+        setLikesCount(response.likesCount)
+      }
     } catch (error) {
       // Revert optimistic update on error
       setLiked(!newLiked)

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { opportunityAPI } from '../../services/opportunityAPI'
+import { applicationTrackerAPI } from '../../services/applicationTrackerAPI'
 import ApplicationModal from '../ApplicationTracker/ApplicationModal'
 import CountdownBadge from '../CountdownBadge/CountdownBadge'
 import './OpportunityCard.css'
@@ -12,18 +13,13 @@ export default function OpportunityCard({ opportunity, currentUser }) {
 
   const handleApplyClick = async () => {
     try {
-      // Track click
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/opportunity-board/${opportunity.id}/apply`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
+      await opportunityAPI.trackClick(opportunity.id)
     } catch (error) {
       console.error('Error tracking click:', error)
     }
     
-    // Open external link
     window.open(opportunity.applicationLink, '_blank')
     
-    // Show tracking modal after a delay
     setTimeout(() => {
       setShowTrackModal(true)
     }, 2000)
@@ -31,12 +27,11 @@ export default function OpportunityCard({ opportunity, currentUser }) {
 
   const handleSaveApplication = async (applicationData) => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/applications`, {
-        ...applicationData,
-        opportunity
-      }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
+      await applicationTrackerAPI.trackApplication(
+        opportunity.id,
+        applicationData.status,
+        applicationData.notes
+      )
     } catch (error) {
       console.error('Error saving application:', error)
     }
@@ -44,10 +39,10 @@ export default function OpportunityCard({ opportunity, currentUser }) {
 
   const handleBookmark = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/opportunity-board/${opportunity.id}/bookmark`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
-      setBookmarked(response.data.bookmarked)
+      const response = await opportunityAPI.toggleBookmark(opportunity.id)
+      if (response.success) {
+        setBookmarked(response.bookmarked)
+      }
     } catch (error) {
       console.error('Bookmark failed:', error)
     }
@@ -72,7 +67,14 @@ export default function OpportunityCard({ opportunity, currentUser }) {
       </div>
 
       <div className="opportunity-meta">
-        <span className={`type type-${opportunity.type}`}>{opportunity.type}</span>
+        {/* Fix: Render type as string, not object */}
+        <span className={`type type-${Array.isArray(opportunity.type) ? opportunity.type[0] : opportunity.type}`}>
+          {Array.isArray(opportunity.type)
+            ? opportunity.type.join(', ')
+            : typeof opportunity.type === 'object'
+              ? Object.values(opportunity.type).join(', ')
+              : opportunity.type}
+        </span>
         <span className="organization">{opportunity.organization}</span>
         {opportunity.amount && (
           <span className="amount">{opportunity.amount}</span>

@@ -55,13 +55,12 @@ export default function Forum() {
   }, [fetchPosts])
 
   const handleLikePost = async (postId) => {
-    const token = localStorage.getItem('token')
-    
     try {
       const response = await fetch(`${API}/api/forum/posts/${postId}/like`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
         }
       })
       
@@ -179,13 +178,12 @@ export default function Forum() {
   }
 
   const handleLikeComment = async (commentId) => {
-    const token = localStorage.getItem('token')
-    
     try {
       await fetch(`${API}/api/forum/comments/${commentId}/like`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
         }
       })
       
