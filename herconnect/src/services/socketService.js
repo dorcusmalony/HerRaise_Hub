@@ -9,7 +9,7 @@ export const initializeSocket = (token) => {
   }
 
   const API_URL = import.meta.env.VITE_API_URL || ''
-  const socketUrl = API_URL.replace('/api', '').replace(/\/$/, '')
+  const socketUrl = API_URL
 
   socket = io(socketUrl, {
     auth: { token },
@@ -21,10 +21,7 @@ export const initializeSocket = (token) => {
 
   socket.on('connect', () => {
     console.log('✅ Connected to WebSocket')
-    const userId = getUserIdFromToken(token)
-    if (userId) {
-      socket.emit('authenticate', userId)
-    }
+    socket.emit('authenticate', token)
   })
 
   socket.on('disconnect', () => {
@@ -95,15 +92,7 @@ export const disconnectSocket = () => {
 
 export const getSocket = () => socket
 
-function getUserIdFromToken(token) {
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    return payload.id || payload.userId
-  } catch (error) {
-    console.error('Error decoding token:', error)
-    return null
-  }
-}
+
 
 function showNotification(title, message) {
   // Browser notification
