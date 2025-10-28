@@ -329,7 +329,7 @@ export default function SafetyReport() {
           </p>
           <p className="text-lg">
             <a href="tel:1212" className="text-blue-600 hover:text-blue-700 font-semibold">
-               GBV Crisis Hotline: 1212
+               Do not keep quite, alway reach out for assistance
             </a>
           </p>
           <p className="text-lg">
