@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import axios from 'axios'
 import './MediaUpload.css'
 
 export default function MediaUpload({ onUpload, multiple = false }) {
@@ -24,21 +23,25 @@ export default function MediaUpload({ onUpload, multiple = false }) {
 
     setUploading(true)
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('media', file)
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/upload/single`,
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
-      )
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/media/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formData
+      })
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.status}`)
+      }
+      
+      const data = await response.json()
 
-      if (response.data && response.data.success) {
-        const fileData = response.data.files?.[0] || response.data
+      if (data && data.success) {
+        const fileData = data.files?.[0] || data
         onUpload({
           url: fileData.url,
           publicId: fileData.publicId || fileData.fileId,
@@ -56,7 +59,7 @@ export default function MediaUpload({ onUpload, multiple = false }) {
       }
     } catch (error) {
       console.error('Upload failed:', error)
-      alert('Upload failed. Please try again.')
+      alert(`Upload failed: ${error.message}. Please try again.`)
     } finally {
       setUploading(false)
     }

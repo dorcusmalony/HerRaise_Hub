@@ -10,8 +10,14 @@ export const likeAPI = {
   async togglePostLike(postId) {
     const response = await fetch(`${API_URL}/api/forum/posts/${postId}/like`, {
       method: 'POST',
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
+      body: JSON.stringify({})
     })
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
     return response.json()
   },
 
@@ -19,8 +25,14 @@ export const likeAPI = {
   async toggleCommentLike(commentId) {
     const response = await fetch(`${API_URL}/api/forum/comments/${commentId}/like`, {
       method: 'POST',
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
+      body: JSON.stringify({})
     })
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
     return response.json()
   }
 }

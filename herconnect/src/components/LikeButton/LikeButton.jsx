@@ -22,7 +22,9 @@ export default function LikeButton({ postId, initialLikes = [], currentUserId, t
         ? await likeAPI.toggleCommentLike(postId)
         : await likeAPI.togglePostLike(postId)
 
-      if (response.success) {
+      console.log('Like response:', response)
+      
+      if (response && response.success) {
         setLiked(response.liked)
         setLikesCount(response.likesCount)
       }
@@ -31,6 +33,7 @@ export default function LikeButton({ postId, initialLikes = [], currentUserId, t
       setLiked(!newLiked)
       setLikesCount(prev => newLiked ? prev - 1 : prev + 1)
       console.error('Like failed:', error)
+      alert(`Like failed: ${error.message}`)
     } finally {
       setLoading(false)
     }
