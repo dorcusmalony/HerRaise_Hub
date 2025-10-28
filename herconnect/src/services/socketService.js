@@ -28,7 +28,7 @@ export const initializeSocket = (token) => {
   })
 
   socket.on('disconnect', () => {
-    console.log('❌ Disconnected from WebSocket')
+    console.log('Disconnected from WebSocket')
   })
 
   socket.on('connect_error', (error) => {
@@ -37,49 +37,49 @@ export const initializeSocket = (token) => {
 
   // Listen for new opportunities
   socket.on('opportunity:new', (data) => {
-    console.log('🆕 New opportunity:', data)
+    console.log(' New opportunity:', data)
     showNotification('New Opportunity', data.title || 'A new opportunity has been posted!')
   })
 
   // Listen for application status updates
   socket.on('application:status_update', (data) => {
-    console.log('📝 Application status updated:', data)
+    console.log(' Application status updated:', data)
     showNotification('Application Update', `Your application status: ${data.status}`)
   })
 
   // Listen for deadline reminders
   socket.on('opportunity:deadline_reminder', (data) => {
-    console.log('⏰ Deadline reminder:', data)
+    console.log(' Deadline reminder:', data)
     showNotification('Deadline Reminder', data.message || 'Deadline approaching!')
   })
 
   // Listen for new forum questions
   socket.on('forum:new_question', (data) => {
-    console.log('❓ New forum question:', data)
+    console.log(' New forum question:', data)
     showNotification('New Question Posted', `${data.author.name}: ${data.title}`)
   })
 
   // Listen for answers to your questions
   socket.on('forum:new_answer', (data) => {
-    console.log('💡 New answer:', data)
+    console.log(' New answer:', data)
     showNotification('Someone Answered Your Question', `${data.author.name} answered: ${data.questionTitle}`)
   })
 
   // Listen for comments on your posts
   socket.on('forum:new_comment', (data) => {
-    console.log('💬 New comment:', data)
+    console.log(' New comment:', data)
     showNotification('New Comment', `${data.author.name} commented on your post`)
   })
 
   // Listen for opportunity updates
   socket.on('opportunity:updated', (data) => {
-    console.log('📢 Opportunity updated:', data)
+    console.log(' Opportunity updated:', data)
     showNotification('Opportunity Updated', `${data.title} has new updates`)
   })
 
   // Listen for new applications
   socket.on('application:new', (data) => {
-    console.log('📝 New application:', data)
+    console.log(' New application:', data)
     showNotification('New Application', `Someone applied to ${data.opportunityTitle}`)
   })
 

@@ -14,7 +14,7 @@ const FileUpload = ({ onFilesUploaded, acceptedTypes = 'image/*,video/*,.pdf,.do
 
     try {
       const API = import.meta.env.VITE_API_URL || ''
-      const response = await fetch(`${API}/api/forum/upload`, {
+      const response = await fetch(`${API}/api/upload/multiple`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         body: formData
@@ -22,7 +22,9 @@ const FileUpload = ({ onFilesUploaded, acceptedTypes = 'image/*,video/*,.pdf,.do
       
       if (response.ok) {
         const data = await response.json()
-        onFilesUploaded(data.files)
+        if (data.success && data.files) {
+          onFilesUploaded(data.files)
+        }
       } else {
         console.error('Upload failed')
       }

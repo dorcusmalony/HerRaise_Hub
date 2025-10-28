@@ -1,114 +1,63 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getSocket, requestNotificationPermission } from '../../services/socketService'
-import OpportunityCard from '../../components/OpportunityCard/OpportunityCard'
-import ApplicationTracker from '../../components/ApplicationTracker/ApplicationTracker'
-import UrgentOpportunities from '../../components/UrgentOpportunities/UrgentOpportunities'
-import { useAuth } from '../../hooks/useAuth'
 import styles from './Opportunities.module.css'
 
+const API_URL = import.meta.env.VITE_API_URL || ''
+
+const getMockOpportunities = () => [
+  {
+    id: 1,
+    title: "UN Women Leadership Scholarship 2025",
+    organization: "UN Women",
+    type: "scholarship",
+    description: "Empowering young women leaders through education and mentorship programs.",
+    amount: "$5,000",
+    location: "Global",
+    applicationDeadline: "2024-12-31",
+    applicationLink: "https://unwomen.org/scholarship/apply",
+    isFeatured: true,
+    
+  },
+  {
+    id: 2,
+    title: "Google Women Techmakers Internship",
+    organization: "Google",
+    type: "internship",
+    description: "3-month paid internship program for women in technology.",
+    amount: "$4,000/month",
+    location: "Remote/Global",
+    applicationDeadline: "2024-11-15",
+    applicationLink: "https://careers.google.com/women-techmakers",
+    
+  }
+]
+
 export default function Opportunities() {
-  const { user } = useAuth()
-  const API = import.meta.env.VITE_API_URL || ''
   const [opportunities, setOpportunities] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
-  const [bookmarkedOnly, setBookmarkedOnly] = useState(false)
+  const [bookmarked, setBookmarked] = useState(false)
 
-  // Real-time updates
-  useEffect(() => {
-    requestNotificationPermission()
-    const socket = getSocket()
-    if (socket) {
-      socket.on('opportunity:new', (data) => {
-        setOpportunities(prev => [data, ...prev])
-      })
-      return () => {
-        socket.off('opportunity:new')
-      }
-    }
-  }, [])
-
-  // Mock data for demonstration
-  const getMockOpportunities = () => [
-    {
-      id: 1,
-      title: "UN Women Leadership Scholarship 2025",
-      organization: "UN Women",
-      type: "scholarship",
-      description: "Empowering young women leaders through education and mentorship programs.",
-      amount: "$5,000",
-      location: "Global",
-      applicationDeadline: "2024-12-31",
-      applicationLink: "https://unwomen.org/scholarship/apply",
-      isFeatured: true,
-      views: 1250,
-      clickCount: 89
-    },
-    {
-      id: 2,
-      title: "Google Women Techmakers Internship",
-      organization: "Google",
-      type: "internship",
-      description: "3-month paid internship program for women in technology.",
-      amount: "$4,000/month",
-      location: "Remote/Global",
-      applicationDeadline: "2024-11-15",
-      applicationLink: "https://careers.google.com/women-techmakers",
-      views: 2100,
-      clickCount: 156
-    },
-    {
-      id: 3,
-      title: "AAUW International Fellowships 2024",
-      organization: "AAUW",
-      type: "scholarship",
-      description: "$18,000-$30,000 fellowships for women pursuing graduate studies.",
-      amount: "$18,000-$30,000",
-      location: "Global",
-      applicationDeadline: "2024-12-20",
-      applicationLink: "https://aauw.org/fellowships",
-      isFeatured: false,
-      views: 890,
-      clickCount: 67
-    },
-    {
-      id: 4,
-      title: "TechWomen Program 2024",
-      organization: "U.S. State Department",
-      type: "conference",
-      description: "Silicon Valley STEM mentorship program for emerging women leaders.",
-      amount: "Fully funded",
-      location: "Silicon Valley, USA",
-      applicationDeadline: "2024-12-18",
-      applicationLink: "https://techwomen.org/apply",
-      isFeatured: true,
-      views: 1450,
-      clickCount: 123
-    }
-  ]
-
-  // Fetch opportunities
   const fetchOpportunities = useCallback(async () => {
-    const token = localStorage.getItem('token')
-    const params = new URLSearchParams({
-      type: filter !== 'all' ? filter : '',
-      search,
-      bookmarked: bookmarkedOnly
-    })
-    
     try {
-      const response = await fetch(`${API}/api/opportunity-board?${params.toString()}`, {
+      const params = new URLSearchParams({
+        type: filter !== 'all' ? filter : '',
+        search,
+        bookmarked: bookmarked.toString()
+      })
+      
+      const response = await fetch(`${API_URL}/api/opportunity-board?${params}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         }
       })
-
+      
       if (response.ok) {
         const data = await response.json()
         setOpportunities(data.opportunities || [])
       } else {
+        // Fallback to mock data if API fails
         setOpportunities(getMockOpportunities())
       }
     } catch (error) {
@@ -117,28 +66,52 @@ export default function Opportunities() {
     } finally {
       setLoading(false)
     }
-  }, [API, filter, search, bookmarkedOnly])
+  }, [filter, search, bookmarked])
 
   useEffect(() => {
     fetchOpportunities()
   }, [fetchOpportunities])
 
-
-
-  if (loading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    )
+  const handleApplyClick = async (opportunityId, applicationLink) => {
+    try {
+      // Track click
+      await fetch(`${API_URL}/api/opportunity-board/${opportunityId}/apply`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+    } catch (error) {
+      console.error('Error tracking click:', error)
+    }
+    
+    // Open external link
+    window.open(applicationLink, '_blank')
   }
+
+  const handleBookmark = async (opportunityId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/opportunity-board/${opportunityId}/bookmark`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      
+      if (response.ok) {
+        fetchOpportunities() // Refresh to update bookmark status
+      }
+    } catch (error) {
+      console.error('Error toggling bookmark:', error)
+    }
+  }
+
+
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>🎓 Scholarship & Opportunity Board</h1>
+        <h1 className={styles.title}> Scholarship & Opportunity Board</h1>
         <p className={styles.subtitle}>
           Discover scholarships, internships, and competitions. Apply directly through external links.
         </p>
@@ -167,43 +140,77 @@ export default function Opportunities() {
             />
           </div>
           <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Filter</label>
             <button 
-              className={`${styles.bookmarkButton} ${bookmarkedOnly ? styles.active : ''}`}
-              onClick={() => setBookmarkedOnly(!bookmarkedOnly)}
+              className={`${styles.bookmarkButton} ${bookmarked ? styles.active : ''}`}
+              onClick={() => setBookmarked(!bookmarked)}
             >
-              {bookmarkedOnly ? '💖 Bookmarked Only' : '💖 Show Bookmarked'}
+              {bookmarked ? '💖 Bookmarked Only' : '💖 Show Bookmarked'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Urgent Opportunities */}
-      <UrgentOpportunities />
-      
-      {/* Application Tracker */}
-      <div className="mb-4">
-        <ApplicationTracker />
-      </div>
-
-      {opportunities.length === 0 ? (
-        <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>🔍</div>
-          <h4 className={styles.emptyTitle}>No opportunities found</h4>
-          <p className={styles.emptyText}>Check back soon for new scholarships and internships!</p>
+      {loading && (
+        <div className="text-center py-5">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
-      ) : (
+      )}
+
+      {!loading && (
         <div className={styles.opportunitiesGrid}>
           {opportunities.map(opportunity => (
-            <OpportunityCard 
-              key={opportunity.id}
-              opportunity={opportunity} 
-              currentUser={user}
-            />
+            <div key={opportunity.id} className={styles.opportunityCard}>
+              {opportunity.isFeatured && (
+                <div className={styles.featuredBadge}> Featured</div>
+              )}
+              
+              <div className={styles.opportunityHeader}>
+                <h3 className={styles.opportunityTitle}>{opportunity.title}</h3>
+                <button 
+                  className={`${styles.bookmarkBtn} ${opportunity.bookmarked ? styles.bookmarked : ''}`}
+                  onClick={() => handleBookmark(opportunity.id)}
+                >
+                  {opportunity.bookmarked ? '💖' : '🤍'}
+                </button>
+              </div>
+
+              <div className={styles.opportunityMeta}>
+                <span className={styles.type}>{opportunity.type}</span>
+                <span className={styles.organization}>{opportunity.organization}</span>
+                {opportunity.amount && (
+                  <span className={styles.amount}>{opportunity.amount}</span>
+                )}
+              </div>
+
+              <p className={styles.description}>{opportunity.description}</p>
+
+              <div className={styles.opportunityDetails}>
+                <div className={styles.deadline}>
+                   Deadline: {new Date(opportunity.applicationDeadline).toLocaleDateString()}
+                  {opportunity.isUrgent && (
+                    <span className={styles.urgentBadge}> Urgent</span>
+                  )}
+                </div>
+                <div className={styles.location}> {opportunity.location}</div>
+              </div>
+
+              <div className={styles.opportunityActions}>
+                <button 
+                  onClick={() => handleApplyClick(opportunity.id, opportunity.applicationLink)}
+                  className={styles.applyBtn}
+                >
+                   Apply Now
+                </button>
+                <div className={styles.stats}>
+                   {opportunity.views || 0} views  {opportunity.clickCount || 0} applications
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       )}
     </div>
   )
 }
-

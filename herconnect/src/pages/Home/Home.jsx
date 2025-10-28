@@ -3,183 +3,157 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../../hooks/useLanguage'
 import styles from './Home.module.css'
 
-
-
 export default function Home() {
   const { t } = useLanguage()
+
   return (
     <div className={styles.container}>
       {/* Hero Section */}
       <section className={styles.hero}>
         <h1 className={styles.heroTitle}>
-          {t('nav.home')} - Empowering Young Women
+          {t('HerRaise Hub')}  Empowering the Next Generation of Women Leaders
         </h1>
-        <p className={styles.heroSubtitle}>
-          Connect, learn, and grow with our supportive community
+        <p className={`${styles.heroSubtitle} text-white mb-4`} style={{ maxWidth: '700px' }}>
+          HerRaise Hub is a women led initiative dedicated to mentoring and empowering girls through education, confidence-building, and storytelling. 
+          We believe that every girl deserves the chance to rise above societal pressures, to dream boldly, and to take accountability for shaping her own future.
         </p>
         <Link to="/register" className={styles.ctaButton}>
-          Get Started Today
+          Join the Movement
         </Link>
       </section>
 
+      {/* Welcome Video Section */}
+      <section className={styles.videoSection}>
+        <div className="container text-center">
+          <h2 className="display-5 fw-bold mb-4">{t('Welcome to HerRaise Hub')}</h2>
+          <p className="lead mb-4">{t('Watch our founder share the vision behind HerRaise Hub')}</p>
+          <div className={styles.videoContainer}>
+            <video 
+              className={styles.welcomeVideo}
+              controls 
+              poster="/path/to/video-thumbnail.jpg"
+            >
+              <source src="/path/to/welcome-video.mp4" type="video/mp4" />
+              <source src="/path/to/welcome-video.webm" type="video/webm" />
+              {t('Your browser does not support the video tag.')}
+            </video>
+          </div>
+        </div>
+      </section>
+
+      {/* About Us Section */}
+      <section className="text-center mb-5 mt-5">
+        <h2 className="display-5 fw-bold mb-4">{t('About HerRaise')}</h2>
+        <p className="lead mx-auto" style={{ maxWidth: '850px' }}>
+          We exist to support and guide young women in South Sudan and across Africa to pursue their education, careers, and passions with courage and clarity.
+          Through mentorship, learning programs, and storytelling, HerRaise connects girls to role models and opportunities that open doors to growth and independence.
+          Together, we are shaping a future where girls choose purpose over pressure and leadership over limitation.
+        </p>
+      </section>
+
+      {/* What We Do Section */}
       <section className={styles.features}>
-        {/* What We Do Section */}
-        <section className="text-center mb-5">
-          <h2 className="display-5 fw-bold mb-4">{t('what we do')}</h2>
-          <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            {t('What we do')}
+        <div className={styles.featureCard}>
+          <div className={styles.featureIcon}>🤝</div>
+          <h3 className={styles.featureTitle}>{t('Find Mentorship')}</h3>
+          <p className={styles.featureDescription}>
+            Connect with inspiring mentors who guide you in education, career, and personal growth. You don’t walk this journey alone.
           </p>
-        </section>
+          <Link to="/register" className={styles.ctaButton}>{t('Get Started')}</Link>
+        </div>
 
-        {/* Key Features */}
-        <section className="mb-5">
-          <div className="row g-4">
-            {/* Feature 1: Mentorship */}
-            <div className="col-md-4">
-              <div className="card h-100 border-0 shadow-sm text-center p-4">
-                <div className="mb-3" style={{ fontSize: '3rem' }}>👩‍🏫</div>
-                <h4 className="fw-bold mb-3">{t('Find mentorship here')}</h4>
-                <p className="text-muted">
-                  {t('Connect with Peers')}
-                </p>
-                <Link to="/register" className="btn btn-outline-primary mt-auto">
-                  {t('get started')}
-                </Link>
-              </div>
-            </div>
+        <div className={styles.featureCard}>
+          <div className={styles.featureIcon}>📚</div>
+          <h3 className={styles.featureTitle}>{t('Access Resources')}</h3>
+          <p className={styles.featureDescription}>
+            Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.
+          </p>
+          <Link to="/resources" className={styles.ctaButton}>{t('Browse Resources')}</Link>
+        </div>
 
-            {/* Feature 2: Resources */}
-            <div className="col-md-4">
-              <div className="card h-100 border-0 shadow-sm text-center p-4">
-                <div className="mb-3" style={{ fontSize: '3rem' }}>📚</div>
-                <h4 className="fw-bold mb-3">{t('access resources')}</h4>
-                <p className="text-muted">
-                  {t('access resources')}
-                </p>
-                <Link to="/resources" className="btn btn-outline-primary mt-auto">
-                  {t('browse resources')}
-                </Link>
-              </div>
-            </div>
+        <div className={styles.featureCard}>
+          <div className={styles.featureIcon}>🌍</div>
+          <h3 className={styles.featureTitle}>{t('Discover Opportunities')}</h3>
+          <p className={styles.featureDescription}>
+            Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.
+          </p>
+          <Link to="/opportunities" className={styles.ctaButton}>{t('View Opportunities')}</Link>
+        </div>
+      </section>
 
-            {/* Feature 3: Opportunities */}
-            <div className="col-md-4">
-              <div className="card h-100 border-0 shadow-sm text-center p-4">
-                <div className="mb-3" style={{ fontSize: '3rem' }}></div>
-                <h4 className="fw-bold mb-3">{t('discover opportunities')}</h4>
-                <p className="text-muted">
-                  {t('discover opportunities')}
-                </p>
-                <Link to="/opportunities" className="btn btn-outline-primary mt-auto">
-                  {t('view opportunities')}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Why Join Section */}
-        <section className="mb-5">
-          <div className="card border-0" style={{ background: 'linear-gradient(135deg, #E84393 0%, #c33764 100%)' }}>
-            <div className="card-body text-white p-5 text-center">
-              <h2 className="display-6 fw-bold mb-4">{t('why join herraise')}</h2>
-              <div className="row g-4 text-start">
-                <div className="col-md-6">
+      {/* Why Join Section */}
+      <section className="mb-5">
+        <div className="card border-0" style={{ background: 'linear-gradient(135deg, #E84393 0%, #c33764 100%)' }}>
+          <div className="card-body text-white p-5 text-center">
+            <h2 className="display-6 fw-bold mb-4">{t('Why Join HerRaise?')}</h2>
+            <p className="lead mb-5">Because when you rise, your community rises with you.</p>
+            <div className="row g-4 justify-content-center text-start">
+              {[
+                ['Build your network', 'Meet other ambitious young women and grow together through mentorship and friendship.'],
+                ['Develop your skills', 'Access training and workshops to build confidence, leadership, and tech skills.'],
+                ['Unlock opportunities', 'Find the tools and connections that turn your dreams into action.'],
+                ['Join our community', 'Be part of a safe, supportive, and inspiring space made by women, for women.']
+              ].map(([title, desc]) => (
+                <div key={title} className="col-md-6">
                   <div className="d-flex align-items-start gap-3">
                     <div className="fs-3"></div>
                     <div>
-                      <h5 className="fw-bold">{t('Build your network')}</h5>
-                      <p className="mb-0">{t('build your network')}</p>
+                      <h5 className="fw-bold">{t(title)}</h5>
+                      <p className="mb-0">{t(desc)}</p>
                     </div>
                   </div>
                 </div>
-                <div className="col-md-6">
-                  <div className="d-flex align-items-start gap-3">
-                    <div className="fs-3"></div>
-                    <div>
-                      <h5 className="fw-bold">{t('Develop your skills')}</h5>
-                      <p className="mb-0">{t('develop your skills')}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="d-flex align-items-start gap-3">
-                    <div className="fs-3">🎓</div>
-                    <div>
-                      <h5 className="fw-bold">{t('Unlock opportunities')}</h5>
-                      <p className="mb-0">{t('Unlock opportunities')}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="d-flex align-items-start gap-3">
-                    <div className="fs-3"></div>
-                    <div>
-                      <h5 className="fw-bold">{t('Join our supportive community')}</h5>
-                      <p className="mb-0">{t('Join')}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4">
-                <Link to="/register" className="btn btn-light btn-lg fw-bold">
-                  {t('join our community today')}
-                </Link>
-              </div>
+              ))}
+            </div>
+            <div className="mt-5">
+              <Link to="/register" className="btn btn-light btn-lg fw-bold">
+                {t('Join Our Community Today')}
+              </Link>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* How It Works */}
-        <section className="mb-5">
-          <h2 className="text-center fw-bold mb-5">{t('how it works')}</h2>
-          <div className="row g-4">
-            <div className="col-md-3 text-center">
-              <div className="mb-3" style={{ fontSize: '2.5rem' }}>1️⃣</div>
-              <h5 className="fw-bold">{t('signup')}</h5>
-              <p className="text-muted small">{t('signup')}</p>
+      {/* How It Works Section */}
+      <section className="mb-5">
+        <h2 className="text-center fw-bold mb-5">{t('How It Works')}</h2>
+        <div className="row g-4 justify-content-center">
+          {[
+            ['Sign Up', 'Create your free HerRaise account in minutes.'],
+            ['Build Your Profile', 'Tell us about your goals and interests.'],
+            ['Connect With Mentors', 'Join mentorship programs and forums.'],
+            ['Achieve Your Goals', 'Turn your learning into real-world action.']
+          ].map(([title, desc], index) => (
+            <div key={title} className="col-md-3 text-center">
+              <div className="mb-3" style={{ fontSize: '2.5rem' }}>{index + 1}️⃣</div>
+              <h5 className="fw-bold">{t(title)}</h5>
+              <p className="text-muted small">{t(desc)}</p>
             </div>
-            <div className="col-md-3 text-center">
-              <div className="mb-3" style={{ fontSize: '2.5rem' }}>2️⃣</div>
-              <h5 className="fw-bold">{t('build your profile')}</h5>
-              <p className="text-muted small">{t('build your profile')}</p>
-            </div>
-            <div className="col-md-3 text-center">
-              <div className="mb-3" style={{ fontSize: '2.5rem' }}>3️⃣</div>
-              <h5 className="fw-bold">{t('connect with peers')}</h5>
-              <p className="text-muted small">{t('connect learn')}</p>
-            </div>
-            <div className="col-md-3 text-center">
-              <div className="mb-3" style={{ fontSize: '2.5rem' }}>4️⃣</div>
-              <h5 className="fw-bold">{t('Achieve your goals')}</h5>
-              <p className="text-muted small">{t('Achieve your goals')}</p>
-            </div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
-        {/* Call to Action */}
-        <section className="text-center mb-5">
-          <div className="card border-0 bg-light">
-            <div className="card-body p-5">
-              <h2 className="display-6 fw-bold mb-3">{t(' Star your journey')}</h2>
-              <p className="lead text-muted mb-4">
-                {t('join_thousands_of_young_women')}
-              </p>
-              <div className="d-flex gap-3 justify-content-center flex-wrap">
-                <Link to="/register" className={`btn btn-lg ${styles.brandButton}`}>
-                  {t('create_free_account')}
-                </Link>
-                <Link to="/login" className="btn btn-lg btn-outline-primary">
-                  {t('sign_in')}
-                </Link>
-              </div>
-              <p className="text-muted small mt-3 mb-0">
-                {t('already_have_an_account')} <Link to="/login">{t('login here')}</Link>
-              </p>
+      {/* Final Call to Action */}
+      <section className="text-center mb-5">
+        <div className="card border-0 bg-light">
+          <div className="card-body p-5">
+            <h2 className="display-6 fw-bold mb-3">{t('Start Your Journey Today')}</h2>
+            <p className="lead text-muted mb-4">
+              Join thousands of young women taking charge of their future with courage, education, and purpose.
+            </p>
+            <div className="d-flex gap-3 justify-content-center flex-wrap">
+              <Link to="/register" className={`btn btn-lg ${styles.brandButton}`}>
+                {t('Create Free Account')}
+              </Link>
+              <Link to="/login" className="btn btn-lg btn-outline-primary">
+                {t('Sign In')}
+              </Link>
             </div>
+            <p className="text-muted small mt-3 mb-0">
+              {t('Already have an account?')} <Link to="/login">{t('Login here')}</Link>
+            </p>
           </div>
-        </section>
-      {/* Close the features div */}
+        </div>
       </section>
     </div>
   )

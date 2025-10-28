@@ -1,0 +1,140 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2rem;
+}
+
+.successCard {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.successIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.emailNotification {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.emailIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.emailNotification p {
+  margin: 0;
+  text-align: left;
+  color: #495057;
+}
+
+.nextSteps {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.nextSteps h3 {
+  color: #333;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.nextSteps ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nextSteps li {
+  padding: 0.5rem 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.getStartedBtn {
+  background: var(--brand-blue);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 2rem;
+}
+
+.getStartedBtn:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+.emailReminder {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+}
+
+.emailReminder p {
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  color: #856404;
+}
+
+.emailReminder ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #856404;
+}
+
+.emailReminder li {
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .successCard {
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .emailNotification {
+    flex-direction: column;
+    text-align: center;
+  }
+}

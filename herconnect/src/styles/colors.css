@@ -1,0 +1,77 @@
+/* Global Color Variables */
+:root {
+  --brand-blue: #0d6efd;
+  --brand-purple: #8B5CF6;
+  --brand-pink: #E84393;
+  --brand-magenta: var(--brand-pink);
+  
+  /* Bootstrap overrides */
+  --bs-primary: var(--brand-blue);
+  --bs-primary-rgb: 13, 110, 253;
+}
+
+/* Button Updates */
+.btn-primary {
+  background-color: var(--brand-blue);
+  border-color: var(--brand-blue);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--brand-blue);
+  border-color: var(--brand-blue);
+  filter: brightness(0.9);
+}
+
+.btn-outline-primary {
+  color: var(--brand-blue);
+  border-color: var(--brand-blue);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  background-color: var(--brand-blue);
+  border-color: var(--brand-blue);
+  color: white;
+}
+
+/* Purple Elements */
+.bg-purple {
+  background-color: var(--brand-purple) !important;
+}
+
+.text-purple {
+  color: var(--brand-purple) !important;
+}
+
+.border-purple {
+  border-color: var(--brand-purple) !important;
+}
+
+/* Pink/Magenta Elements */
+.bg-pink,
+.bg-magenta {
+  background-color: var(--brand-pink) !important;
+}
+
+.text-pink,
+.text-magenta {
+  color: var(--brand-pink) !important;
+}
+
+.border-pink,
+.border-magenta {
+  border-color: var(--brand-pink) !important;
+}
+
+/* Update existing magenta references */
+[style*="var(--brand-magenta)"] {
+  background-color: var(--brand-pink) !important;
+}
+
+/* Footer Styling */
+.site-footer {
+  background: linear-gradient(135deg, var(--brand-purple) 0%, #6D28D9 100%);
+}

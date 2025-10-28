@@ -1,0 +1,64 @@
+.container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.form {
+  text-align: center;
+}
+
+.form .form-label {
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.form .form-control,
+.form .form-select {
+  text-align: center;
+}
+
+.form .text-muted {
+  text-align: center;
+}
+
+.brandButton {
+  background: var(--brand-blue);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.brandButton:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+.brandButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+}

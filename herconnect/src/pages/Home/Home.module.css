@@ -73,6 +73,26 @@
   line-height: 1.6;
 }
 
+.videoSection {
+  padding: 4rem 0;
+  background: #f8f9fa;
+  margin-bottom: 3rem;
+}
+
+.videoContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.welcomeVideo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 @media (max-width: 768px) {
   .heroTitle {
     font-size: 2rem;
@@ -84,5 +104,14 @@
   
   .features {
     grid-template-columns: 1fr;
+  }
+  
+  .videoSection {
+    padding: 2rem 0;
+  }
+  
+  .videoContainer {
+    max-width: 100%;
+    margin: 0 1rem;
   }
 }

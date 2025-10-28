@@ -1,48 +1,64 @@
 
+:root {
+  --brand-blue: #0d6efd;
+  --brand-purple: #8B5CF6;
+  --brand-magenta: var(--brand-purple);
+}
+
 #root {
-	/* allow full width, don't artificially center the entire app */
 	width: 100%;
 	min-height: 100vh;
 	box-sizing: border-box;
 }
 
-#root {
-  padding: 2rem;
-  text-align: center;
+/* Update all blue buttons */
+.btn-primary, .btn-outline-primary {
+  --bs-btn-bg: var(--brand-blue);
+  --bs-btn-border-color: var(--brand-blue);
+  --bs-btn-hover-bg: var(--brand-blue);
+  --bs-btn-hover-border-color: var(--brand-blue);
+  --bs-btn-active-bg: var(--brand-blue);
+  --bs-btn-active-border-color: var(--brand-blue);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.btn-outline-primary {
+  --bs-btn-color: var(--brand-blue);
+  --bs-btn-bg: transparent;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Update all purple/magenta elements */
+.bg-primary {
+  background-color: var(--brand-blue) !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.text-primary {
+  color: var(--brand-blue) !important;
 }
 
-.card {
-  padding: 2em;
+.border-primary {
+  border-color: var(--brand-blue) !important;
 }
 
-.read-the-docs {
-  color: #888;
+/* Footer purple background */
+.site-footer {
+  background: linear-gradient(135deg, var(--brand-purple) 0%, #6D28D9 100%);
+  color: white;
+  padding: 3rem 0 1rem;
+}
+
+.site-footer h5 {
+  color: white;
+  font-weight: 600;
+}
+
+.site-footer .btn-light {
+  background-color: white;
+  border-color: white;
+  color: var(--brand-purple);
+}
+
+.site-footer .btn-light:hover {
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+  color: var(--brand-purple);
 }
