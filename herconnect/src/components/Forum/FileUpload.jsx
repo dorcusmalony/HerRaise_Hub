@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './FileUpload.module.css'
 
-const FileUpload = ({ onFilesUploaded, acceptedTypes = 'image/*,video/*,.pdf,.doc,.docx,.txt,.ppt,.pptx' }) => {
+const FileUpload = ({ onFilesUploaded, acceptedTypes = '.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.webm,.pdf,.doc,.docx,.ppt,.pptx,.txt,.mp3,.wav,.ogg' }) => {
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
 
@@ -14,7 +14,7 @@ const FileUpload = ({ onFilesUploaded, acceptedTypes = 'image/*,video/*,.pdf,.do
 
     try {
       const API = import.meta.env.VITE_API_URL || ''
-      const response = await fetch(`${API}/api/upload/multiple`, {
+      const response = await fetch(`${API}/api/forum/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         body: formData
@@ -86,7 +86,7 @@ const FileUpload = ({ onFilesUploaded, acceptedTypes = 'image/*,video/*,.pdf,.do
                 <strong>Click to upload</strong> or drag and drop
               </p>
               <p className={styles.uploadHint}>
-                Images, videos, PDFs, documents (Max 10MB each)
+                Images, videos, documents, audio (Max 50MB each)
               </p>
             </div>
           )}

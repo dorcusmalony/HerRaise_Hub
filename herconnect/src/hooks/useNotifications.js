@@ -5,12 +5,22 @@ export function useNotifications() {
   const [unreadCount, setUnreadCount] = useState(0)
 
   const fetchUnreadCount = async () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setUnreadCount(0)
+      return
+    }
+    
     try {
       const data = await notificationAPI.getUnreadCount()
       if (data.success) {
         setUnreadCount(data.unreadCount)
       }
     } catch (error) {
+      if (error.message?.includes('401') || error.message?.includes('Invalid token')) {
+        setUnreadCount(0)
+        return
+      }
       console.error('Failed to fetch unread count:', error)
     }
   }
@@ -40,7 +50,19 @@ export function useNotifications() {
       
       // Poll for updates every 30 seconds
       const interval = setInterval(fetchUnreadCount, 30000)
-      return () => clearInterval(interval)
+      
+      // Listen for logout events
+      const handleLogout = () => {
+        setUnreadCount(0)
+      }
+      window.addEventListener('user-logout', handleLogout)
+      
+      return () => {
+        clearInterval(interval)
+        window.removeEventListener('user-logout', handleLogout)
+      }
+    } else {
+      setUnreadCount(0)
     }
   }, [])
 

@@ -125,28 +125,28 @@ export default function Header() {
 			className="site-header border-bottom sticky-top"
 			style={{
 				borderColor: 'var(--border-blue)',
-				background: 'var(--bg-white)',
+				background: 'linear-gradient(135deg, var(--brand-purple) 0%, #6D28D9 100%)',
 				margin: 0,
 				borderRadius: 0,
 			}}
 		>
 			<div className="container d-flex align-items-center justify-content-between py-3">
 				{/* Logo */}
-				<Link to="/" className="d-flex align-items-center text-decoration-none" style={{color: 'var(--text-dark)'}}>
+				<Link to="/" className="d-flex align-items-center text-decoration-none" style={{color: 'white'}}>
 					<img src={logoUrl} alt="HerRaise Hub logo" width="56" className="me-2" />
 					<div>
-						<strong className="d-block" style={{color: 'var(--text-dark)'}}>HerRaise Hub</strong>
-						<small className="text-muted">Empowering young women</small>
+						<strong className="d-block" style={{color: 'white'}}>HerRaise Hub</strong>
+						<small style={{color: 'rgba(255,255,255,0.8)'}}>Empowering young women</small>
 					</div>
 				</Link>
 
 				{/* Navigation */}
 				<nav className="d-none d-md-flex align-items-center gap-4">
-					<Link to="/" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('home')}</Link>
-					<Link to="/about" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('about')}</Link>
-					<Link to="/forum" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('forum')}</Link>
-					<Link to="/opportunities" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('opportunities')}</Link>
-					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`} style={{color: 'var(--text-dark)'}}>{t('resources')}</Link>
+					<Link to="/" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('home')}</Link>
+					<Link to="/about" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('about')}</Link>
+					<Link to="/forum" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('forum')}</Link>
+					<Link to="/opportunities" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('opportunities')}</Link>
+					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('resources')}</Link>
 				</nav>
 
 				{/* Right Side: Language + Notification + Avatar */}
@@ -158,7 +158,7 @@ export default function Header() {
 							<div className="position-relative" ref={notificationRef}>
 								<button 
 									className="btn btn-link text-decoration-none p-2"
-									style={{color: 'var(--text-dark)'}}
+									style={{color: 'white'}}
 									title="Notifications"
 									onClick={() => setShowNotifications(!showNotifications)}
 								>
@@ -338,8 +338,8 @@ export default function Header() {
 						</>
 					) : (
 						<>
-							<Link to="/login" className="btn btn-sm btn-outline-primary">{t('login')}</Link>
-							<Link to="/register" className="btn btn-sm text-white" style={{background: 'var(--brand-pink)'}}>{t('register')}</Link>
+							<Link to="/login" className="btn btn-sm btn-pink">{t('login')}</Link>
+							<Link to="/register" className="btn btn-sm btn-pink">{t('register')}</Link>
 						</>
 					)}
 				</div>

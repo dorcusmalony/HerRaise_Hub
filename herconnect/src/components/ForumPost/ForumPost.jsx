@@ -1,8 +1,9 @@
 import LikeButton from '../LikeButton/LikeButton'
 import { MediaDisplay } from '../MediaUpload'
+import { forumAPI } from '../../services/forumAPI'
 import './ForumPost.css'
 
-export default function ForumPost({ post, currentUser }) {
+export default function ForumPost({ post, currentUser, onEdit, onDelete }) {
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', {
@@ -12,6 +13,17 @@ export default function ForumPost({ post, currentUser }) {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this post? This will remove all comments and cannot be undone.')) return
+    
+    try {
+      await forumAPI.deletePost(post.id)
+      onDelete?.(post.id)
+    } catch (error) {
+      alert('Failed to delete post. Please try again.')
+    }
   }
 
   return (
@@ -28,6 +40,26 @@ export default function ForumPost({ post, currentUser }) {
             <span className="post-date">{formatDate(post.createdAt)}</span>
           </div>
         </div>
+        
+        {/* Edit/Delete Menu */}
+        {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
+          <div className="post-menu">
+            <button 
+              className="menu-btn"
+              onClick={() => onEdit?.(post)}
+              title="Edit post"
+            >
+              ✏️
+            </button>
+            <button 
+              className="menu-btn delete-btn"
+              onClick={() => handleDelete()}
+              title="Delete post"
+            >
+              🗑️
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="post-content">

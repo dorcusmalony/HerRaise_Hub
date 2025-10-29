@@ -9,9 +9,15 @@ export default function MediaUpload({ onUpload, multiple = false }) {
     if (!file) return
 
     // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/mov', 'video/avi', 'video/webm']
+    const validTypes = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+      'video/mp4', 'video/mov', 'video/avi', 'video/webm',
+      'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'text/plain', 'audio/mpeg', 'audio/wav', 'audio/ogg'
+    ]
     if (!validTypes.includes(file.type)) {
-      alert('Please select an image or video file')
+      alert('Please select a supported file type (images, videos, documents, or audio)')
       return
     }
 

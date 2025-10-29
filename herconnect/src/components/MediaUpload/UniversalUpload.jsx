@@ -3,7 +3,7 @@ import { useState } from 'react'
 export default function UniversalUpload({ 
   onUpload, 
   multiple = false, 
-  acceptedTypes = 'image/*,video/*,.pdf,.doc,.docx,.txt',
+  acceptedTypes = '.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.webm,.pdf,.doc,.docx,.ppt,.pptx,.txt,.mp3,.wav,.ogg',
   buttonText = '📎 Upload Files',
   className = 'btn btn-outline-primary'
 }) {
@@ -18,37 +18,25 @@ export default function UniversalUpload({
     const token = localStorage.getItem('token')
 
     try {
-      if (multiple && files.length > 1) {
-        // Multiple files upload
-        const formData = new FormData()
-        files.forEach(file => formData.append('files', file))
-        
-        const response = await fetch(`${API}/api/upload/multiple`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          body: formData
-        })
-        
-        const data = await response.json()
-        if (data.success) {
-          onUpload(data.files)
-        }
+      // General file upload - supports both single and multiple files
+      const formData = new FormData()
+      files.forEach(file => formData.append('files', file))
+      
+      const response = await fetch(`${API}/api/upload`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+      })
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      if (data.success) {
+        onUpload(multiple ? data.files : data.files[0])
       } else {
-        // Single file upload
-        const formData = new FormData()
-        formData.append('file', files[0])
-        
-        const response = await fetch(`${API}/api/upload/single`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          body: formData
-        })
-        
-        const data = await response.json()
-        if (data.success) {
-          const fileData = data.files?.[0] || data
-          onUpload(multiple ? [fileData] : fileData)
-        }
+        throw new Error(data.message || 'Upload failed')
       }
     } catch (error) {
       console.error('Upload failed:', error)
