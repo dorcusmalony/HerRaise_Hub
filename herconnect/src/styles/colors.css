@@ -4,36 +4,39 @@
   --brand-purple: #8B5CF6;
   --brand-pink: #E84393;
   --brand-magenta: var(--brand-pink);
+  --brand-gradient: linear-gradient(135deg, var(--brand-purple) 0%, #6D28D9 100%);
   
   /* Bootstrap overrides */
-  --bs-primary: var(--brand-blue);
-  --bs-primary-rgb: 13, 110, 253;
+  --bs-primary: var(--brand-purple);
+  --bs-primary-rgb: 139, 92, 246;
 }
 
-/* Button Updates */
+/* Button Updates - Uniform Purple Gradient */
 .btn-primary {
-  background-color: var(--brand-blue);
-  border-color: var(--brand-blue);
+  background: var(--brand-gradient);
+  border: none;
+  color: white;
 }
 
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
-  background-color: var(--brand-blue);
-  border-color: var(--brand-blue);
+  background: var(--brand-gradient);
+  border: none;
   filter: brightness(0.9);
+  color: white;
 }
 
 .btn-outline-primary {
-  color: var(--brand-blue);
-  border-color: var(--brand-blue);
+  color: var(--brand-purple);
+  border-color: var(--brand-purple);
 }
 
 .btn-outline-primary:hover,
 .btn-outline-primary:focus,
 .btn-outline-primary:active {
-  background-color: var(--brand-blue);
-  border-color: var(--brand-blue);
+  background: var(--brand-gradient);
+  border: none;
   color: white;
 }
 
@@ -71,7 +74,39 @@
   background-color: var(--brand-pink) !important;
 }
 
-/* Footer Styling */
+/* Uniform Gradient Styling */
 .site-footer {
-  background: linear-gradient(135deg, var(--brand-purple) 0%, #6D28D9 100%);
+  background: var(--brand-gradient);
+}
+
+/* Cards with gradient */
+.card-gradient {
+  background: var(--brand-gradient) !important;
+  color: white !important;
+}
+
+/* Any element with brand gradient */
+.bg-gradient {
+  background: var(--brand-gradient) !important;
+  color: white !important;
+}
+
+/* Pink Button for Login/Register */
+.btn-pink {
+  background-color: var(--brand-pink) !important;
+  border-color: var(--brand-pink) !important;
+  color: white !important;
+}
+
+.btn-pink:hover,
+.btn-pink:focus,
+.btn-pink:active {
+  background-color: white !important;
+  border-color: var(--brand-pink) !important;
+  color: var(--brand-pink) !important;
+}
+
+/* Update existing pink elements to use gradient */
+[style*="var(--brand-pink)"] {
+  background: var(--brand-gradient) !important;
 }

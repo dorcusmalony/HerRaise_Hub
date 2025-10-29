@@ -75,22 +75,25 @@
 
 .videoSection {
   padding: 4rem 0;
-  background: #f8f9fa;
-  margin-bottom: 3rem;
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  margin: 0 -1rem 3rem -1rem;
+  width: calc(100% + 2rem);
 }
 
 .videoContainer {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  aspect-ratio: 1 / 1;
 }
 
 .welcomeVideo {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
+  border: none;
 }
 
 @media (max-width: 768px) {

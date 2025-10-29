@@ -33,7 +33,7 @@ export const notificationAPI = {
 
   // Mark all notifications as read
   async markAllAsRead() {
-    const response = await fetch(`${API_URL}/api/notifications/mark-all-read`, {
+    const response = await fetch(`${API_URL}/api/notifications/read-all`, {
       method: 'PUT',
       headers: getAuthHeaders()
     })

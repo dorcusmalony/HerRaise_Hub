@@ -25,18 +25,16 @@ export default function Home() {
       {/* Welcome Video Section */}
       <section className={styles.videoSection}>
         <div className="container text-center">
-          <h2 className="display-5 fw-bold mb-4">{t('Welcome to HerRaise Hub')}</h2>
-          <p className="lead mb-4">{t('Watch our founder share the vision behind HerRaise Hub')}</p>
+          <h2 className="display-5 fw-bold mb-4 text-white">{t('Welcome to HerRaise Hub')}</h2>
+          <p className="lead mb-4 text-white">{t('Watch our founder share the vision behind HerRaise Hub')}</p>
           <div className={styles.videoContainer}>
-            <video 
+            <iframe 
               className={styles.welcomeVideo}
-              controls 
-              poster="/path/to/video-thumbnail.jpg"
-            >
-              <source src="/path/to/welcome-video.mp4" type="video/mp4" />
-              <source src="/path/to/welcome-video.webm" type="video/webm" />
-              {t('Your browser does not support the video tag.')}
-            </video>
+              src="https://drive.google.com/file/d/1zitqM39hIv82Q_nkELUY8Tb2f9F46uxe/preview"
+              allow="autoplay"
+              allowFullScreen
+              title="Welcome to HerRaise Hub"
+            ></iframe>
           </div>
         </div>
       </section>
