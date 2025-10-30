@@ -69,12 +69,12 @@
   border-color: var(--brand-pink) !important;
 }
 
-/* Update existing magenta references */
+/* magenta references */
 [style*="var(--brand-magenta)"] {
   background-color: var(--brand-pink) !important;
 }
 
-/* Uniform Gradient Styling */
+/*  Gradient Styling */
 .site-footer {
   background: var(--brand-gradient);
 }
@@ -106,7 +106,7 @@
   color: var(--brand-pink) !important;
 }
 
-/* Update existing pink elements to use gradient */
+/*  pink elements to use gradient */
 [style*="var(--brand-pink)"] {
   background: var(--brand-gradient) !important;
 }

@@ -15,9 +15,9 @@ export default function RegistrationSuccess({ userEmail }) {
         <p className={styles.subtitle}>{t('Your account has been created successfully.')}</p>
         
         <div className={styles.emailNotification}>
-          <div className={styles.emailIcon}>📧</div>
+          <div className={styles.emailIcon}></div>
           <p>
-            {t('We\'ve sent a welcome email to')} <strong>{userEmail}</strong> 
+            {t('We\'ve sent a welcome email to your email')} <strong>{userEmail}</strong> 
             {t(' with everything you need to get started.')}
           </p>
         </div>
@@ -25,10 +25,10 @@ export default function RegistrationSuccess({ userEmail }) {
         <div className={styles.nextSteps}>
           <h3>{t('What\'s Next?')}</h3>
           <ul>
-            <li>✅ {t('Check your email inbox')}</li>
-            <li>🔍 {t('Explore opportunities')}</li>
-            <li>💬 {t('Join forum discussions')}</li>
-            <li>👥 {t('Connect with mentors')}</li>
+            <li> {t('Check your email inbox')}</li>
+            <li> {t('Explore opportunities')}</li>
+            <li> {t('Join forum discussions')}</li>
+            <li> {t('Connect with mentors')}</li>
           </ul>
         </div>
         
@@ -36,11 +36,11 @@ export default function RegistrationSuccess({ userEmail }) {
           className={styles.getStartedBtn}
           onClick={() => navigate('/login')}
         >
-          {t('Login to Get Started')} 🚀
+          {t('Login to Get Started')} 
         </button>
 
         <div className={styles.emailReminder}>
-          <p>📧 {t('Didn\'t receive the email?')}</p>
+          <p> {t('Didn\'t receive the email?')}</p>
           <ul>
             <li>{t('Check your spam/junk folder')}</li>
             <li>{t('Make sure you entered the correct email')}</li>

@@ -1,3 +1,20 @@
+/* Modern Purple Animations */
+@keyframes purpleWave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes purpleGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(157, 78, 221, 0.3), 0 0 40px rgba(114, 9, 183, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(157, 78, 221, 0.5), 0 0 60px rgba(114, 9, 183, 0.3); }
+}
+
+@keyframes purpleShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 /* Forum Container */
 .forumContainer {
   max-width: 1200px;
@@ -35,12 +52,26 @@
 
 /* Professional Header */
 .forumHeader {
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: linear-gradient(-45deg, #9d4edd, #7209b7, #480ca8, #3c096c) !important;
+  background-size: 400% 400% !important;
+  animation: purpleWave 4s ease-in-out infinite, purpleGlow 2s ease-in-out infinite alternate !important;
   border-radius: 16px;
   padding: 2.5rem;
   margin-bottom: 2rem;
   color: white;
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.forumHeader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: purpleShimmer 2.5s infinite;
 }
 
 .headerContent {
@@ -108,7 +139,9 @@
 
 /* Purple Create Post Button */
 .createPostBtn {
-  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  background: linear-gradient(-45deg, #9d4edd, #7209b7, #480ca8) !important;
+  background-size: 300% 300% !important;
+  animation: purpleWave 3s ease-in-out infinite !important;
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -120,13 +153,24 @@
   gap: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.createPostBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: purpleShimmer 3s infinite;
 }
 
 .createPostBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+  animation: purpleWave 2s ease-in-out infinite, purpleGlow 1s ease-in-out infinite alternate;
 }
 
 .createPostBtn:active {
@@ -176,13 +220,13 @@
 }
 
 .filterBtn:hover {
-  border-color: #8B5CF6;
-  color: #8B5CF6;
+  border-color: var(--footer-bg);
+  color: var(--footer-bg);
 }
 
 .filterBtn.active {
-  background: #8B5CF6;
-  border-color: #8B5CF6;
+  background: var(--footer-bg);
+  border-color: var(--footer-bg);
   color: white;
 }
 
@@ -197,7 +241,7 @@
 
 .sortSelect:focus {
   outline: none;
-  border-color: #8B5CF6;
+  border-color: var(--footer-bg);
 }
 
 /* Post Form Container */
@@ -257,31 +301,31 @@
 .postCard {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.1);
-  border-left: 4px solid #8B5CF6;
+  box-shadow: 0 2px 10px rgba(51, 55, 100, 0.1);
+  border-left: 4px solid var(--footer-bg);
   transition: all 0.3s ease;
   overflow: hidden;
 }
 
 .postCard[data-type="essay"] {
   background: white;
-  border-left-color: #10B981;
+  border-left-color: #444;
 }
 
 .postCard[data-type="video"] {
   background: white;
-  border-left-color: #F59E0B;
+  border-left-color: #555;
 }
 
 .postCard[data-type="project"] {
   background: white;
-  border-left-color: #8B5CF6;
+  border-left-color: var(--footer-bg);
 }
 
 .postCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
-  border-left-color: white;
+  box-shadow: 0 8px 25px rgba(51, 55, 100, 0.15);
+  border-left-color: #222;
 }
 
 .postContent {
@@ -306,7 +350,7 @@
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #8B5CF6;
+  border: 3px solid var(--footer-bg);
 }
 
 .authorDetails {
@@ -656,7 +700,7 @@
 }
 
 .postCommentBtn {
-  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  background: var(--footer-bg);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -667,13 +711,13 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 2px 8px rgba(51, 55, 100, 0.3);
 }
 
 .postCommentBtn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+  background: #222;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 12px rgba(51, 55, 100, 0.4);
 }
 
 .postCommentBtn:disabled {

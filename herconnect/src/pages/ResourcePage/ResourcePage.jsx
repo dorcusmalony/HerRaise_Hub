@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styles from './ResourcePage.module.css'
 
 export default function ResourcePage() {
   const { t: _t } = useTranslation()
@@ -129,7 +130,9 @@ export default function ResourcePage() {
   }
 
   const getFilteredResources = () => {
-    let filtered = []
+    let documentResources = []
+    let videoResources = []
+    
     Object.entries(resources).forEach(([category, items]) => {
       const categoryItems = items.filter(item => {
         const matchesFilter = activeFilter === 'all' || item.category === activeFilter
@@ -137,11 +140,21 @@ export default function ResourcePage() {
                              item.desc.toLowerCase().includes(searchTerm.toLowerCase())
         return matchesFilter && matchesSearch
       })
+      
       if (categoryItems.length > 0) {
-        filtered.push([category, categoryItems])
+        const documents = categoryItems.filter(item => item.type !== 'Video')
+        const videos = categoryItems.filter(item => item.type === 'Video')
+        
+        if (documents.length > 0) {
+          documentResources.push([category, documents])
+        }
+        if (videos.length > 0) {
+          videoResources.push([category, videos])
+        }
       }
     })
-    return filtered
+    
+    return { documentResources, videoResources }
   }
 
   return (
@@ -190,8 +203,8 @@ export default function ResourcePage() {
         </div>
       </div>
 
-      {/* Resources Grid */}
-      {getFilteredResources().map(([category, items]) => (
+      {/* Document Resources */}
+      {getFilteredResources().documentResources.map(([category, items]) => (
         <div key={category} className="mb-5">
           <div className="d-flex align-items-center mb-4">
             <div className="flex-grow-1">
@@ -203,10 +216,10 @@ export default function ResourcePage() {
           <div className="row g-4">
             {items.map((resource, idx) => (
               <div key={idx} className="col-12 col-md-6 col-lg-4">
-                <div className="card h-100 shadow-sm border-0 hover-shadow transition-all">
+                <div className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll}`}>
                   <div className="card-body p-4">
                     <div className="d-flex justify-content-between align-items-start mb-3">
-                      <div className="resource-icon">
+                      <div className={styles.resourceIcon}>
                         <span style={{ fontSize: '2rem' }}>{resource.icon}</span>
                       </div>
                       <span 
@@ -218,7 +231,7 @@ export default function ResourcePage() {
                     </div>
                     
                     <h5 className="card-title mb-2 text-dark">{resource.title}</h5>
-                    <p className="card-text text-muted small mb-3 line-height-relaxed">
+                    <p className={`card-text text-muted small mb-3 ${styles.lineHeightRelaxed}`}>
                       {resource.desc}
                     </p>
                     
@@ -252,8 +265,77 @@ export default function ResourcePage() {
         </div>
       ))}
 
+      {/* Video Resources Section */}
+      {getFilteredResources().videoResources.length > 0 && (
+        <div className="mb-5">
+          <div className="d-flex align-items-center mb-4">
+            <div className="flex-grow-1">
+              <h2 className="h3 mb-1 text-dark">🎥 Video Resources</h2>
+              <p className="text-muted mb-0">
+                {getFilteredResources().videoResources.reduce((total, [, items]) => total + items.length, 0)} videos available
+              </p>
+            </div>
+          </div>
+
+          {getFilteredResources().videoResources.map(([category, items]) => (
+            <div key={category} className="mb-4">
+              <h3 className="h5 mb-3 text-secondary">{category}</h3>
+              <div className="row g-4">
+                {items.map((resource, idx) => (
+                  <div key={idx} className="col-12 col-md-6 col-lg-4">
+                    <div className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll}`}>
+                      <div className="card-body p-4">
+                        <div className="d-flex justify-content-between align-items-start mb-3">
+                          <div className={styles.resourceIcon}>
+                            <span style={{ fontSize: '2rem' }}>{resource.icon}</span>
+                          </div>
+                          <span 
+                            className="badge px-2 py-1 text-white fw-normal"
+                            style={{ backgroundColor: getTypeColor(resource.type) }}
+                          >
+                            {resource.type}
+                          </span>
+                        </div>
+                        
+                        <h5 className="card-title mb-2 text-dark">{resource.title}</h5>
+                        <p className={`card-text text-muted small mb-3 ${styles.lineHeightRelaxed}`}>
+                          {resource.desc}
+                        </p>
+                        
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <div className="d-flex align-items-center gap-2">
+                            <span className="text-warning">{'★'.repeat(Math.floor(resource.rating))}</span>
+                            <small className="text-muted">{resource.rating}</small>
+                          </div>
+                          <small className="text-muted">
+                            <i className="fas fa-play me-1"></i>
+                            {resource.downloadCount}
+                          </small>
+                        </div>
+                        
+                        <div className="d-grid gap-2">
+                          <a 
+                            href={resource.link} 
+                            className="btn btn-primary btn-sm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <i className="fas fa-play me-2"></i>
+                            Watch Video
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Empty State */}
-      {getFilteredResources().length === 0 && (
+      {getFilteredResources().documentResources.length === 0 && getFilteredResources().videoResources.length === 0 && (
         <div className="text-center py-5">
           <div className="mb-4">
             <i className="fas fa-search fa-3x text-muted mb-3"></i>
@@ -272,30 +354,7 @@ export default function ResourcePage() {
         </div>
       )}
 
-      <style>{`
-        .hover-shadow {
-          transition: all 0.3s ease;
-        }
-        .hover-shadow:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
-        }
-        .transition-all {
-          transition: all 0.3s ease;
-        }
-        .line-height-relaxed {
-          line-height: 1.6;
-        }
-        .resource-icon {
-          width: 60px;
-          height: 60px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(13, 110, 253, 0.1);
-          border-radius: 12px;
-        }
-      `}</style>
+
     </div>
   )
 }

@@ -73,15 +73,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 p { margin-bottom: 0.9rem; }
 
-/* Keep existing component styles and the previously-added rules */
-header a.btn {
-  transition: background-color 150ms, border-color 150ms;
-}
-header a.btn:hover {
-  background: var(--nav-hover-blue) !important;
-  color: #fff !important;
-  border-color: var(--nav-hover-blue) !important;
-}
+
 
 /* search bar styles */
 .search-bar input.form-control {
@@ -126,63 +118,6 @@ footer {
   box-sizing: border-box;
 }
 
-/* Professional, edge-to-edge footer */
-.site-footer {
-  /* edge-to-edge full-viewport width */
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-
-  /* appearance */
-  background: var(--footer-bg);
-  color: #fff;
-  padding-top: 3.5rem;
-  padding-bottom: 3.5rem;
-  border-radius: 0;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-  flex-shrink: 0;
-  box-sizing: border-box;
-  z-index: 10;
-}
-
-/* keep inner content readable and centered */
-.site-footer .container {
-  max-width: 1200px;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-/* larger headings and spacing for footer */
-.site-footer h5 {
-  font-size: 1.15rem;
-  margin-bottom: .6rem;
-  color: #fff;
-}
-.site-footer p, .site-footer a, .site-footer .small { color: rgba(255,255,255,0.95); }
-
-/* bigger, clearer social icons */
-.site-footer .social a {
-  font-size: 1.35rem;
-  display: inline-block;
-  margin-right: 0.75rem;
-  opacity: 0.95;
-}
-.site-footer .social a:hover {
-  color: var(--nav-hover-blue);
-  opacity: 1;
-}
-
-/* newsletter input contrast */
-.site-footer .newsletter input.form-control {
-  max-width: 360px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: #fff;
-}
-
 /* make sure footer corners are square and there is no whitespace */
 * { box-sizing: border-box; }
 
@@ -195,18 +130,7 @@ html, body {
 .app-root { display: flex; flex-direction: column; min-height: 100vh; }
 .app-root main { flex: 1 0 auto; }
 
-/* Responsive adjustments for footer */
-@media (max-width: 768px) {
-  .site-footer {
-    padding-top: 2.25rem;
-    padding-bottom: 2.25rem;
-    margin-left: -50vw;
-    margin-right: -50vw;
-  }
-  .site-footer .newsletter { flex-direction: column; gap: .5rem; align-items: stretch; }
-  .site-footer .newsletter input.form-control { width: 100%; max-width: none; }
-  .site-footer .social { margin-top: .75rem; }
-}
+
 
 /* responsive tweaks */
 @media (max-width: 768px) {

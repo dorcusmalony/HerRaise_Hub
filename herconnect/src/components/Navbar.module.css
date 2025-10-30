@@ -1,0 +1,23 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navButton {
+  background-color: #c33764 !important;
+  background-image: none !important;
+  border: 1px solid #c33764 !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.navButton:hover,
+.navButton:focus,
+.navButton:active {
+  background-color: #4C8BF5 !important;
+  background-image: none !important;
+  border-color: #4C8BF5 !important;
+  color: white !important;
+  text-decoration: none !important;
+}
