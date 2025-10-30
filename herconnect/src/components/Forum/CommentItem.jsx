@@ -71,7 +71,7 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
               )}
             </div>
 
-            {canModify && !editMode && (
+            {canModify && (
               <div className="dropdown">
                 <button 
                   className="btn btn-sm btn-link text-muted p-0" 
@@ -83,13 +83,13 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
                 <ul className="dropdown-menu dropdown-menu-end shadow-sm">
                   <li>
                     <button className="dropdown-item small" onClick={() => setEditMode(true)}>
-                       Edit
+                      ✏️ Edit
                     </button>
                   </li>
                   <li><hr className="dropdown-divider" /></li>
                   <li>
                     <button className="dropdown-item small text-danger" onClick={() => onDelete(comment.id)}>
-                       Delete
+                      🗑️ Delete
                     </button>
                   </li>
                 </ul>

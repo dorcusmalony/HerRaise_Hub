@@ -454,14 +454,14 @@ export default function Forum() {
                             onClick={() => setEditingPost(post)}
                             title="Edit post"
                           >
-                            
+                            ✏️
                           </button>
                           <button 
                             className={styles.deletePostBtn}
                             onClick={() => handleDeletePost(post.id)}
                             title="Delete post"
                           >
-                            
+                            🗑️
                           </button>
                         </div>
                       </div>

@@ -414,31 +414,40 @@
 
 .editPostBtn,
 .deletePostBtn {
-  background: none;
-  border: none;
-  padding: 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
 }
 
 .editPostBtn {
   color: #8B5CF6;
+  border-color: #8B5CF6;
 }
 
 .editPostBtn:hover {
-  background: #f3e8ff;
-  transform: scale(1.1);
+  background: #8B5CF6;
+  color: white;
+  transform: scale(1.05);
 }
 
 .deletePostBtn {
   color: #EF4444;
+  border-color: #EF4444;
 }
 
 .deletePostBtn:hover {
-  background: #fef2f2;
-  transform: scale(1.1);
+  background: #EF4444;
+  color: white;
+  transform: scale(1.05);
 }
 
 .quickCreateSection {

@@ -9,6 +9,7 @@ export const initializeSocket = (token) => {
   }
 
   const API_URL = import.meta.env.VITE_API_URL || ''
+  console.log('🔗 Connecting to socket at:', API_URL)
   const socketUrl = API_URL
 
   socket = io(socketUrl, {
@@ -20,16 +21,29 @@ export const initializeSocket = (token) => {
   })
 
   socket.on('connect', () => {
-    console.log('✅ Connected to WebSocket')
+    console.log('✅ Connected to WebSocket:', socket.id)
     socket.emit('authenticate', token)
   })
 
-  socket.on('disconnect', () => {
-    console.log('Disconnected from WebSocket')
+  socket.on('authenticated', (data) => {
+    console.log('🔐 Socket authenticated:', data)
+  })
+
+  socket.on('disconnect', (reason) => {
+    console.log('❌ Disconnected from WebSocket:', reason)
   })
 
   socket.on('connect_error', (error) => {
-    console.error('WebSocket connection error:', error)
+    console.error('🚨 WebSocket connection error:', error)
+    console.error('Error details:', error.message, error.type)
+  })
+
+  socket.on('reconnect', (attemptNumber) => {
+    console.log('🔄 Reconnected after', attemptNumber, 'attempts')
+  })
+
+  socket.on('reconnect_error', (error) => {
+    console.error('🔄❌ Reconnection failed:', error)
   })
 
   // Listen for new opportunities
