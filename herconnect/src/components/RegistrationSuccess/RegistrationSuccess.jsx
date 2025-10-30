@@ -34,9 +34,9 @@ export default function RegistrationSuccess({ userEmail }) {
         
         <button 
           className={styles.getStartedBtn}
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/login')}
         >
-          {t('Get Started')} 🚀
+          {t('Login to Get Started')} 🚀
         </button>
 
         <div className={styles.emailReminder}>
