@@ -8,6 +8,10 @@ export default function Forum() {
   const { t } = useTranslation()
   const API = import.meta.env.VITE_API_URL || ''
   
+  // Debug: Check API URL on Vercel
+  console.log('🔗 Forum API URL:', API)
+  console.log('🌍 Environment:', import.meta.env.MODE)
+  
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
@@ -26,6 +30,9 @@ export default function Forum() {
     if (userData) {
       setCurrentUser(JSON.parse(userData))
     }
+    
+    // Debug: Log environment variables
+    console.log('🔧 All env vars:', import.meta.env)
   }, [])
 
   const fetchPosts = useCallback(async () => {
@@ -155,6 +162,7 @@ export default function Forum() {
 
   const handleUpdateComment = async (commentId, newContent) => {
     const token = localStorage.getItem('token')
+    console.log('🔧 Updating comment:', { commentId, API, newContent })
     
     try {
       const response = await fetch(`${API}/api/forum/comments/${commentId}`, {
@@ -166,10 +174,15 @@ export default function Forum() {
         body: JSON.stringify({ content: newContent })
       })
 
+      console.log('📝 Update response:', response.status, response.statusText)
+      
       if (response.ok) {
         fetchPosts()
         return true
       }
+      
+      const errorData = await response.text()
+      console.error('❌ Update failed:', errorData)
       return false
     } catch (error) {
       console.error('Error updating comment:', error)
@@ -197,6 +210,7 @@ export default function Forum() {
     if (!window.confirm('Delete this comment? This action cannot be undone.')) return
 
     const token = localStorage.getItem('token')
+    console.log('🗑️ Deleting comment:', { commentId, API })
     
     try {
       const response = await fetch(`${API}/api/forum/comments/${commentId}`, {
@@ -206,8 +220,14 @@ export default function Forum() {
         }
       })
       
+      console.log('🗑️ Delete response:', response.status, response.statusText)
+      
       if (response.ok) {
         fetchPosts()
+      } else {
+        const errorData = await response.text()
+        console.error('❌ Delete failed:', errorData)
+        alert('Failed to delete comment. Please try again.')
       }
     } catch (error) {
       console.error('Error deleting comment:', error)
@@ -381,7 +401,7 @@ export default function Forum() {
               }}
               className={styles.createBtn}
             >
-              <div className={styles.btnIcon}>🎥</div>
+              <div className={styles.btnIcon}></div>
               <div className={styles.btnText}>Upload Video</div>
               <div className={styles.btnCount}>{posts.filter(p => p.type === 'video').length} uploaded</div>
             </button>
@@ -454,14 +474,14 @@ export default function Forum() {
                             onClick={() => setEditingPost(post)}
                             title="Edit post"
                           >
-                            ✏️
+                            
                           </button>
                           <button 
                             className={styles.deletePostBtn}
                             onClick={() => handleDeletePost(post.id)}
                             title="Delete post"
                           >
-                            🗑️
+                            
                           </button>
                         </div>
                       </div>
