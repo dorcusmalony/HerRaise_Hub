@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import styles from './Footer.module.css'
 
 export default function Footer(){
   const navigate = useNavigate()
@@ -34,56 +35,56 @@ export default function Footer(){
       } catch {
         // Ignore localStorage errors
       }
-      navigate('/login', { replace: true })
+      navigate('/', { replace: true })
     }
   }
 
   return (
     <footer
-      className="site-footer"
+      className={styles.siteFooter}
       role="contentinfo"
       aria-labelledby="site-footer-heading"
     >
-      <div className="container">
+      <div className={styles.container}>
         <h2 id="site-footer-heading" className="visually-hidden">Site footer</h2>
 
         <div className="row">
           <div className="col-12 col-md-4 mb-4">
-            <h5>HerRaise Hub</h5>
-            <p className="small text-white-50">We support girls through resource opportunities, mentorship and track of goals setting to help them achive their careers.</p>
+            <h5 className={styles.heading}>HerRaise Hub</h5>
+            <p className={`small ${styles.text}`}>We support girls through resource opportunities, mentorship and track of goals setting to help them achive their careers.</p>
           </div>
 
           <div className="col-6 col-md-4 mb-4">
-            <h5>Quick Links</h5>
+            <h5 className={styles.heading}>Quick Links</h5>
             <ul className="list-unstyled small">
-              <li><a href="/resources" className="text-white">Resources</a></li>
-              <li><a href="/reports" className="text-white">Reports</a></li>
-              <li><a href="/about" className="text-white">About</a></li>
+              <li><a href="/resources" className={styles.link}>Resources</a></li>
+              <li><a href="/reports" className={styles.link}>Reports</a></li>
+              <li><a href="/about" className={styles.link}>About</a></li>
               {isLoggedIn ? (
-                <li><button type="button" onClick={handleLogout} className="btn btn-link p-0 text-white">Logout</button></li>
+                <li><button type="button" onClick={handleLogout} className={styles.logoutButton}>Logout</button></li>
               ) : (
-                <li><a href="/login" className="text-white">Login</a></li>
+                <li><a href="/login" className={styles.link}>Login</a></li>
               )}
             </ul>
           </div>
 
           <div className="col-6 col-md-4 mb-4">
-            <h5>Contact & Newsletter</h5>
-            <p className="small text-white-50 mb-2">Join our mailing list for updates.</p>
-            <form className="d-flex newsletter" onSubmit={e => e.preventDefault()}>
-              <input className="form-control form-control-sm me-2" placeholder="Email address" aria-label="Email address" />
+            <h5 className={styles.heading}>Contact & Newsletter</h5>
+            <p className={`small mb-2 ${styles.text}`}>Join our mailing list for updates.</p>
+            <form className={styles.newsletter} onSubmit={e => e.preventDefault()}>
+              <input className={`form-control form-control-sm me-2 ${styles.newsletterInput}`} placeholder="Email address" aria-label="Email address" />
               <button className="btn btn-sm btn-light">Subscribe</button>
             </form>
-            <div className="social mt-3">
-              <a href="#" className="text-white me-3" aria-label="Facebook"><FaFacebook /></a>
-              <a href="#" className="text-white me-3" aria-label="Twitter"><FaTwitter /></a>
-              <a href="#" className="text-white me-3" aria-label="Instagram"><FaInstagram /></a>
-              <a href="#" className="text-white" aria-label="LinkedIn"><FaLinkedin /></a>
+            <div className={styles.social}>
+              <a href="#" className={styles.socialLink} aria-label="Facebook"><FaFacebook /></a>
+              <a href="#" className={styles.socialLink} aria-label="Twitter"><FaTwitter /></a>
+              <a href="#" className={styles.socialLink} aria-label="Instagram"><FaInstagram /></a>
+              <a href="#" className={styles.socialLink} aria-label="LinkedIn"><FaLinkedin /></a>
             </div>
           </div>
         </div>
 
-        <div className="text-center small mt-4">© {new Date().getFullYear()} HerRaise Hub All rights reserved</div>
+        <div className={styles.copyright}>© {new Date().getFullYear()} HerRaise Hub All rights reserved</div>
       </div>
     </footer>
   )

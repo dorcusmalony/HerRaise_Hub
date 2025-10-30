@@ -1,3 +1,20 @@
+/* Modern Purple Animations */
+@keyframes purpleWave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes purpleGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(157, 78, 221, 0.3), 0 0 40px rgba(114, 9, 183, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(157, 78, 221, 0.5), 0 0 60px rgba(114, 9, 183, 0.3); }
+}
+
+@keyframes purpleShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -7,10 +24,25 @@
 .hero {
   text-align: center;
   padding: 4rem 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(-45deg, #9d4edd, #7209b7, #480ca8, #3c096c) !important;
+  background-size: 400% 400% !important;
+  animation: purpleWave 4s ease-in-out infinite, purpleGlow 2s ease-in-out infinite alternate !important;
   color: white;
   border-radius: 12px;
   margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: purpleShimmer 2.5s infinite;
 }
 
 .heroTitle {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { initializeSocket, requestNotificationPermission } from '../../services/socketService'
-import styles from '../../styles/Pages.module.css'
+import styles from './Login.module.css'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -228,7 +228,7 @@ export default function Login() {
         )}
 
         <div className="d-flex gap-2 mb-3">
-          <button className="btn btn-primary" type="submit" disabled={loading}>
+          <button className={`btn ${styles.submitButton}`} type="submit" disabled={loading}>
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
           <button

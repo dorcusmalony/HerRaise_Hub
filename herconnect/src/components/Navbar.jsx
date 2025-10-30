@@ -1,9 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom' // or NavLink if preferred
-import '../../styles/BootstrapVars.module.css' // ensures Bootstrap + vars are loaded
+import { Link } from 'react-router-dom'
+import '../../styles/BootstrapVars.module.css'
 import styles from '../../styles/Pages.module.css'
+import navStyles from './Navbar.module.css'
 
-// image assets from src/images
 const heroImg = new URL('../../images/girl2.jpg', import.meta.url).href
 const teamImg2 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 const teamImg3 = new URL('../../images/adich-pic.jpg', import.meta.url).href
@@ -84,14 +84,14 @@ export default function About() {
       </section>
 
       {/* Navigation (modified) */}
-      <nav className="d-flex align-items-center gap-2">
-        <Link to="/" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Home</Link>
-        <Link to="/about" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>About</Link>
-        <Link to="/contact" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Contact</Link>
-        <Link to="/resources" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Resources</Link>
-        <Link to="/login" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Login</Link>
-        <button type="button" className="btn btn-sm" style={{background: 'transparent', border: `1px solid var(--border-blue)`, color: 'var(--text-dark)'}}>Logout</button>
-        <Link to="/register" className="btn btn-sm text-white" style={{background: 'var(--brand-magenta)', border: `1px solid var(--border-blue)`}}>Register</Link>
+      <nav className={navStyles.navigation}>
+        <Link to="/" className={`btn btn-sm ${navStyles.navButton}`}>Home</Link>
+        <Link to="/about" className={`btn btn-sm ${navStyles.navButton}`}>About</Link>
+        <Link to="/contact" className={`btn btn-sm ${navStyles.navButton}`}>Contact</Link>
+        <Link to="/resources" className={`btn btn-sm ${navStyles.navButton}`}>Resources</Link>
+        <Link to="/login" className={`btn btn-sm ${navStyles.navButton}`}>Login</Link>
+        <button type="button" className={`btn btn-sm ${navStyles.navButton}`}>Logout</button>
+        <Link to="/register" className={`btn btn-sm ${navStyles.navButton}`}>Register</Link>
       </nav>
     </div>
   )

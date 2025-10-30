@@ -5,7 +5,7 @@ import { useLanguage } from '../../hooks/useLanguage'
 import { useNotifications } from '../../hooks/useNotifications'
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
 import NotificationPanel from '../Notifications/NotificationPanel'
-import styles from '../../styles/Pages.module.css'
+import styles from './Header.module.css'
 
 export default function Header() {
 	const { t } = useLanguage()
@@ -115,38 +115,30 @@ export default function Header() {
 			
 			console.log(' User logged out, localStorage cleared')
 			
-			// Navigate to login
-			navigate('/login', { replace: true })
+			// Navigate to home page
+			navigate('/', { replace: true })
 		}
 	}
 
 	return (
-		<header
-			className="site-header border-bottom sticky-top"
-			style={{
-				borderColor: 'var(--border-blue)',
-				background: 'linear-gradient(135deg, var(--brand-purple) 0%, #6D28D9 100%)',
-				margin: 0,
-				borderRadius: 0,
-			}}
-		>
+		<header className={`site-header border-bottom sticky-top ${styles.siteHeader}`}>
 			<div className="container d-flex align-items-center justify-content-between py-3">
 				{/* Logo */}
-				<Link to="/" className="d-flex align-items-center text-decoration-none" style={{color: 'white'}}>
+				<Link to="/" className={`d-flex align-items-center text-decoration-none ${styles.logo}`}>
 					<img src={logoUrl} alt="HerRaise Hub logo" width="56" className="me-2" />
 					<div>
-						<strong className="d-block" style={{color: 'white'}}>HerRaise Hub</strong>
-						<small style={{color: 'rgba(255,255,255,0.8)'}}>Empowering young women</small>
+						<strong className={`d-block ${styles.logoText}`}>HerRaise Hub</strong>
+						<small className={styles.logoSubtext}>Empowering young women</small>
 					</div>
 				</Link>
 
 				{/* Navigation */}
-				<nav className="d-none d-md-flex align-items-center gap-4">
-					<Link to="/" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('home')}</Link>
-					<Link to="/about" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('about')}</Link>
-					<Link to="/forum" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('forum')}</Link>
-					<Link to="/opportunities" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('opportunities')}</Link>
-					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`} style={{color: 'white'}}>{t('resources')}</Link>
+				<nav className={`d-none d-md-flex align-items-center ${styles.nav}`}>
+					<Link to="/" className={`text-decoration-none ${styles.navLink}`}>{t('home')}</Link>
+					<Link to="/about" className={`text-decoration-none ${styles.navLink}`}>{t('about')}</Link>
+					<Link to="/forum" className={`text-decoration-none ${styles.navLink}`}>{t('forum')}</Link>
+					<Link to="/opportunities" className={`text-decoration-none ${styles.navLink}`}>{t('opportunities')}</Link>
+					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`}>{t('resources')}</Link>
 				</nav>
 
 				{/* Right Side: Language + Notification + Avatar */}
@@ -157,8 +149,7 @@ export default function Header() {
 							{/* Notification Bell */}
 							<div className="position-relative" ref={notificationRef}>
 								<button 
-									className="btn btn-link text-decoration-none p-2"
-									style={{color: 'white'}}
+									className={`btn btn-link text-decoration-none ${styles.notificationButton}`}
 									title="Notifications"
 									onClick={() => setShowNotifications(!showNotifications)}
 								>
@@ -166,10 +157,7 @@ export default function Header() {
 										<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
 									</svg>
 									{unreadCount > 0 && (
-										<span 
-											className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-											style={{fontSize: '0.6rem'}}
-										>
+										<span className={`position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger ${styles.notificationBadge}`}>
 											{unreadCount}
 										</span>
 									)}
@@ -185,23 +173,13 @@ export default function Header() {
 								<button
 									onClick={() => setShowDropdown(!showDropdown)}
 									className="btn p-0 border-0 bg-transparent"
-									style={{outline: 'none'}}
 								>
-									<div 
-										className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
-										style={{
-											width: '40px',
-											height: '40px',
-											background: 'var(--brand-pink)',
-											overflow: 'hidden',
-											cursor: 'pointer'
-										}}
-									>
+									<div className={`rounded-circle d-flex align-items-center justify-content-center text-white fw-bold ${styles.avatar}`}>
 										{user?.profilePicture ? (
 											<img 
 												src={user.profilePicture} 
 												alt={user.name}
-												style={{width: '100%', height: '100%', objectFit: 'cover'}}
+												className={styles.avatarImage}
 											/>
 										) : (
 											<span>{getInitials(user?.name)}</span>
@@ -211,31 +189,16 @@ export default function Header() {
 
 								{/* Dropdown Menu */}
 								{showDropdown && (
-									<div 
-										className="position-absolute end-0 mt-2 bg-white rounded shadow-lg"
-										style={{
-											width: '280px',
-											zIndex: 1050,
-											border: '1px solid #e0e0e0'
-										}}
-									>
+									<div className={`position-absolute end-0 mt-2 bg-white rounded shadow-lg ${styles.dropdown}`}>
 										{/* User Info Section */}
-										<div className="p-3 border-bottom">
+										<div className={`p-3 ${styles.userInfo}`}>
 											<div className="d-flex align-items-center gap-3">
-												<div 
-													className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
-													style={{
-														width: '48px',
-														height: '48px',
-														background: 'var(--brand-pink)',
-														overflow: 'hidden'
-													}}
-												>
+												<div className={`rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0 ${styles.userAvatar}`}>
 													{user?.profilePicture ? (
 														<img 
 															src={user.profilePicture} 
 															alt={user.name}
-															style={{width: '100%', height: '100%', objectFit: 'cover'}}
+															className={styles.avatarImage}
 														/>
 													) : (
 														<span>{getInitials(user?.name)}</span>
@@ -244,10 +207,7 @@ export default function Header() {
 												<div className="flex-grow-1 overflow-hidden">
 													<p className="mb-0 fw-semibold text-truncate">{user?.name || 'User'}</p>
 													<p className="mb-0 small text-muted text-truncate">{user?.email || 'user@example.com'}</p>
-													<span 
-														className="badge mt-1"
-														style={{background: 'var(--brand-pink)', fontSize: '0.7rem'}}
-													>
+													<span className={`badge mt-1 ${styles.userBadge}`}>
 														{user?.role === 'mentee' ? ' Mentee' : 
 														 user?.role === 'mentor' ? ' Mentor' : ' Admin'}
 													</span>
@@ -259,7 +219,7 @@ export default function Header() {
 										<div className="py-1">
 											<Link
 												to="/profile"
-												className="d-flex align-items-center px-3 py-2 text-decoration-none text-dark hover-bg-light"
+												className={`d-flex align-items-center text-decoration-none text-dark ${styles.menuItem}`}
 												onClick={() => setShowDropdown(false)}
 											>
 												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2 text-muted">
@@ -271,7 +231,7 @@ export default function Header() {
 
 											<Link
 												to="/dashboard"
-												className="d-flex align-items-center px-3 py-2 text-decoration-none text-dark hover-bg-light"
+												className={`d-flex align-items-center text-decoration-none text-dark ${styles.menuItem}`}
 												onClick={() => setShowDropdown(false)}
 											>
 												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2 text-muted">
@@ -283,7 +243,7 @@ export default function Header() {
 
 											<Link
 												to="/settings"
-												className="d-flex align-items-center px-3 py-2 text-decoration-none text-dark hover-bg-light"
+												className={`d-flex align-items-center text-decoration-none text-dark ${styles.menuItem}`}
 												onClick={() => setShowDropdown(false)}
 											>
 												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2 text-muted">
@@ -295,7 +255,7 @@ export default function Header() {
 
 											<Link
 												to="/help"
-												className="d-flex align-items-center px-3 py-2 text-decoration-none text-dark hover-bg-light"
+												className={`d-flex align-items-center text-decoration-none text-dark ${styles.menuItem}`}
 												onClick={() => setShowDropdown(false)}
 											>
 												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2 text-muted">
@@ -310,7 +270,7 @@ export default function Header() {
 										<div className="border-top pt-1">
 											<Link
 												to="/safety-report"
-												className="d-flex align-items-center w-100 px-3 py-2 text-decoration-none text-danger hover-bg-danger-light"
+												className={`d-flex align-items-center w-100 text-decoration-none ${styles.menuItem} ${styles.dangerItem}`}
 												onClick={() => setShowDropdown(false)}
 											>
 												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2">
@@ -322,8 +282,7 @@ export default function Header() {
 
 											<button
 												onClick={handleLogout}
-												className="d-flex align-items-center w-100 px-3 py-2 text-decoration-none border-0 bg-transparent text-danger hover-bg-danger-light"
-												style={{cursor: 'pointer'}}
+												className={`d-flex align-items-center w-100 text-decoration-none border-0 bg-transparent ${styles.menuItem} ${styles.dangerItem}`}
 											>
 												<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" className="me-2">
 													<path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
@@ -338,22 +297,14 @@ export default function Header() {
 						</>
 					) : (
 						<>
-							<Link to="/login" className="btn btn-sm btn-pink">{t('login')}</Link>
-							<Link to="/register" className="btn btn-sm btn-pink">{t('register')}</Link>
+							<Link to="/login" className={`btn btn-sm ${styles.authButton}`}>{t('login')}</Link>
+							<Link to="/register" className={`btn btn-sm ${styles.authButton}`}>{t('register')}</Link>
 						</>
 					)}
 				</div>
 			</div>
 
-			{/* Add hover effect CSS */}
-			<style>{`
-				.hover-bg-light:hover {
-					background-color: #f8f9fa;
-				}
-				.hover-bg-danger-light:hover {
-					background-color: #ffe5e5;
-				}
-			`}</style>
+
 		</header>
 	)
 }

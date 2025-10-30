@@ -9,7 +9,7 @@
 
 /* Welcome Section */
 .welcomeSection {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--footer-bg);
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -165,7 +165,7 @@
 }
 
 .viewAllBtn {
-  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  background: var(--footer-bg);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -177,7 +177,7 @@
 }
 
 .viewAllBtn:hover {
-  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+  background: #222;
   color: white;
   transform: translateY(-1px);
 }
@@ -336,7 +336,7 @@
 }
 
 .emptyAction {
-  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  background: var(--footer-bg);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -347,7 +347,7 @@
 }
 
 .emptyAction:hover {
-  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+  background: #222;
   color: white;
   transform: translateY(-1px);
 }
