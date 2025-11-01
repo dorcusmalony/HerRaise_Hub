@@ -96,6 +96,101 @@
   font-weight: 600;
 }
 
+.errorMessage {
+  background: #fee;
+  color: #c33;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.filePreview {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.filePreview h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.fileIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9ecef;
+  border-radius: 4px;
+  font-size: 1.2rem;
+}
+
+.fileName {
+  display: flex;
+  flex-direction: column;
+}
+
+.fileName strong {
+  font-size: 0.9rem;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.fileName small {
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-transform: capitalize;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.removeBtn:hover {
+  background: #fee;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .dropZone {
@@ -108,5 +203,14 @@
   
   .uploadText {
     font-size: 1rem;
+  }
+  
+  .fileItem {
+    padding: 0.5rem;
+  }
+  
+  .thumbnail, .fileIcon {
+    width: 32px;
+    height: 32px;
   }
 }

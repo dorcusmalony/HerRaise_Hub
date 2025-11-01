@@ -23,6 +23,9 @@ export default function Forum() {
   const [currentUser, setCurrentUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
   const [selectedType, setSelectedType] = useState('project')
+  const [showPostDropdown, setShowPostDropdown] = useState(null)
+  const [expandedVideo, setExpandedVideo] = useState(null)
+
 
   // Load current user
   useEffect(() => {
@@ -60,6 +63,18 @@ export default function Forum() {
   useEffect(() => {
     fetchPosts()
   }, [fetchPosts])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowPostDropdown(null)
+    }
+    
+    if (showPostDropdown) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [showPostDropdown])
 
   const handleLikePost = async (postId) => {
     try {
@@ -467,23 +482,35 @@ export default function Forum() {
 
                     {/* Edit/Delete for post author or admin */}
                     {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
-                      <div className={styles.postActionsMenu}>
-                        <div className={styles.actionButtons}>
-                          <button 
-                            className={styles.editPostBtn}
-                            onClick={() => setEditingPost(post)}
-                            title="Edit post"
-                          >
-                            
-                          </button>
-                          <button 
-                            className={styles.deletePostBtn}
-                            onClick={() => handleDeletePost(post.id)}
-                            title="Delete post"
-                          >
-                            
-                          </button>
-                        </div>
+                      <div className="dropdown" style={{ position: 'relative' }}>
+                        <button 
+                          className="btn btn-sm btn-link text-muted p-0" 
+                          onClick={() => setShowPostDropdown(showPostDropdown === post.id ? null : post.id)}
+                          style={{ fontSize: '1.2rem' }}
+                        >
+                          ⋮
+                        </button>
+                        {showPostDropdown === post.id && (
+                          <ul className="dropdown-menu dropdown-menu-end shadow-sm show" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1000 }}>
+                            <li>
+                              <button className="dropdown-item small" onClick={() => {
+                                setEditingPost(post)
+                                setShowPostDropdown(null)
+                              }}>
+                                ✏️ Edit Post
+                              </button>
+                            </li>
+                            <li><hr className="dropdown-divider" /></li>
+                            <li>
+                              <button className="dropdown-item small text-danger" onClick={() => {
+                                handleDeletePost(post.id)
+                                setShowPostDropdown(null)
+                              }}>
+                                🗑️ Delete Post
+                              </button>
+                            </li>
+                          </ul>
+                        )}
                       </div>
                     )}
                   </div>
@@ -492,37 +519,162 @@ export default function Forum() {
                     <h3 className={styles.postTitle}>{post.title}</h3>
                     <p className={styles.postText}>{post.content}</p>
 
-                    {/* Attachments */}
+                    {/* Media Gallery - YouTube/Instagram Style */}
                     {post.attachments && post.attachments.length > 0 && (
-                      <div className={styles.attachments}>
-                        {post.attachments.map((file, index) => (
-                          <div key={index} className={styles.attachment}>
-                            {file.category === 'image' && (
-                              <img 
-                                src={file.url} 
-                                alt={file.originalName}
-                                className={styles.attachmentImage}
-                              />
-                            )}
-                            {file.category === 'video' && (
-                              <video 
-                                src={file.url} 
-                                controls 
-                                className={styles.attachmentVideo}
-                              />
-                            )}
-                            {file.category === 'document' && (
-                              <a 
-                                href={file.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className={styles.attachmentLink}
-                              >
-                                 {file.originalName}
-                              </a>
-                            )}
-                          </div>
-                        ))}
+                      <div className={styles.mediaGallery}>
+                        {post.attachments.map((file, index) => {
+                          // Enhanced file type detection
+                          let fileType = file.category || file.type || 'document'
+                          const fileName = file.originalName || file.name || 'Unknown file'
+                          const fileUrl = file.url || ''
+                          
+                          // Check file extension if type is not clear
+                          if (fileType === 'document' || !fileType) {
+                            const extension = fileUrl.split('.').pop()?.toLowerCase()
+                            if (['mp4', 'webm', 'ogg', 'mov', 'avi'].includes(extension)) {
+                              fileType = 'video'
+                            } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
+                              fileType = 'image'
+                            } else if (['mp3', 'wav', 'ogg', 'aac'].includes(extension)) {
+                              fileType = 'audio'
+                            }
+                          }
+                          
+
+                          
+                          return (
+                            <div key={index} className={styles.mediaItem}>
+                              {fileType === 'image' && (
+                                <div className={styles.imageContainer}>
+                                  <img 
+                                    src={file.url} 
+                                    alt={fileName}
+                                    className={styles.fullImage}
+                                    loading="lazy"
+                                    onClick={() => {
+                                      const modal = document.createElement('div')
+                                      modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer'
+                                      const img = document.createElement('img')
+                                      img.src = file.url
+                                      img.style.cssText = 'max-width:90%;max-height:90%;object-fit:contain'
+                                      modal.appendChild(img)
+                                      modal.onclick = () => document.body.removeChild(modal)
+                                      document.body.appendChild(modal)
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              {fileType === 'video' && (
+                                <div 
+                                  style={{
+                                    width: '100%',
+                                    borderRadius: '12px',
+                                    overflow: 'hidden',
+                                    margin: '1rem 0',
+                                    position: 'relative',
+                                    cursor: expandedVideo === `${post.id}-${index}` ? 'default' : 'pointer'
+                                  }}
+                                  onClick={() => {
+                                    if (expandedVideo !== `${post.id}-${index}`) {
+                                      setExpandedVideo(`${post.id}-${index}`)
+                                    }
+                                  }}
+                                >
+                                  <video 
+                                    src={fileUrl} 
+                                    controls={expandedVideo === `${post.id}-${index}`}
+                                    style={{
+                                      width: '100%',
+                                      height: expandedVideo === `${post.id}-${index}` ? '400px' : '200px',
+                                      background: '#000',
+                                      display: 'block',
+                                      objectFit: 'cover',
+                                      transition: 'height 0.3s ease'
+                                    }}
+                                    preload="metadata"
+                                    poster={file.thumbnail}
+                                  />
+                                  {expandedVideo !== `${post.id}-${index}` && (
+                                    <div style={{
+                                      position: 'absolute',
+                                      top: '50%',
+                                      left: '50%',
+                                      transform: 'translate(-50%, -50%)',
+                                      background: 'rgba(0,0,0,0.7)',
+                                      borderRadius: '50%',
+                                      width: '60px',
+                                      height: '60px',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      color: 'white',
+                                      fontSize: '20px',
+                                      pointerEvents: 'none'
+                                    }}>
+                                      ▶
+                                    </div>
+                                  )}
+                                  {expandedVideo === `${post.id}-${index}` && (
+                                    <div style={{
+                                      position: 'absolute',
+                                      top: '10px',
+                                      right: '10px',
+                                      background: 'rgba(0,0,0,0.7)',
+                                      color: 'white',
+                                      padding: '5px 10px',
+                                      borderRadius: '15px',
+                                      fontSize: '12px',
+                                      cursor: 'pointer'
+                                    }}
+                                    onClick={(_e) => {
+                                      _e.stopPropagation()
+                                      setExpandedVideo(null)
+                                    }}>
+                                      ✕ Minimize
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                              {fileType === 'audio' && (
+                                <div className={styles.audioContainer}>
+                                  <div className={styles.audioIcon}>🎵</div>
+                                  <audio 
+                                    src={file.url} 
+                                    controls 
+                                    className={styles.fullAudio}
+                                    preload="metadata"
+                                  />
+                                  <div className={styles.audioInfo}>
+                                    <span className={styles.fileName}>{fileName}</span>
+                                  </div>
+                                </div>
+                              )}
+                              {(fileType === 'document' || !['image', 'video', 'audio'].includes(fileType)) && (
+                                <div className={styles.documentContainer}>
+                                  <div className={styles.documentIcon}>📄</div>
+                                  <div className={styles.documentInfo}>
+                                    <span className={styles.fileName}>{fileName} (Type: {fileType})</span>
+                                    <a 
+                                      href={fileUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className={styles.downloadBtn}
+                                    >
+                                      📎 Download
+                                    </a>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+
+                      {/* File Count Info */}
+                    {post.attachments && post.attachments.length > 0 && (
+                      <div className={styles.fileInfo}>
+                        📎 {post.attachments.length} file{post.attachments.length > 1 ? 's' : ''} attached
                       </div>
                     )}
 

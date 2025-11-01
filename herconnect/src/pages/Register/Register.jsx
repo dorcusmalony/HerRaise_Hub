@@ -30,6 +30,13 @@ export default function Register(){
 	const [error, setError] = useState(null)
 	const [showSuccess, setShowSuccess] = useState(false)
 	const [userEmail, setUserEmail] = useState('')
+	const [showPassword, setShowPassword] = useState(false)
+	const [passwordStrength, setPasswordStrength] = useState({
+		length: false,
+		hasUpper: false,
+		hasLower: false,
+		hasNumber: false
+	})
 
 	const handleChange = (e) => {
 		const { name, value } = e.target
@@ -37,6 +44,16 @@ export default function Register(){
 			setForm(prev => ({ ...prev, location: { ...prev.location, [name]: value } }))
 		} else {
 			setForm(prev => ({ ...prev, [name]: value }))
+		}
+		
+		// Password strength validation
+		if (name === 'password') {
+			setPasswordStrength({
+				length: value.length >= 8,
+				hasUpper: /[A-Z]/.test(value),
+				hasLower: /[a-z]/.test(value),
+				hasNumber: /\d/.test(value)
+			})
 		}
 	}
 
@@ -46,10 +63,19 @@ export default function Register(){
 		const err = {}
 		if (!form.name.trim()) err.name = t('name required')
 		if (!form.email.trim()) err.email = 'Email required'
-		if (!form.password) err.password = 'Password required'
+		if (!form.password) {
+			err.password = 'Password required'
+		} else if (form.password.length < 8) {
+			err.password = 'Password must be at least 8 characters'
+		} else if (!/[A-Z]/.test(form.password)) {
+			err.password = 'Password must contain at least one uppercase letter'
+		} else if (!/[a-z]/.test(form.password)) {
+			err.password = 'Password must contain at least one lowercase letter'
+		} else if (!/\d/.test(form.password)) {
+			err.password = 'Password must contain at least one number'
+		}
 		if (role === 'mentor') {
 			if (!form.educationLevel) err.educationLevel = t('education required')
-			if (!form.location.city.trim()) err.city = 'City required for mentors'
 		}
 		setErrors(err)
 		return Object.keys(err).length === 0
@@ -178,55 +204,50 @@ export default function Register(){
 
 				<div className="mb-2">
 					<label className="form-label">{t('password')}</label>
-					<input type="password" name="password" value={form.password} onChange={handleChange} className="form-control" autoComplete="new-password" />
+					<div className="position-relative">
+						<input 
+							type={showPassword ? 'text' : 'password'} 
+							name="password" 
+							value={form.password} 
+							onChange={handleChange} 
+							className="form-control" 
+							autoComplete="new-password"
+							minLength="8"
+						/>
+						<button
+							type="button"
+							className="btn btn-sm position-absolute end-0 top-0 h-100"
+							onClick={() => setShowPassword(!showPassword)}
+							style={{border: 'none', background: 'transparent'}}
+						>
+							{showPassword ? '🙈' : '👁️'}
+						</button>
+					</div>
+					{form.password && (
+						<div className="mt-2">
+							<div className="small mb-1">Password strength:</div>
+							<div className="d-flex gap-1 mb-2">
+								<div className={`flex-fill rounded ${passwordStrength.length >= 8 ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
+								<div className={`flex-fill rounded ${passwordStrength.hasUpper ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
+								<div className={`flex-fill rounded ${passwordStrength.hasLower ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
+								<div className={`flex-fill rounded ${passwordStrength.hasNumber ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
+							</div>
+							<div className="small text-muted">
+								<div className={passwordStrength.length >= 8 ? 'text-success' : 'text-muted'}>✓ At least 8 characters</div>
+								<div className={passwordStrength.hasUpper ? 'text-success' : 'text-muted'}>✓ One uppercase letter</div>
+								<div className={passwordStrength.hasLower ? 'text-success' : 'text-muted'}>✓ One lowercase letter</div>
+								<div className={passwordStrength.hasNumber ? 'text-success' : 'text-muted'}>✓ One number</div>
+							</div>
+						</div>
+					)}
 					{errors.password && <div className="text-danger small">{errors.password}</div>}
 				</div>
 
-				<div className="mb-3">
-					<label className="form-label">{t('Contact')}</label>
-					<input 
-						type="tel"
-						name="Contac" 
-						value={form.phoneNumber} 
-						onChange={handleChange} 
-						className="form-control" 
-						placeholder={t('phone_placeholder')}
-						pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"
-						title={t('phone_title')}
-						autoComplete="tel"
-					/>
-					<small className="text-muted">{t('phone hint')}</small>
-				</div>
 
 
 
-				<div className="mb-2">
-					<label className="form-label">{t('city')}</label>
-					<input name="city" value={form.location.city} onChange={handleChange} className="form-control" autoComplete="address-level2" />
-					{errors.city && <div className="text-danger small">{errors.city}</div>}
-				</div>
-				<div className="mb-2">
-					<label className="form-label">{t('state country')}</label>
-					<input name="state" value={form.location.state} onChange={handleChange} className="form-control" autoComplete="address-level1" />
-				</div>
 
-				<div className="mb-2">
-					<label className="form-label">{t('Date of Birth')}</label>
-					<input 
-						type="date" 
-						name="Date of Birth" 
-						value={form.dateOfBirth} 
-						onChange={handleChange} 
-						className="form-control"
-						max={new Date().toISOString().split('T')[0]}
-					/>
-					<small className="text-muted">{t()}</small>
-				</div>
 
-				<div className="mb-2">
-					<label className="form-label">{t('Interests')}</label>
-					<input name="interests" value={form.interests} onChange={handleChange} className="form-control" placeholder={t('interests_placeholder')} />
-				</div>
 
 				<div className="mb-3">
 					<label className="form-label">{t('Education level')}</label>
@@ -253,11 +274,14 @@ export default function Register(){
 				</button>
 			</form>
 
-			{(debugInfo || error) && (
+			{error && (
+				<div className="mt-3 alert alert-danger">
+					<strong>{t('error')}:</strong> {error}
+				</div>
+			)}
+			{debugInfo && (
 				<div className="mt-3 alert alert-warning">
-					{error && <div className="text-danger"><strong>{t('error')}:</strong> {error}</div>}
-					{debugInfo && <div className="text-warning"><strong>Debug:</strong> {debugInfo}</div>}
-					<div className="small mt-1">{t('check console')}</div>
+					<strong>Debug:</strong> {debugInfo}
 				</div>
 			)}
 
