@@ -49,14 +49,14 @@ export default function ForumPost({ post, currentUser, onEdit, onDelete }) {
               onClick={() => onEdit?.(post)}
               title="Edit post"
             >
-              ✏️
+              edit
             </button>
             <button 
               className="menu-btn delete-btn"
               onClick={() => handleDelete()}
               title="Delete post"
             >
-              🗑️
+              delete
             </button>
           </div>
         )}
@@ -80,11 +80,11 @@ export default function ForumPost({ post, currentUser, onEdit, onDelete }) {
         />
         
         <button className="comment-btn">
-          💬 Comment ({post.commentsCount || 0})
+           Comment ({post.commentsCount || 0})
         </button>
         
         <button className="share-btn">
-          📤 Share
+           Share
         </button>
       </div>
     </div>

@@ -39,14 +39,128 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Us Section */}
-      <section className="text-center mb-5 mt-5">
-        <h2 className="display-5 fw-bold mb-4">{t('About HerRaise')}</h2>
-        <p className="lead mx-auto" style={{ maxWidth: '850px' }}>
-          We exist to support and guide young women in South Sudan and across Africa to pursue their education, careers, and passions with courage and clarity.
-          Through mentorship, learning programs, and storytelling, HerRaise connects girls to role models and opportunities that open doors to growth and independence.
-          Together, we are shaping a future where girls choose purpose over pressure and leadership over limitation.
+      {/* Mentorship Program Section */}
+      <section className="mb-5 mt-5">
+        <h2 className="display-5 fw-bold mb-5 text-center">{t('HerRaise Mentorship Program')}</h2>
+        <div className="row g-5 align-items-center">
+          {/* Become a Mentee */}
+          <div className="col-lg-6">
+            <div className="text-center mb-4">
+              <img 
+                src="https://files.globalgiving.org/pfil/44921/pict_grid7.jpg" 
+                alt="Mentee learning" 
+                className="img-fluid rounded-3 shadow"
+                style={{ maxHeight: '300px', objectFit: 'cover' }}
+              />
+            </div>
+            <h3 className="fw-bold mb-3 text-center">{t('Become a Mentee to Advance Your Future')}</h3>
+            <p className="lead mb-4">
+              At HerRaise Hub, we believe that mentorship opens doors to growth and confidence. Whether you’re exploring your education path, 
+              developing leadership and life skills, or preparing for career opportunities, this program connects you with inspiring women mentors who guide and empower you to reach higher.
+            </p>
+            <ul className="list-unstyled mb-4">
+              <li className="mb-2">• <strong>Access scholarships</strong> - Find and apply for educational funding opportunities</li>
+              <li className="mb-2">• <strong>Discover internships</strong> - Connect with career-building experiences</li>
+              <li className="mb-2">• <strong>Get guidance through forum discussions</strong> - Connect with mentors in community forums</li>
+              <li className="mb-2">• <strong>Build confidence</strong> - Develop skills and self-assurance for success</li>
+              <li className="mb-2">• <strong>Achieve your dreams</strong> - Turn aspirations into reality with expert help</li>
+            </ul>
+            <p className="fw-bold">Join HerRaise today and start your journey toward purpose, confidence, and success.</p>
+            
+            <div className="text-center">
+              <Link to="/register" className="btn btn-lg" style={{background: '#E84393', color: 'white', border: 'none'}}>
+                Apply for Mentorship
+              </Link>
+            </div>
+          </div>
+
+          {/* Become a Mentor */}
+          <div className="col-lg-6">
+            <div className="text-center mb-4">
+              <img 
+                src="https://www.norway.no/contentassets/262345ea071e441b95f954c8e5b0f592/image4vif.jpg?preset=mainimagetop&v=-1852770130" 
+                alt="Mentor guiding" 
+                className="img-fluid rounded-3 shadow"
+                style={{ maxHeight: '300px', objectFit: 'cover' }}
+              />
+            </div>
+            <h3 className="fw-bold mb-3 text-center">{t('Become a Mentor to Bridge the Gap and Make an Impact')}</h3>
+            <ul className="list-unstyled mb-4">
+              <li className="mb-2">• <strong>Guide and support</strong> - Stand with young girls amid the challenges they face</li>
+              <li className="mb-2">• <strong>Inspire through forum discussions</strong> - Share meaningful conversations and experiences</li>
+              <li className="mb-2">• <strong>Navigate opportunities</strong> - Help them find scholarships, internships, and programs</li>
+              <li className="mb-2">• <strong>Lead by example</strong> - Share your knowledge and life experiences</li>
+              <li className="mb-2">• <strong>Grow together</strong> - Mentors can also be mentees in our community</li>
+              <li className="mb-2">• <strong>Empower the next generation</strong> - Help them reach their full potential</li>
+            </ul>
+            <p className="fw-bold">Together, we can empower young women to rise with confidence and purpose.</p>
+            <div className="text-center">
+              <Link to="/register" className="btn btn-lg" style={{background: '#8B5CF6', color: 'white', border: 'none'}}>
+                Become a Mentor
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Mentors Section */}
+      <section className="mb-5">
+        <h2 className="display-5 fw-bold mb-5 text-center">{t('Featured Mentors')}</h2>
+        <p className="lead text-center mb-5 mx-auto" style={{ maxWidth: '600px' }}>
+          Meet the inspiring women leaders guiding and empowering young girls across South Sudan and Africa
         </p>
+        <div className="row g-4 justify-content-center">
+          {[
+            {
+              name: 'Dr. Sarah Johnson',
+              profession: 'Education Director & Women Rights Advocate',
+              image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face',
+              expertise: 'Educational Leadership, Scholarship Guidance'
+            },
+            {
+              name: 'Grace Akello',
+              profession: 'Tech Entrepreneur & Startup Founder',
+              image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face',
+              expertise: 'Technology, Business Development'
+            },
+            {
+              name: 'Mary Nyandeng',
+              profession: 'Healthcare Professional & Community Leader',
+              image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face',
+              expertise: 'Healthcare, Community Development'
+            },
+            {
+              name: 'Rebecca Garang',
+              profession: 'Legal Advisor & Human Rights Lawyer',
+              image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face'
+            },
+            {
+              name: 'Amina Hassan',
+              profession: 'Financial Advisor & Business Consultant',
+              image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=300&h=300&fit=crop&crop=face'
+            }
+          ].map((mentor, index) => (
+            <div key={index} className="col-lg-2 col-md-4 col-6">
+              <div className="card border-0 shadow-sm h-100 text-center">
+                <div className="card-body p-3">
+                  <img 
+                    src={mentor.image}
+                    alt={mentor.name}
+                    className="rounded-circle mb-3 shadow"
+                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                  />
+                  <h6 className="fw-bold mb-2">{mentor.name}</h6>
+                  <p className="text-muted small mb-0">{mentor.profession}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-5">
+          <Link to="/register" className="btn btn-lg" style={{background: '#8B5CF6', color: 'white', border: 'none'}}>
+            Join Our Mentor Community
+          </Link>
+        </div>
       </section>
 
       {/* What We Do Section */}

@@ -55,18 +55,36 @@
 
 .uploadText {
   font-size: 1.1rem;
-  color: purple;
+  color: black !important;
   margin: 0;
 }
 
 .uploadText strong {
-  color: purple;
+  color: black !important;
 }
 
 .uploadHint {
   font-size: 0.875rem;
-  color: purple;
+  color: black !important;
   margin: 0;
+}
+
+/* Force all text in upload area to be black */
+.dropZone,
+.dropZone *,
+.uploadPrompt,
+.uploadPrompt *,
+.uploadingState,
+.uploadingState *,
+.uploadLabel,
+.uploadLabel * {
+  color: black !important;
+}
+
+.dropZone p,
+.dropZone span,
+.dropZone div {
+  color: black !important;
 }
 
 .uploadingState {

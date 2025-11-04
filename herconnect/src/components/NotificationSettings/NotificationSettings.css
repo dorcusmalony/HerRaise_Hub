@@ -1,0 +1,67 @@
+.notification-settings {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-settings h3 {
+  margin: 0 0 20px 0;
+  color: #1a1a1a;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.setting-group {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.setting-group h4 {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.setting-group label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: #374151;
+  font-size: 14px;
+}
+
+.setting-group label:last-child {
+  margin-bottom: 0;
+}
+
+.setting-group input[type="checkbox"] {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+  accent-color: #0d6efd;
+}
+
+.setting-group input[type="checkbox"]:checked {
+  background: #0d6efd;
+}
+
+@media (max-width: 768px) {
+  .notification-settings {
+    padding: 16px;
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+  
+  .notification-settings h3 {
+    font-size: 18px;
+  }
+}

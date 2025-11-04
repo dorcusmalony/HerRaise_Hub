@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
+import LikeButton from '../../components/LikeButton/LikeButton'
 import styles from './forum.module.css'
 
 export default function Forum() {
@@ -24,7 +25,6 @@ export default function Forum() {
   const [successMessage, setSuccessMessage] = useState('')
   const [selectedType, setSelectedType] = useState('project')
   const [showPostDropdown, setShowPostDropdown] = useState(null)
-  const [expandedVideo, setExpandedVideo] = useState(null)
 
 
   // Load current user
@@ -76,23 +76,7 @@ export default function Forum() {
     }
   }, [showPostDropdown])
 
-  const handleLikePost = async (postId) => {
-    try {
-      const response = await fetch(`${API}/api/forum/posts/${postId}/like`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      
-      if (response.ok) {
-        fetchPosts()
-      }
-    } catch (error) {
-      console.error('Error liking post:', error)
-    }
-  }
+
 
   const handleUpdatePost = (updatedPost) => {
     setPosts(prev => prev.map(p => p.id === updatedPost.id ? updatedPost : p))
@@ -540,7 +524,7 @@ export default function Forum() {
                             }
                           }
                           
-
+                          console.log('🎥 File debug:', { fileName, fileType, url: fileUrl, original: file })
                           
                           return (
                             <div key={index} className={styles.mediaItem}>
@@ -551,7 +535,8 @@ export default function Forum() {
                                     alt={fileName}
                                     className={styles.fullImage}
                                     loading="lazy"
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      // Open in fullscreen/modal
                                       const modal = document.createElement('div')
                                       modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer'
                                       const img = document.createElement('img')
@@ -562,77 +547,52 @@ export default function Forum() {
                                       document.body.appendChild(modal)
                                     }}
                                   />
+
                                 </div>
                               )}
                               {fileType === 'video' && (
-                                <div 
-                                  style={{
-                                    width: '100%',
-                                    borderRadius: '12px',
-                                    overflow: 'hidden',
-                                    margin: '1rem 0',
-                                    position: 'relative',
-                                    cursor: expandedVideo === `${post.id}-${index}` ? 'default' : 'pointer'
-                                  }}
-                                  onClick={() => {
-                                    if (expandedVideo !== `${post.id}-${index}`) {
-                                      setExpandedVideo(`${post.id}-${index}`)
-                                    }
-                                  }}
-                                >
+                                <div style={{
+                                  width: '100%',
+                                  background: '#000',
+                                  borderRadius: '16px',
+                                  overflow: 'hidden',
+                                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                                  margin: '1rem 0',
+                                  border: '3px solid #ff0000' // DEBUG: Red border to see if this renders
+                                }}>
+                                  <div style={{
+                                    padding: '0.5rem',
+                                    background: '#ff0000',
+                                    color: 'white',
+                                    fontSize: '0.8rem'
+                                  }}>🎥 VIDEO DETECTED: {fileName}</div>
                                   <video 
                                     src={fileUrl} 
-                                    controls={expandedVideo === `${post.id}-${index}`}
+                                    controls 
                                     style={{
                                       width: '100%',
-                                      height: expandedVideo === `${post.id}-${index}` ? '400px' : '200px',
+                                      height: '400px',
                                       background: '#000',
                                       display: 'block',
-                                      objectFit: 'cover',
-                                      transition: 'height 0.3s ease'
+                                      objectFit: 'contain'
                                     }}
                                     preload="metadata"
                                     poster={file.thumbnail}
                                   />
-                                  {expandedVideo !== `${post.id}-${index}` && (
-                                    <div style={{
-                                      position: 'absolute',
-                                      top: '50%',
-                                      left: '50%',
-                                      transform: 'translate(-50%, -50%)',
-                                      background: 'rgba(0,0,0,0.7)',
-                                      borderRadius: '50%',
-                                      width: '60px',
-                                      height: '60px',
+                                  <div style={{
+                                    padding: '1rem',
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    color: 'white'
+                                  }}>
+                                    <span style={{
+                                      fontSize: '1rem',
+                                      fontWeight: '600',
+                                      color: 'white',
                                       display: 'flex',
                                       alignItems: 'center',
-                                      justifyContent: 'center',
-                                      color: 'white',
-                                      fontSize: '20px',
-                                      pointerEvents: 'none'
-                                    }}>
-                                      ▶
-                                    </div>
-                                  )}
-                                  {expandedVideo === `${post.id}-${index}` && (
-                                    <div style={{
-                                      position: 'absolute',
-                                      top: '10px',
-                                      right: '10px',
-                                      background: 'rgba(0,0,0,0.7)',
-                                      color: 'white',
-                                      padding: '5px 10px',
-                                      borderRadius: '15px',
-                                      fontSize: '12px',
-                                      cursor: 'pointer'
-                                    }}
-                                    onClick={(_e) => {
-                                      _e.stopPropagation()
-                                      setExpandedVideo(null)
-                                    }}>
-                                      ✕ Minimize
-                                    </div>
-                                  )}
+                                      gap: '0.5rem'
+                                    }}>🎥 {fileName}</span>
+                                  </div>
                                 </div>
                               )}
                               {fileType === 'audio' && (
@@ -693,14 +653,13 @@ export default function Forum() {
 
                   {/* Action Buttons */}
                   <div className={styles.postActions}>
-                    <button 
-                      onClick={() => handleLikePost(post.id)}
-                      className={`${styles.actionBtn} ${styles.likeBtn} ${post.likes?.some(l => l.userId === currentUser?.id) ? styles.liked : ''}`}
-                      title={t('like_post')}
-                    >
-                      ❤️ <span className={styles.count}>{post.likes?.length || 0}</span>
-                      <span className={styles.label}>Likes</span>
-                    </button>
+                    <LikeButton
+                      postId={post.id}
+                      initialLikes={post.likes || []}
+                      currentUserId={currentUser?.id}
+                      type="post"
+                      onLikeSuccess={fetchPosts}
+                    />
 
                     <button 
                       onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}

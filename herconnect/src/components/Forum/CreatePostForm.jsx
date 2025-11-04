@@ -99,10 +99,11 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
   return (
     <form onSubmit={handleSubmit} className={styles.formContainer}>
       <div className={styles.formBody}>
-        <h3 className={styles.formTitle}>
+
+        <h3 className={styles.formTitle} style={{color: 'white'}}>
           {editPost ? '✏️ Edit Post' : '✨ Share Your Work'}
         </h3>
-        <p className={styles.formSubtitle}>
+        <p className={styles.formSubtitle} style={{color: 'white'}}>
           💪 Showcase your projects, essays, or ideas to get feedback from peers and mentors
         </p>
 
@@ -111,24 +112,19 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         )}
 
         {/* Post Type Display */}
-        <div className={styles.typeDisplay}>
-          <span className={styles.typeIcon}>
-            {formData.type === 'project' ? '🚀' :
-             formData.type === 'essay' ? '📝' :
-             formData.type === 'video' ? '🎥' :
-             formData.type === 'question' ? '❓' : '💬'}
-          </span>
-          <span className={styles.typeName}>
-            {formData.type === 'project' ? 'Project Showcase' :
-             formData.type === 'essay' ? 'Essay Upload' :
-             formData.type === 'video' ? 'Video Upload' :
-             formData.type === 'question' ? 'Ask Question' : 'Discussion'}
-          </span>
-        </div>
+        {formData.type === 'essay' ? (
+          <div style={{textAlign: 'center', marginBottom: '1.5rem', padding: '1.5rem', background: 'white', borderRadius: '8px', border: '2px solid #8B5CF6'}}>
+            <h2 style={{color: '#374151', marginBottom: '1rem', fontSize: '1.5rem'}}>Essays</h2>
+            <p style={{color: '#374151', lineHeight: '1.6', margin: 0, fontSize: '1rem'}}>
+              Welcome! Share your application essays for scholarships, internships, conferences, or projects.
+              Peers and mentors can review and give feedback to help you strengthen your writing and improve your chances of success.
+            </p>
+          </div>
+        ) : null}
 
         {/* Title */}
         <div className={styles.formGroup}>
-          <label htmlFor="post-title" className={styles.formLabel}>Title *</label>
+          <label htmlFor="post-title" className={styles.formLabel} style={{color: 'white'}}>Title *</label>
           <input
             type="text"
             id="post-title"
@@ -144,7 +140,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
 
         {/* Enhanced Content */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Description *</label>
+          <label className={styles.formLabel} style={{color: 'white'}}>Description *</label>
           <textarea
             value={formData.content}
             onChange={(e) => setFormData({...formData, content: e.target.value})}
@@ -153,14 +149,14 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
             placeholder={getContentPlaceholder(formData.type)}
             className={styles.formTextarea}
           />
-          <div className={styles.characterCount}>
+          <div className={styles.characterCount} style={{color: 'white'}}>
             {formData.content.length} characters
           </div>
         </div>
 
         {/* Tags */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Tags (comma separated)</label>
+          <label className={styles.formLabel} style={{color: 'white'}}>Tags (comma separated)</label>
           <input
             type="text"
             value={formData.tags}
@@ -168,7 +164,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
             placeholder="e.g., technology, education, leadership"
             className={styles.formInput}
           />
-          <div className={styles.formHint}>
+          <div className={styles.formHint} style={{color: 'white'}}>
             Add relevant tags to help others find your post
           </div>
         </div>
@@ -176,7 +172,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         {/* Upload Section - Only for specific types */}
         {(formData.type === 'project' || formData.type === 'essay' || formData.type === 'video') && (
           <div className={styles.uploadSection}>
-            <label className={styles.formLabel}>
+            <label className={styles.formLabel} style={{color: 'white'}}>
               {formData.type === 'video' ? '🎥 Upload Video *' :
                formData.type === 'essay' ? '📝 Upload Essay/Document *' :
                '🚀 Upload Project Files *'}

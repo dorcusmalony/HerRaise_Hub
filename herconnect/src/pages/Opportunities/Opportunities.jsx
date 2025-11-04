@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { getSocket } from '../../services/socketService'
 import styles from './Opportunities.module.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
@@ -37,6 +38,7 @@ export default function Opportunities() {
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [bookmarked, setBookmarked] = useState(false)
+  const [showNewOpportunityBanner, setShowNewOpportunityBanner] = useState(false)
 
   const fetchOpportunities = useCallback(async () => {
     try {
@@ -70,6 +72,39 @@ export default function Opportunities() {
 
   useEffect(() => {
     fetchOpportunities()
+  }, [fetchOpportunities])
+
+  // Socket notification handling
+  useEffect(() => {
+    const socket = getSocket()
+    if (!socket) return
+
+    const handleNotification = (notification) => {
+      if (notification.type === 'new_opportunity') {
+        // Auto-refresh opportunities list
+        fetchOpportunities()
+        
+        // Show "New opportunity added" banner
+        setShowNewOpportunityBanner(true)
+        setTimeout(() => setShowNewOpportunityBanner(false), 5000)
+      }
+    }
+
+    socket.on('notification', handleNotification)
+    
+    // Listen for refresh event from App.jsx
+    const handleRefresh = () => {
+      fetchOpportunities()
+      setShowNewOpportunityBanner(true)
+      setTimeout(() => setShowNewOpportunityBanner(false), 5000)
+    }
+    
+    window.addEventListener('refresh-opportunities', handleRefresh)
+
+    return () => {
+      socket.off('notification', handleNotification)
+      window.removeEventListener('refresh-opportunities', handleRefresh)
+    }
   }, [fetchOpportunities])
 
   const handleApplyClick = async (opportunityId, applicationLink) => {
@@ -110,6 +145,12 @@ export default function Opportunities() {
 
   return (
     <div className={styles.container}>
+      {showNewOpportunityBanner && (
+        <div className={styles.newOpportunityBanner}>
+          🎉 New opportunities have been added! Check them out below.
+        </div>
+      )}
+      
       <div className={styles.header}>
         <h1 className={styles.title}> Scholarship & Opportunity Board</h1>
         <p className={styles.subtitle}>

@@ -13,13 +13,13 @@
 .formTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #111827;
+  color: white !important;
   margin: 0 0 0.5rem 0;
 }
 
 .formSubtitle {
   font-size: 0.95rem;
-  color: #6b7280;
+  color: white !important;
   margin: 0 0 1.5rem 0;
   line-height: 1.5;
 }
@@ -40,19 +40,23 @@
 .formLabel {
   display: block;
   font-weight: 600;
-  color: #374151;
+  color: white !important;
   margin-bottom: 0.5rem;
 }
+
+
 
 .formSelect,
 .formInput,
 .formTextarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid #8B5CF6;
   border-radius: 8px;
   font-family: inherit;
   transition: border-color 0.2s ease;
+  background: white;
+  color: black;
 }
 
 .formSelect:focus,
@@ -70,13 +74,13 @@
 
 .characterCount {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: white !important;
   margin-top: 0.25rem;
 }
 
 .formHint {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: white !important;
   margin-top: 0.25rem;
 }
 
@@ -98,11 +102,11 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: #f9fafb;
+  background: white;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid #8B5CF6;
 }
 
 .typeIcon {
@@ -182,9 +186,9 @@
 }
 
 .cancelBtn {
-  background: #f3f4f6;
-  color: #374151;
-  border: 2px solid #e5e7eb;
+  background: #E84393;
+  color: white;
+  border: 2px solid #E84393;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -193,6 +197,18 @@
 }
 
 .cancelBtn:hover {
-  background: #e5e7eb;
-  border-color: #d1d5db;
+  background: #8B5CF6;
+  color: white;
+  border-color: #8B5CF6;
+}
+
+/* Force all text to be white */
+.formContainer * {
+  color: white !important;
+}
+
+.formContainer input,
+.formContainer textarea,
+.formContainer select {
+  color: black !important;
 }

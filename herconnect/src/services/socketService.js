@@ -49,7 +49,22 @@ export const initializeSocket = (token) => {
   // Listen for new opportunities
   socket.on('opportunity:new', (data) => {
     console.log(' New opportunity:', data)
-    showNotification('New Opportunity', data.title || 'A new opportunity has been posted!')
+    showNotification('New Opportunity', data.title || 'A new opportunity has been posted!', 'new_opportunity', data.id)
+  })
+
+  // Listen for general notifications
+  socket.on('notification', (notification) => {
+    console.log(' Socket notification:', notification)
+    if (notification.type === 'new_opportunity') {
+      showNotification(
+        notification.title,
+        notification.message,
+        'new_opportunity',
+        notification.opportunityId
+      )
+    } else {
+      showNotification(notification.title, notification.message)
+    }
   })
 
   // Listen for application status updates
@@ -108,7 +123,7 @@ export const getSocket = () => socket
 
 
 
-function showNotification(title, message) {
+function showNotification(title, message, type = 'info', opportunityId = null) {
   // Browser notification
   if ('Notification' in window && Notification.permission === 'granted') {
     new Notification(title, { 
@@ -119,7 +134,7 @@ function showNotification(title, message) {
 
   // In-app notification (you can customize this)
   const event = new CustomEvent('app-notification', {
-    detail: { title, message }
+    detail: { title, message, type, opportunityId }
   })
   window.dispatchEvent(event)
 }
