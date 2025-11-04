@@ -21,9 +21,9 @@ export default function MediaUpload({ onUpload, multiple = false }) {
       return
     }
 
-    // Validate file size (50MB)
-    if (file.size > 50 * 1024 * 1024) {
-      alert('File size must be less than 50MB')
+    // Validate file size (500MB)
+    if (file.size > 500 * 1024 * 1024) {
+      alert('File size must be less than 500MB')
       return
     }
 
@@ -112,7 +112,7 @@ export default function MediaUpload({ onUpload, multiple = false }) {
             Drag & drop {multiple ? 'files' : 'a file'} here or click to browse
           </p>
           <p className="upload-hint">
-            Images & Videos • Max 50MB
+            Images & Videos • Max 500MB
           </p>
           <input
             type="file"

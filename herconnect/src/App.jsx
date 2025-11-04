@@ -23,7 +23,9 @@ import './App.css'
 import './styles/colors.css'
 import './styles/rtl.css'
 import './styles/responsive.css'
+import './styles/notifications.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
+import PushNotificationSetup from './components/PushNotificationSetup/PushNotificationSetup'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -49,13 +51,50 @@ export default function App() {
 
       // Listen for real-time notifications
       handleAppNotification = (e) => {
-        const { title, message } = e.detail || {}
-        toast.info(<div><strong>{title}</strong><div>{message}</div></div>, {
-          position: "top-right",
-          autoClose: 5000,
-          closeOnClick: true,
-          pauseOnHover: true,
-        })
+        const { title, message, type, opportunityId } = e.detail || {}
+        
+        if (type === 'new_opportunity') {
+          // Show custom toast for opportunities
+          const toastElement = (
+            <div className="opportunity-toast">
+              <div className="toast-icon">🎯</div>
+              <div className="toast-content">
+                <h4>{title}</h4>
+                <p>{message}</p>
+                {opportunityId && (
+                  <button onClick={() => window.location.href = `/opportunities/${opportunityId}`}>
+                    View Opportunity
+                  </button>
+                )}
+              </div>
+            </div>
+          )
+          
+          toast.success(toastElement, {
+            position: "top-right",
+            autoClose: 8000,
+            closeOnClick: true,
+            pauseOnHover: true,
+          })
+          
+          // Play notification sound
+          try {
+            new Audio('/notification-sound.mp3').play().catch(() => {})
+          } catch (e) {}
+          
+          // Update opportunities list if user is on opportunities page
+          if (window.location.pathname === '/opportunities') {
+            window.dispatchEvent(new Event('refresh-opportunities'))
+          }
+        } else {
+          // Regular notification
+          toast.info(<div><strong>{title}</strong><div>{message}</div></div>, {
+            position: "top-right",
+            autoClose: 5000,
+            closeOnClick: true,
+            pauseOnHover: true,
+          })
+        }
       }
       window.addEventListener('app-notification', handleAppNotification)
 
@@ -101,6 +140,7 @@ export default function App() {
       <div className="app-root">
         <Header />
         <NotificationToast />
+        <PushNotificationSetup />
         <ToastContainer />
         <SafetyButton />
         <main className="container-fluid px-3 py-4">

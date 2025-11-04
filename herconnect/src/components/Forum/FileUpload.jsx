@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './FileUpload.module.css'
 
-const FileUpload = ({ onFilesUploaded, acceptedTypes = '.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.webm,.pdf,.doc,.docx,.ppt,.pptx,.txt,.mp3,.wav,.ogg' }) => {
+const FileUpload = ({ onFilesUploaded, acceptedTypes = '.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.webm,.mkv,.flv,.wmv,.m4v,.3gp,.pdf,.doc,.docx,.ppt,.pptx,.txt,.mp3,.wav,.ogg,.aac' }) => {
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState([])
@@ -13,11 +13,11 @@ const FileUpload = ({ onFilesUploaded, acceptedTypes = '.jpg,.jpeg,.png,.gif,.we
     setUploading(true)
     setError(null)
     const formData = new FormData()
-    Array.from(files).forEach(file => formData.append('files', file))
+    Array.from(files).forEach(file => formData.append('media', file))
 
     try {
       const API = import.meta.env.VITE_API_URL || ''
-      const response = await fetch(`${API}/api/forum/upload`, {
+      const response = await fetch(`${API}/api/media/upload-multiple`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         body: formData
@@ -97,7 +97,7 @@ const FileUpload = ({ onFilesUploaded, acceptedTypes = '.jpg,.jpeg,.png,.gif,.we
                 <strong>Click to upload</strong> or drag and drop
               </p>
               <p className={styles.uploadHint}>
-                Images, videos, documents, audio (Max 50MB each)
+                Images, videos, documents, audio (Max 500MB each)
               </p>
             </div>
           )}

@@ -1,0 +1,117 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.interest-modal {
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  max-width: 500px;
+  margin: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.interest-modal h3 {
+  margin: 0 0 16px 0;
+  color: #1a1a1a;
+  font-size: 24px;
+}
+
+.interest-modal p {
+  margin: 0 0 24px 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.interest-options {
+  margin-bottom: 20px;
+}
+
+.interest-options label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+  color: #374151;
+}
+
+.interest-options input[type="radio"] {
+  margin-right: 12px;
+  accent-color: #0d6efd;
+}
+
+.reminder-option {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.reminder-option label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #374151;
+}
+
+.reminder-option input[type="checkbox"] {
+  margin-right: 12px;
+  accent-color: #0d6efd;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.confirm-btn {
+  background: #0d6efd;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.confirm-btn:hover {
+  background: #0b5ed7;
+}
+
+.cancel-btn {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #f3f4f6;
+}
+
+@media (max-width: 768px) {
+  .interest-modal {
+    margin: 16px;
+    padding: 24px;
+  }
+  
+  .modal-buttons {
+    flex-direction: column;
+  }
+  
+  .confirm-btn, .cancel-btn {
+    width: 100%;
+  }
+}
