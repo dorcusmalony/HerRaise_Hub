@@ -4,6 +4,7 @@ import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
 import LikeButton from '../../components/LikeButton/LikeButton'
 import styles from './forum.module.css'
+import './youtube-video.css'
 
 export default function Forum() {
   const { t } = useTranslation()
@@ -553,45 +554,43 @@ export default function Forum() {
                               {fileType === 'video' && (
                                 <div style={{
                                   width: '100%',
+                                  maxWidth: '400px',
                                   background: '#000',
-                                  borderRadius: '16px',
+                                  borderRadius: '8px',
                                   overflow: 'hidden',
-                                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-                                  margin: '1rem 0',
-                                  border: '3px solid #ff0000' // DEBUG: Red border to see if this renders
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                  margin: '0.5rem 0'
                                 }}>
-                                  <div style={{
-                                    padding: '0.5rem',
-                                    background: '#ff0000',
-                                    color: 'white',
-                                    fontSize: '0.8rem'
-                                  }}>🎥 VIDEO DETECTED: {fileName}</div>
+
                                   <video 
                                     src={fileUrl} 
                                     controls 
                                     style={{
                                       width: '100%',
-                                      height: '400px',
+                                      aspectRatio: '16/9',
+                                      maxHeight: '300px',
                                       background: '#000',
                                       display: 'block',
-                                      objectFit: 'contain'
+                                      objectFit: 'contain',
+                                      borderRadius: '8px'
                                     }}
                                     preload="metadata"
                                     poster={file.thumbnail}
                                   />
                                   <div style={{
-                                    padding: '1rem',
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    color: 'white'
+                                    padding: '0.5rem',
+                                    background: 'white',
+                                    borderTop: '1px solid #eee'
                                   }}>
                                     <span style={{
-                                      fontSize: '1rem',
-                                      fontWeight: '600',
-                                      color: 'white',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '0.5rem'
-                                    }}>🎥 {fileName}</span>
+                                      fontSize: '0.85rem',
+                                      fontWeight: '500',
+                                      color: '#333',
+                                      display: 'block',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      whiteSpace: 'nowrap'
+                                    }}>{fileName}</span>
                                   </div>
                                 </div>
                               )}
