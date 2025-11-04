@@ -143,7 +143,7 @@
 }
 
 .applyBtn {
-  background: #0d6efd;
+  background: #8B5CF6;
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -160,7 +160,7 @@
 }
 
 .applyBtn:hover {
-  background: #0b5ed7;
+  background: #7C3AED;
   transform: translateY(-1px);
 }
 
@@ -182,10 +182,16 @@
   min-height: 40px;
 }
 
-.bookmarkBtn:hover,
+.bookmarkBtn:hover {
+  border-color: #E84393;
+  color: #E84393;
+  background: rgba(232, 67, 147, 0.1);
+}
+
 .shareBtn:hover {
-  border-color: #0d6efd;
-  color: #0d6efd;
+  border-color: #8B5CF6;
+  color: #8B5CF6;
+  background: rgba(139, 92, 246, 0.1);
 }
 
 .emptyState {

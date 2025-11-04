@@ -482,7 +482,7 @@ export default function Forum() {
                                 setEditingPost(post)
                                 setShowPostDropdown(null)
                               }}>
-                                ✏️ Edit Post
+                                 Edit Post
                               </button>
                             </li>
                             <li><hr className="dropdown-divider" /></li>
@@ -491,7 +491,7 @@ export default function Forum() {
                                 handleDeletePost(post.id)
                                 setShowPostDropdown(null)
                               }}>
-                                🗑️ Delete Post
+                                 Delete Post
                               </button>
                             </li>
                           </ul>
@@ -548,7 +548,9 @@ export default function Forum() {
                                       document.body.appendChild(modal)
                                     }}
                                   />
-
+                                  <div className={styles.imageOverlay}>
+                                    🔍
+                                  </div>
                                 </div>
                               )}
                               {fileType === 'video' && (

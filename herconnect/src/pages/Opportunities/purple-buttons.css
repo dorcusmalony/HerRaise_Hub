@@ -1,0 +1,34 @@
+/* Purple Apply Button Override for Opportunities */
+.applyBtn {
+  background: #8B5CF6 !important;
+  color: white !important;
+}
+
+.applyBtn:hover {
+  background: #7C3AED !important;
+  color: white !important;
+}
+
+/* Keep bookmark button pink */
+.bookmarkBtn {
+  border-color: #E84393 !important;
+  color: #E84393 !important;
+}
+
+.bookmarkBtn:hover {
+  border-color: #E84393 !important;
+  color: white !important;
+  background: #E84393 !important;
+}
+
+/* Love button purple */
+.love-btn,
+.like-btn {
+  background: #8B5CF6 !important;
+  color: white !important;
+}
+
+.love-btn:hover,
+.like-btn:hover {
+  background: #7C3AED !important;
+}
