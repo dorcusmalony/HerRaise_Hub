@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getSocket } from '../../services/socketService'
 import styles from './Opportunities.module.css'
+import './purple-buttons.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
 
