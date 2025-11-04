@@ -1,5 +1,5 @@
 import LikeButton from '../LikeButton/LikeButton'
-import { MediaDisplay } from '../MediaUpload'
+import { YouTubeStyleMedia } from '../MediaUpload'
 import { forumAPI } from '../../services/forumAPI'
 import './ForumPost.css'
 
@@ -67,7 +67,7 @@ export default function ForumPost({ post, currentUser, onEdit, onDelete }) {
         <p className="post-text">{post.content}</p>
         
         {post.attachments && post.attachments.length > 0 && (
-          <MediaDisplay attachments={post.attachments} />
+          <YouTubeStyleMedia attachments={post.attachments} />
         )}
       </div>
 
