@@ -75,8 +75,33 @@ export const initializeSocket = (token) => {
 
   // Listen for deadline reminders
   socket.on('opportunity:deadline_reminder', (data) => {
-    console.log(' Deadline reminder:', data)
-    showNotification('Deadline Reminder', data.message || 'Deadline approaching!')
+    console.log('⏰ Deadline reminder:', data)
+    showNotification(
+      '⏰ Application Deadline Reminder', 
+      `${data.title} deadline is in ${data.daysLeft} days! Time to prepare your application.`,
+      'deadline_reminder',
+      data.id
+    )
+    
+    // Show browser notification with action
+    if ('Notification' in window && Notification.permission === 'granted') {
+      const notification = new Notification('⏰ Application Deadline Reminder', {
+        body: `${data.title} deadline is in ${data.daysLeft} days!`,
+        icon: '/vite.svg',
+        tag: 'deadline_reminder',
+        requireInteraction: true,
+        actions: [
+          { action: 'apply', title: '📝 Apply Now' },
+          { action: 'dismiss', title: '❌ Dismiss' }
+        ]
+      })
+      
+      notification.onclick = () => {
+        window.focus()
+        window.location.href = `/opportunities?highlight=${data.id}`
+        notification.close()
+      }
+    }
   })
 
   // Listen for new forum questions

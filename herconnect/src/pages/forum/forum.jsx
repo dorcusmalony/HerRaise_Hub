@@ -32,7 +32,11 @@ export default function Forum() {
   useEffect(() => {
     const userData = localStorage.getItem('user')
     if (userData) {
-      setCurrentUser(JSON.parse(userData))
+      const user = JSON.parse(userData)
+      setCurrentUser(user)
+      console.log('👤 Current user loaded:', user)
+    } else {
+      console.log('⚠️ No user data found in localStorage')
     }
     
     // Debug: Log environment variables
@@ -67,8 +71,11 @@ export default function Forum() {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = () => {
-      setShowPostDropdown(null)
+    const handleClickOutside = (event) => {
+      // Check if click is outside dropdown
+      if (!event.target.closest('.dropdown')) {
+        setShowPostDropdown(null)
+      }
     }
     
     if (showPostDropdown) {
@@ -465,39 +472,94 @@ export default function Forum() {
                       </div>
                     </div>
 
-                    {/* Edit/Delete for post author or admin */}
-                    {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
-                      <div className="dropdown" style={{ position: 'relative' }}>
-                        <button 
-                          className="btn btn-sm btn-link text-muted p-0" 
-                          onClick={() => setShowPostDropdown(showPostDropdown === post.id ? null : post.id)}
-                          style={{ fontSize: '1.2rem' }}
-                        >
-                          ⋮
-                        </button>
-                        {showPostDropdown === post.id && (
-                          <ul className="dropdown-menu dropdown-menu-end shadow-sm show" style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1000 }}>
-                            <li>
-                              <button className="dropdown-item small" onClick={() => {
-                                setEditingPost(post)
-                                setShowPostDropdown(null)
-                              }}>
-                                 Edit Post
-                              </button>
+                    {/* Edit/Delete for post author or admin - Debug version */}
+                    <div className="dropdown" style={{ position: 'relative' }}>
+                      <button 
+                        className="btn btn-sm btn-link text-muted p-0" 
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          console.log('🔧 Dropdown clicked for post:', post.id)
+                          console.log('🔧 Current user:', currentUser)
+                          console.log('🔧 Post author:', post.author)
+                          setShowPostDropdown(showPostDropdown === post.id ? null : post.id)
+                        }}
+                        style={{ 
+                          fontSize: '1.5rem', 
+                          background: '#f3f4f6', 
+                          border: '1px solid #d1d5db',
+                          borderRadius: '4px',
+                          padding: '4px 8px',
+                          color: '#374151'
+                        }}
+                      >
+                        ⋮
+                      </button>
+                      {showPostDropdown === post.id && (
+                        <ul className="dropdown-menu dropdown-menu-end shadow-sm show" style={{ 
+                          position: 'absolute', 
+                          right: 0, 
+                          top: '100%', 
+                          zIndex: 1000, 
+                          minWidth: '140px',
+                          background: 'white',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                          padding: '0.5rem 0'
+                        }}>
+                          {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') ? (
+                            <>
+                              <li>
+                                <button 
+                                  className="dropdown-item small" 
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    setEditingPost(post)
+                                    setShowPostDropdown(null)
+                                  }}
+                                  style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    width: '100%',
+                                    textAlign: 'left',
+                                    padding: '0.5rem 1rem',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  ✏️ Edit Post
+                                </button>
+                              </li>
+                              <li><hr className="dropdown-divider" style={{ margin: '0.25rem 0', border: 'none', borderTop: '1px solid #e5e7eb' }} /></li>
+                              <li>
+                                <button 
+                                  className="dropdown-item small text-danger" 
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleDeletePost(post.id)
+                                    setShowPostDropdown(null)
+                                  }}
+                                  style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    width: '100%',
+                                    textAlign: 'left',
+                                    padding: '0.5rem 1rem',
+                                    cursor: 'pointer',
+                                    color: '#dc2626'
+                                  }}
+                                >
+                                  🗑️ Delete Post
+                                </button>
+                              </li>
+                            </>
+                          ) : (
+                            <li style={{ padding: '0.5rem 1rem', color: '#6b7280', fontSize: '0.875rem' }}>
+                              No permissions
                             </li>
-                            <li><hr className="dropdown-divider" /></li>
-                            <li>
-                              <button className="dropdown-item small text-danger" onClick={() => {
-                                handleDeletePost(post.id)
-                                setShowPostDropdown(null)
-                              }}>
-                                 Delete Post
-                              </button>
-                            </li>
-                          </ul>
-                        )}
-                      </div>
-                    )}
+                          )}
+                        </ul>
+                      )}
+                    </div>
                   </div>
 
                   <div className={styles.postBody}>
