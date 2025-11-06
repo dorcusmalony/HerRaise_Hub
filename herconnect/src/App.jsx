@@ -81,7 +81,9 @@ export default function App() {
           // Play notification sound
           try {
             new Audio('/notification-sound.mp3').play().catch(() => {})
-          } catch (e) {}
+          } catch (e) {
+            // Audio play failed - ignore
+          }
           
           // Update opportunities list if user is on opportunities page
           if (window.location.pathname === '/opportunities') {

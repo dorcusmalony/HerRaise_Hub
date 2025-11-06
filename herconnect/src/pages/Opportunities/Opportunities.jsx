@@ -37,12 +37,11 @@ export default function Opportunities() {
         const data = await response.json()
         setOpportunities(data.opportunities || [])
       } else {
-        // Fallback to mock data if API fails
-        setOpportunities(getMockOpportunities())
+        setOpportunities([])
       }
     } catch (error) {
       console.error('Error fetching opportunities:', error)
-      setOpportunities(getMockOpportunities())
+      setOpportunities([])
     } finally {
       setLoading(false)
     }
@@ -87,18 +86,17 @@ export default function Opportunities() {
 
   const handleCardClick = async (opportunityId) => {
     try {
-      // Track the click to add to liked opportunities
-      const response = await fetch(`${API_URL}/api/tracking/track/${opportunityId}`, {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/api/dashboard/track-opportunity/${opportunityId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
       
       if (response.ok) {
         console.log('✅ Opportunity added to dashboard:', opportunityId)
-        // Optionally show a toast notification or update UI
       } else {
         console.error('❌ Failed to add opportunity to dashboard:', response.status)
       }

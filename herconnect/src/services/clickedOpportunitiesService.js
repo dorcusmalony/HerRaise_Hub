@@ -3,7 +3,7 @@ const API_URL = import.meta.env.VITE_API_URL || ''
 export const getClickedOpportunities = async () => {
   try {
     const token = localStorage.getItem('token')
-    const response = await fetch(`${API_URL}/api/dashboard`, {
+    const response = await fetch(`${API_URL}/api/tracking/clicked-opportunities`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -12,10 +12,10 @@ export const getClickedOpportunities = async () => {
     
     if (response.ok) {
       const data = await response.json()
-      console.log('Dashboard data:', data)
-      return data.clickedOpportunities || []
+      console.log('Clicked opportunities data:', data)
+      return data || []
     } else {
-      console.error('Failed to fetch dashboard data:', response.status)
+      console.error('Failed to fetch clicked opportunities:', response.status)
     }
     return []
   } catch (error) {
