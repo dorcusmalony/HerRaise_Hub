@@ -12,7 +12,40 @@ export const useOpportunityTracking = () => {
   // Check for return tracking when component mounts
   useEffect(() => {
     const checkForInterestPopup = async () => {
-      const opportunityId = getOpportunityIdFromUrl()
+      // Check URL parameters for return tracking
+      const urlParams = new URLSearchParams(window.location.search)
+      const refParam = urlParams.get('ref')
+      const oppIdParam = urlParams.get('opp_id')
+      
+      // Check localStorage for recent clicks
+      const recentClicks = Object.keys(localStorage)
+        .filter(key => key.startsWith('tracking_'))
+        .map(key => {
+          try {
+            const data = JSON.parse(localStorage.getItem(key))
+            return { ...data, key }
+          } catch {
+            return null
+          }
+        })
+        .filter(Boolean)
+        .filter(click => {
+          // Check if click was within last 30 minutes
+          const clickTime = new Date(click.clickedAt)
+          const now = new Date()
+          const diffMinutes = (now - clickTime) / (1000 * 60)
+          return diffMinutes <= 30
+        })
+      
+      let opportunityId = oppIdParam || getOpportunityIdFromUrl()
+      
+      // If we found recent clicks, use the most recent one
+      if (recentClicks.length > 0 && !opportunityId) {
+        const mostRecent = recentClicks.sort((a, b) => 
+          new Date(b.clickedAt) - new Date(a.clickedAt)
+        )[0]
+        opportunityId = mostRecent.opportunityId
+      }
       
       if (opportunityId) {
         // Check if we've already shown popup for this opportunity
@@ -24,7 +57,7 @@ export const useOpportunityTracking = () => {
         setLoading(true)
         try {
           const result = await trackUserReturn(opportunityId)
-          if (result.success && result.showInterestPopup) {
+          if (result.success && result.shouldShowPopup) {
             setSelectedOpportunity(result.opportunity)
             setShowInterestModal(true)
             
@@ -34,8 +67,9 @@ export const useOpportunityTracking = () => {
             showToast('Welcome back! How was your experience?', 'info')
           }
           
-          // Clean up URL parameters
+          // Clean up tracking data
           cleanTrackingParams()
+          localStorage.removeItem(`tracking_${opportunityId}`)
         } catch (error) {
           console.error('Return tracking failed:', error)
           showToast('Failed to track your return', 'error')
@@ -45,7 +79,9 @@ export const useOpportunityTracking = () => {
       }
     }
     
-    checkForInterestPopup()
+    // Run check after a short delay to ensure page is loaded
+    const timer = setTimeout(checkForInterestPopup, 1000)
+    return () => clearTimeout(timer)
   }, [showToast])
 
   // Handle apply button click with tracking

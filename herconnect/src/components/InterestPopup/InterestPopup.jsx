@@ -11,8 +11,24 @@ export default function InterestPopup({ opportunity, onClose, onSuccess }) {
     try {
       const result = await markAsInterested(opportunity.id, wantsReminder)
       if (result.success) {
-        onSuccess?.(result.message || 'Thanks for your interest!')
+        const message = wantsReminder 
+          ? `Thanks for your interest! We'll remind you 3 days before the deadline at 9 AM.`
+          : 'Thanks for your interest!'
+        onSuccess?.(message)
         onClose()
+        
+        // Show confirmation toast
+        if (wantsReminder) {
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('app-notification', {
+              detail: {
+                title: 'Reminder Set! ⏰',
+                message: `You'll get a reminder 3 days before ${opportunity.title} deadline`,
+                type: 'success'
+              }
+            }))
+          }, 1000)
+        }
       } else {
         console.error('Failed to mark as interested')
       }
@@ -49,9 +65,16 @@ export default function InterestPopup({ opportunity, onClose, onSuccess }) {
                 className={styles.checkbox}
               />
               <span className={styles.checkboxText}>
-                📅 Remind me 3 days before the deadline
+                📅 Remind me 3 days before the deadline at 9:00 AM
               </span>
             </label>
+            {wantsReminder && (
+              <div className={styles.reminderInfo}>
+                <small className={styles.reminderNote}>
+                  ✅ You'll receive a notification 3 days before the deadline to prepare your application
+                </small>
+              </div>
+            )}
           </div>
           
           <div className={styles.actions}>

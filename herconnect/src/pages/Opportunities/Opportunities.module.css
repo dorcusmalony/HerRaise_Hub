@@ -38,54 +38,195 @@
   align-items: end;
 }
 
-.filterGroup {
+.filtersRow {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
-.filterLabel {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+.filterButtons {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.select,
-.input {
-  padding: 0.5rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  transition: border-color 0.2s;
-}
-
-.select:focus,
-.input:focus {
-  outline: none;
-  border-color: #2349f5;
-}
-
-.bookmarkButton {
-  background: #f3f4f6;
-  color: #E84393 ;
-  border: 2px solid #e5e7eb;
+.filterBtn {
+  background: #f8f9fa;
+  color: #666;
+  border: 1px solid #e5e7eb;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 20px;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.bookmarkButton.active {
-  background: #2349f5;
+.filterBtn:hover {
+  background: #e9ecef;
+}
+
+.filterBtn.active {
+  background: #E84393;
   color: white;
-  border-color: #2349f5;
+  border-color: #E84393;
+}
+
+.searchAndBookmark {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.searchInput {
+  background: white;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  width: 200px;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #E84393;
+}
+
+.bookmarkButton {
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookmarkButton:hover {
+  background: #f8f9fa;
+}
+
+.bookmarkButton.active {
+  background: #E84393;
+  border-color: #E84393;
 }
 
 .opportunitiesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.compactCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 1px solid #f0f0f0;
+}
+
+.compactCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.featuredBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ffd700;
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.bookmarkBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.cardOrg {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0 0 1rem 0;
+}
+
+.cardMeta {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cardType {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.cardAmount {
+  background: #e8f5e8;
+  color: #2e7d32;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardDeadline {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.learnMoreBtn {
+  background: #E84393;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.learnMoreBtn:hover {
+  background: #d63384;
 }
 
 .emptyState {
@@ -158,5 +299,32 @@
   
   .filters {
     padding: 1rem;
+  }
+  
+  .compactCard {
+    padding: 1rem;
+  }
+  
+  .cardTitle {
+    font-size: 1rem;
+  }
+  
+  .filtersRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .filterButtons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .searchAndBookmark {
+    justify-content: center;
+  }
+  
+  .searchInput {
+    width: 150px;
   }
 }

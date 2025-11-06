@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { getClickedOpportunities } from '../../services/clickedOpportunitiesService'
 import styles from './dashboard.module.css'
 
 export default function Dashboard() {
@@ -10,6 +11,9 @@ export default function Dashboard() {
   const [recentPosts, setRecentPosts] = useState([])
   const [latestOpportunities, setLatestOpportunities] = useState([])
   const [recommendedResources, setRecommendedResources] = useState([])
+  const [clickedOpportunities, setClickedOpportunities] = useState([])
+
+
 
   const fetchDashboardData = useCallback(async (token) => {
     // Fetch recent forum posts
@@ -42,6 +46,17 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error('Error fetching opportunities:', error)
+    }
+
+    // Fetch clicked opportunities
+    try {
+      console.log('🔍 Fetching clicked opportunities...')
+      const clicked = await getClickedOpportunities()
+      console.log('📊 Clicked opportunities received:', clicked)
+      console.log('📊 Number of clicked opportunities:', clicked.length)
+      setClickedOpportunities(clicked.slice(0, 3)) // Show only 3 most recent
+    } catch (error) {
+      console.error('💥 Error fetching clicked opportunities:', error)
     }
 
     // Set static recommended resources (from ResourcePage)
@@ -117,9 +132,9 @@ export default function Dashboard() {
           <p className={styles.statLabel}>Forum Posts</p>
         </div>
         <div className={`${styles.statCard} ${styles.green}`}>
-          <span className={styles.statIcon}>💾</span>
-          <h3 className={styles.statValue}>0</h3>
-          <p className={styles.statLabel}>Saved Items</p>
+          <span className={styles.statIcon}>💖</span>
+          <h3 className={styles.statValue}>{clickedOpportunities.length}</h3>
+          <p className={styles.statLabel}>Liked Opportunities</p>
         </div>
       </div>
 
@@ -199,7 +214,41 @@ export default function Dashboard() {
       
       {/* Bottom Section */}
       <div className={styles.bottomGrid}>
-        {/* Opportunities Section */}
+        {/* Clicked Opportunities Section */}
+        <div className={`${styles.featureCard} ${styles.green}`}>
+          <div className={styles.cardHeader}>
+            <h3 className={styles.cardTitle}>💖 Opportunities You've Liked</h3>
+            <Link to="/opportunities" className={styles.viewAllBtn}>View All</Link>
+          </div>
+          <div className={styles.cardBody}>
+            {clickedOpportunities.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>💖</div>
+                <h4 className={styles.emptyTitle}>No liked opportunities yet</h4>
+                <p className={styles.emptyDescription}>Browse opportunities to start building your list!</p>
+                <Link to="/opportunities" className={styles.emptyAction}>
+                  Browse Opportunities
+                </Link>
+              </div>
+            ) : (
+              <div>
+                {clickedOpportunities.map((interaction, idx) => (
+                  <div key={idx} className={styles.listItem}>
+                    <div className={styles.listItemHeader}>
+                      <div>
+                        <h6 className={styles.listItemTitle}>{interaction.Opportunity.title}</h6>
+                        <p className={styles.listItemMeta}>{interaction.Opportunity.organization}</p>
+                      </div>
+                      <span className={`${styles.listItemBadge} ${styles.green}`}>{interaction.Opportunity.type}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Latest Opportunities Section */}
         <div className={`${styles.featureCard} ${styles.blue}`}>
           <div className={styles.cardHeader}>
             <h3 className={styles.cardTitle}> Latest Opportunities</h3>
@@ -233,7 +282,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Resources Section */}
+      </div>
+      
+      {/* Resources Section */}
+      <div className={styles.bottomGrid}>
         <div className={`${styles.featureCard} ${styles.pink}`}>
           <div className={styles.cardHeader}>
             <h3 className={styles.cardTitle}>📚 Recommended Resources</h3>

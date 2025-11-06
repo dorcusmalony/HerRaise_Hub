@@ -5,33 +5,8 @@ import './purple-buttons.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
 
-const getMockOpportunities = () => [
-  {
-    id: 1,
-    title: "UN Women Leadership Scholarship 2025",
-    organization: "UN Women",
-    type: "scholarship",
-    description: "Empowering young women leaders through education and mentorship programs.",
-    amount: "$5,000",
-    location: "Global",
-    applicationDeadline: "2024-12-31",
-    applicationLink: "https://unwomen.org/scholarship/apply",
-    isFeatured: true,
-    
-  },
-  {
-    id: 2,
-    title: "Google Women Techmakers Internship",
-    organization: "Google",
-    type: "internship",
-    description: "3-month paid internship program for women in technology.",
-    amount: "$4,000/month",
-    location: "Remote/Global",
-    applicationDeadline: "2024-11-15",
-    applicationLink: "https://careers.google.com/women-techmakers",
-    
-  }
-]
+
+  
 
 export default function Opportunities() {
   const [opportunities, setOpportunities] = useState([])
@@ -40,6 +15,8 @@ export default function Opportunities() {
   const [search, setSearch] = useState('')
   const [bookmarked, setBookmarked] = useState(false)
   const [showNewOpportunityBanner, setShowNewOpportunityBanner] = useState(false)
+
+
 
   const fetchOpportunities = useCallback(async () => {
     try {
@@ -108,17 +85,48 @@ export default function Opportunities() {
     }
   }, [fetchOpportunities])
 
-  const handleApplyClick = async (opportunityId, applicationLink) => {
+  const handleCardClick = async (opportunityId) => {
     try {
-      // Track click
-      await fetch(`${API_URL}/api/opportunity-board/${opportunityId}/apply`, {
+      // Track the click to add to liked opportunities
+      const response = await fetch(`${API_URL}/api/tracking/track/${opportunityId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
         }
       })
+      
+      if (response.ok) {
+        console.log('✅ Opportunity added to dashboard:', opportunityId)
+        // Optionally show a toast notification or update UI
+      } else {
+        console.error('❌ Failed to add opportunity to dashboard:', response.status)
+      }
     } catch (error) {
-      console.error('Error tracking click:', error)
+      console.error('Error adding opportunity to dashboard:', error)
+    }
+  }
+
+  const handleApplyClick = async (opportunityId, applicationLink) => {
+    try {
+      // Call apply endpoint (automatically tracks with status: in_progress)
+      const response = await fetch(`${API_URL}/api/opportunities/${opportunityId}/apply`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      console.log('📡 Apply response status:', response.status)
+      
+      if (response.ok) {
+        console.log('🎯 Apply tracked for opportunity:', opportunityId)
+      } else {
+        console.error('❌ Apply tracking failed:', response.status)
+      }
+    } catch (error) {
+      console.error('Error tracking apply:', error)
     }
     
     // Open external link
@@ -151,44 +159,55 @@ export default function Opportunities() {
           🎉 New opportunities have been added! Check them out below.
         </div>
       )}
-      
-      <div className={styles.header}>
-        <h1 className={styles.title}> Scholarship & Opportunity Board</h1>
-        <p className={styles.subtitle}>
-          Discover scholarships, internships, and competitions. Apply directly through external links.
-        </p>
-      </div>
 
-      <div className={styles.filters}>
-        <div className={styles.filterRow}>
-          <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Type</label>
-            <select className={styles.select} value={filter} onChange={e => setFilter(e.target.value)}>
-              <option value="all">All Opportunities</option>
-              <option value="scholarship">Scholarships</option>
-              <option value="internship">Internships</option>
-              <option value="competition">Competitions</option>
-              <option value="conference">Conferences</option>
-            </select>
-          </div>
-          <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Search</label>
-            <input
-              type="text"
-              className={styles.input}
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search opportunities..."
-            />
-          </div>
-          <div className={styles.filterGroup}>
-            <button 
-              className={`${styles.bookmarkButton} ${bookmarked ? styles.active : ''}`}
-              onClick={() => setBookmarked(!bookmarked)}
-            >
-              {bookmarked ? '💖 Bookmarked Only' : '💖 Show Bookmarked'}
-            </button>
-          </div>
+      <div className={styles.filtersRow}>
+        <div className={styles.filterButtons}>
+          <button 
+            className={`${styles.filterBtn} ${filter === 'all' ? styles.active : ''}`}
+            onClick={() => setFilter('all')}
+          >
+            All
+          </button>
+          <button 
+            className={`${styles.filterBtn} ${filter === 'scholarship' ? styles.active : ''}`}
+            onClick={() => setFilter('scholarship')}
+          >
+            Scholarships
+          </button>
+          <button 
+            className={`${styles.filterBtn} ${filter === 'internship' ? styles.active : ''}`}
+            onClick={() => setFilter('internship')}
+          >
+            Internships
+          </button>
+          <button 
+            className={`${styles.filterBtn} ${filter === 'conference' ? styles.active : ''}`}
+            onClick={() => setFilter('conference')}
+          >
+            Conferences
+          </button>
+          <button 
+            className={`${styles.filterBtn} ${filter === 'competition' ? styles.active : ''}`}
+            onClick={() => setFilter('competition')}
+          >
+            Competitions
+          </button>
+        </div>
+        
+        <div className={styles.searchAndBookmark}>
+          <input
+            type="text"
+            className={styles.searchInput}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search..."
+          />
+          <button 
+            className={`${styles.bookmarkButton} ${bookmarked ? styles.active : ''}`}
+            onClick={() => setBookmarked(!bookmarked)}
+          >
+            {bookmarked ? '💖' : '🤍'}
+          </button>
         </div>
       </div>
 
@@ -203,51 +222,46 @@ export default function Opportunities() {
       {!loading && (
         <div className={styles.opportunitiesGrid}>
           {opportunities.map(opportunity => (
-            <div key={opportunity.id} className={styles.opportunityCard}>
+            <div 
+              key={opportunity.id} 
+              className={styles.compactCard}
+              onClick={() => handleCardClick(opportunity.id)}
+            >
               {opportunity.isFeatured && (
-                <div className={styles.featuredBadge}> Featured</div>
+                <div className={styles.featuredBadge}>⭐</div>
               )}
               
-              <div className={styles.opportunityHeader}>
-                <h3 className={styles.opportunityTitle}>{opportunity.title}</h3>
+              <button 
+                className={`${styles.bookmarkBtn} ${opportunity.bookmarked ? styles.bookmarked : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleBookmark(opportunity.id)
+                }}
+              >
+                {opportunity.bookmarked ? '💖' : '🤍'}
+              </button>
+
+              <h3 className={styles.cardTitle}>{opportunity.title}</h3>
+              <p className={styles.cardOrg}>{opportunity.organization}</p>
+              
+              <div className={styles.cardMeta}>
+                <span className={styles.cardType}>{opportunity.type}</span>
+                {opportunity.amount && <span className={styles.cardAmount}>{opportunity.amount}</span>}
+              </div>
+
+              <div className={styles.cardFooter}>
+                <span className={styles.cardDeadline}>
+                  📅 {new Date(opportunity.applicationDeadline).toLocaleDateString()}
+                </span>
                 <button 
-                  className={`${styles.bookmarkBtn} ${opportunity.bookmarked ? styles.bookmarked : ''}`}
-                  onClick={() => handleBookmark(opportunity.id)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleApplyClick(opportunity.id, opportunity.applicationLink)
+                  }}
+                  className={styles.learnMoreBtn}
                 >
-                  {opportunity.bookmarked ? '💖' : '🤍'}
+                  Learn More
                 </button>
-              </div>
-
-              <div className={styles.opportunityMeta}>
-                <span className={styles.type}>{opportunity.type}</span>
-                <span className={styles.organization}>{opportunity.organization}</span>
-                {opportunity.amount && (
-                  <span className={styles.amount}>{opportunity.amount}</span>
-                )}
-              </div>
-
-              <p className={styles.description}>{opportunity.description}</p>
-
-              <div className={styles.opportunityDetails}>
-                <div className={styles.deadline}>
-                   Deadline: {new Date(opportunity.applicationDeadline).toLocaleDateString()}
-                  {opportunity.isUrgent && (
-                    <span className={styles.urgentBadge}> Urgent</span>
-                  )}
-                </div>
-                <div className={styles.location}> {opportunity.location}</div>
-              </div>
-
-              <div className={styles.opportunityActions}>
-                <button 
-                  onClick={() => handleApplyClick(opportunity.id, opportunity.applicationLink)}
-                  className={styles.applyBtn}
-                >
-                   Apply Now
-                </button>
-                <div className={styles.stats}>
-                   {opportunity.views || 0} views  {opportunity.clickCount || 0} applications
-                </div>
               </div>
             </div>
           ))}
