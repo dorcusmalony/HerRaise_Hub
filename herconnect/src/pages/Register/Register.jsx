@@ -3,6 +3,7 @@
 import { useTranslation } from 'react-i18next'
 import ImageUpload from '../../components/ImageUpload/ImageUpload.jsx'
 import RegistrationSuccess from '../../components/RegistrationSuccess/RegistrationSuccess.jsx'
+import EmailVerification from '../../components/EmailVerification/EmailVerification.jsx'
 import '../../styles/BootstrapVars.module.css'
 import styles from './Register.module.css'
 
@@ -29,14 +30,9 @@ export default function Register(){
 	const [success, setSuccess] = useState(null)
 	const [error, setError] = useState(null)
 	const [showSuccess, setShowSuccess] = useState(false)
+	const [showEmailVerification, setShowEmailVerification] = useState(false)
 	const [userEmail, setUserEmail] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
-	const [passwordStrength, setPasswordStrength] = useState({
-		length: false,
-		hasUpper: false,
-		hasLower: false,
-		hasNumber: false
-	})
 
 	const handleChange = (e) => {
 		const { name, value } = e.target
@@ -46,23 +42,24 @@ export default function Register(){
 			setForm(prev => ({ ...prev, [name]: value }))
 		}
 		
-		// Password strength validation
-		if (name === 'password') {
-			setPasswordStrength({
-				length: value.length >= 8,
-				hasUpper: /[A-Z]/.test(value),
-				hasLower: /[a-z]/.test(value),
-				hasNumber: /\d/.test(value)
-			})
-		}
+
 	}
 
 
 
+	const validateEmail = (email) => {
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+		return emailRegex.test(email)
+	}
+
 	const validate = (role) => {
 		const err = {}
 		if (!form.name.trim()) err.name = t('name required')
-		if (!form.email.trim()) err.email = 'Email required'
+		if (!form.email.trim()) {
+			err.email = 'Email required'
+		} else if (!validateEmail(form.email.trim())) {
+			err.email = 'Please enter a valid email address (e.g., user@gmail.com)'
+		}
 		if (!form.password) {
 			err.password = 'Password required'
 		} else if (form.password.length < 8) {
@@ -159,9 +156,9 @@ export default function Register(){
 				}
 			}
 
-			// Success - show welcome email notification
+			// Success - show email verification
 			setUserEmail(payload.email)
-			setShowSuccess(true)
+			setShowEmailVerification(true)
 			
 		} catch (err) {
 			console.error("Registration error:", err)
@@ -175,8 +172,28 @@ export default function Register(){
 		submitToServer(role)
 	}
 
+	const handleVerificationSuccess = () => {
+		setShowEmailVerification(false)
+		setShowSuccess(true)
+	}
+
+	const handleBackToRegistration = () => {
+		setShowEmailVerification(false)
+		setUserEmail('')
+	}
+
 	if (showSuccess) {
 		return <RegistrationSuccess userEmail={userEmail} />
+	}
+
+	if (showEmailVerification) {
+		return (
+			<EmailVerification 
+				userEmail={userEmail}
+				onVerificationSuccess={handleVerificationSuccess}
+				onBack={handleBackToRegistration}
+			/>
+		)
 	}
 
 	return (
@@ -198,7 +215,15 @@ export default function Register(){
 
 				<div className="mb-2">
 					<label className="form-label">{t('email')}</label>
-					<input name="email" value={form.email} onChange={handleChange} className="form-control" autoComplete="email" />
+					<input 
+						type="email" 
+						name="email" 
+						value={form.email} 
+						onChange={handleChange} 
+						className="form-control" 
+						autoComplete="email"
+						placeholder="Enter your email (e.g., user@gmail.com)"
+					/>
 					{errors.email && <div className="text-danger small">{errors.email}</div>}
 				</div>
 
