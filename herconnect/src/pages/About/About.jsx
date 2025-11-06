@@ -28,7 +28,7 @@ export default function Home() {
       testimony: 'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.'
     },
     {
-      name: 'Kur Peter',
+      name: 'Adich Alier',
       image: alumniImg2,
       role: 'University Student',
       testimony: 'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.'
