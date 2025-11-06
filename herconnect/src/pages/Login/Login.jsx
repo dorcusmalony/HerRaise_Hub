@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { initializeSocket, requestNotificationPermission } from '../../services/socketService'
+import OpportunityReminder from '../../components/OpportunityReminder/OpportunityReminder'
 import styles from './Login.module.css'
 
 export default function Login() {
@@ -20,6 +21,8 @@ export default function Login() {
   const [forgotEmail, setForgotEmail] = useState('')
   const [forgotStatus, setForgotStatus] = useState(null)
   const [forgotLoading, setForgotLoading] = useState(false)
+  const [showReminders, setShowReminders] = useState(false)
+  const [pendingReminders, setPendingReminders] = useState(null)
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -96,11 +99,17 @@ export default function Login() {
         console.warn(' No user data in login response')
       }
 
-      // Direct navigation
-      if (data.user?.role === 'admin') {
-        navigate('/admin/dashboard')
+      // Check for pending reminders
+      if (data?.pendingReminders && data.pendingReminders.count > 0) {
+        setPendingReminders(data.pendingReminders)
+        setShowReminders(true)
       } else {
-        navigate('/dashboard')
+        // Direct navigation if no reminders
+        if (data.user?.role === 'admin') {
+          navigate('/admin/dashboard')
+        } else {
+          navigate('/dashboard')
+        }
       }
       
     } catch (err) {
@@ -306,6 +315,23 @@ export default function Login() {
             </div>
           </div>
         </div>
+      )}
+      
+      {/* Opportunity Reminder Popup */}
+      {showReminders && (
+        <OpportunityReminder 
+          reminders={pendingReminders}
+          onClose={() => {
+            setShowReminders(false)
+            // Navigate after closing popup
+            const userData = JSON.parse(localStorage.getItem('user') || '{}')
+            if (userData.role === 'admin') {
+              navigate('/admin/dashboard')
+            } else {
+              navigate('/dashboard')
+            }
+          }}
+        />
       )}
     </div>
   )
