@@ -1,0 +1,149 @@
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding: 20px;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card {
+	background: white;
+	border-radius: 12px;
+	padding: 40px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	max-width: 400px;
+	width: 100%;
+	text-align: center;
+}
+
+.header h2 {
+	color: #333;
+	margin-bottom: 10px;
+}
+
+.header p {
+	color: #666;
+	margin-bottom: 5px;
+}
+
+.header strong {
+	color: #E84393;
+	font-size: 16px;
+}
+
+.form {
+	margin: 30px 0;
+}
+
+.inputGroup {
+	margin-bottom: 20px;
+}
+
+.inputGroup label {
+	display: block;
+	margin-bottom: 8px;
+	color: #333;
+	font-weight: 500;
+}
+
+.codeInput {
+	width: 100%;
+	padding: 15px;
+	border: 2px solid #ddd;
+	border-radius: 8px;
+	font-size: 24px;
+	text-align: center;
+	letter-spacing: 8px;
+	font-weight: bold;
+}
+
+.codeInput:focus {
+	outline: none;
+	border-color: #E84393;
+}
+
+.verifyButton {
+	width: 100%;
+	padding: 15px;
+	background: #E84393;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.3s;
+}
+
+.verifyButton:hover:not(:disabled) {
+	background: #d63384;
+}
+
+.verifyButton:disabled {
+	background: #ccc;
+	cursor: not-allowed;
+}
+
+.resendSection {
+	margin: 20px 0;
+	padding-top: 20px;
+	border-top: 1px solid #eee;
+}
+
+.resendSection p {
+	color: #666;
+	margin-bottom: 10px;
+}
+
+.resendButton {
+	background: transparent;
+	color: #E84393;
+	border: 1px solid #E84393;
+	padding: 10px 20px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.resendButton:hover:not(:disabled) {
+	background: #E84393;
+	color: white;
+}
+
+.resendButton:disabled {
+	color: #ccc;
+	border-color: #ccc;
+	cursor: not-allowed;
+}
+
+.backButton {
+	background: transparent;
+	color: #666;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	margin-top: 20px;
+}
+
+.backButton:hover {
+	color: #333;
+}
+
+.error {
+	color: #dc3545;
+	background: #f8d7da;
+	padding: 10px;
+	border-radius: 6px;
+	margin-bottom: 15px;
+	font-size: 14px;
+}
+
+.success {
+	color: #155724;
+	background: #d4edda;
+	padding: 10px;
+	border-radius: 6px;
+	margin-bottom: 15px;
+	font-size: 14px;
+}

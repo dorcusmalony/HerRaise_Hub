@@ -31,12 +31,40 @@ export default function Forum() {
   // Load current user
   useEffect(() => {
     const userData = localStorage.getItem('user')
-    if (userData) {
-      const user = JSON.parse(userData)
-      setCurrentUser(user)
-      console.log('👤 Current user loaded:', user)
+    const token = localStorage.getItem('token')
+    
+    console.log('🔍 Auth Debug - Token exists:', !!token)
+    console.log('🔍 Auth Debug - User data exists:', !!userData)
+    
+    if (userData && token) {
+      try {
+        const user = JSON.parse(userData)
+        setCurrentUser(user)
+        console.log('👤 Current user loaded:', user)
+        
+        // Validate token is not expired
+        try {
+          const tokenPayload = JSON.parse(atob(token.split('.')[1]))
+          const isExpired = tokenPayload.exp * 1000 < Date.now()
+          console.log('🔍 Token expired:', isExpired)
+          
+          if (isExpired) {
+            console.warn('⚠️ Token expired, clearing auth data')
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+            setCurrentUser(null)
+          }
+        } catch (tokenError) {
+          console.warn('⚠️ Invalid token format:', tokenError)
+        }
+      } catch (parseError) {
+        console.error('❌ Failed to parse user data:', parseError)
+        localStorage.removeItem('user')
+        setCurrentUser(null)
+      }
     } else {
-      console.log('⚠️ No user data found in localStorage')
+      console.log('⚠️ Missing auth data - Token:', !!token, 'User:', !!userData)
+      setCurrentUser(null)
     }
     
     // Debug: Log environment variables
@@ -46,7 +74,15 @@ export default function Forum() {
   const fetchPosts = useCallback(async () => {
     const token = localStorage.getItem('token')
     
+    if (!token) {
+      console.warn('⚠️ No token found, user might need to login')
+      setLoading(false)
+      return
+    }
+    
     try {
+      console.log('📡 Fetching posts with token:', token.substring(0, 20) + '...')
+      
       const response = await fetch(`${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -54,12 +90,25 @@ export default function Forum() {
         }
       })
 
+      console.log('📡 Posts response status:', response.status)
+      
+      if (response.status === 401) {
+        console.warn('⚠️ Unauthorized - token might be invalid')
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        setCurrentUser(null)
+        return
+      }
+      
       if (response.ok) {
         const data = await response.json()
         setPosts(data.posts || [])
+        console.log('✅ Posts loaded successfully:', data.posts?.length || 0)
+      } else {
+        console.error('❌ Failed to fetch posts:', response.status, response.statusText)
       }
     } catch (error) {
-      console.error('Error fetching posts:', error)
+      console.error('❌ Error fetching posts:', error)
     } finally {
       setLoading(false)
     }
@@ -568,7 +617,13 @@ export default function Forum() {
 
                     {/* Media Gallery - YouTube/Instagram Style */}
                     {post.attachments && post.attachments.length > 0 && (
-                      <div className={styles.mediaGallery}>
+                      <div 
+                        className={styles.mediaGallery}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          console.log('🎬 Media gallery clicked, preventing bubbling')
+                        }}
+                      >
                         {post.attachments.map((file, index) => {
                           // Enhanced file type detection
                           let fileType = file.category || file.type || 'document'
@@ -590,7 +645,14 @@ export default function Forum() {
                           console.log('🎥 File debug:', { fileName, fileType, url: fileUrl, original: file })
                           
                           return (
-                            <div key={index} className={styles.mediaItem}>
+                            <div 
+                              key={index} 
+                              className={styles.mediaItem}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                console.log('🎬 Media item clicked, preventing redirect')
+                              }}
+                            >
                               {fileType === 'image' && (
                                 <div className={styles.imageContainer}>
                                   <img 
@@ -598,7 +660,7 @@ export default function Forum() {
                                     alt={fileName}
                                     className={styles.fullImage}
                                     loading="lazy"
-                                    onClick={(e) => {
+                                    onClick={(_e) => {
                                       // Open in fullscreen/modal
                                       const modal = document.createElement('div')
                                       modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer'
@@ -616,16 +678,24 @@ export default function Forum() {
                                 </div>
                               )}
                               {fileType === 'video' && (
-                                <div style={{
-                                  width: '100%',
-                                  maxWidth: '400px',
-                                  background: '#000',
-                                  borderRadius: '8px',
-                                  overflow: 'hidden',
-                                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                                  margin: '0.5rem 0'
-                                }}>
-
+                                <div 
+                                  style={{
+                                    width: '100%',
+                                    maxWidth: '400px',
+                                    background: '#000',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                    margin: '0.5rem 0'
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    e.preventDefault()
+                                    console.log('🎬 Video container clicked, preventing all navigation')
+                                  }}
+                                  onMouseDown={(e) => e.stopPropagation()}
+                                  onMouseUp={(e) => e.stopPropagation()}
+                                >
                                   <video 
                                     src={fileUrl} 
                                     controls 
@@ -640,12 +710,45 @@ export default function Forum() {
                                     }}
                                     preload="metadata"
                                     poster={file.thumbnail}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      e.preventDefault()
+                                      console.log('🎥 Video clicked, preventing redirect for:', fileName)
+                                      // Force focus on video element
+                                      e.target.focus()
+                                    }}
+                                    onPlay={(e) => {
+                                      e.stopPropagation()
+                                      console.log('🎥 Video started playing')
+                                    }}
+                                    onPause={(e) => {
+                                      e.stopPropagation()
+                                      console.log('🎥 Video paused')
+                                    }}
+                                    onLoadStart={(e) => {
+                                      e.stopPropagation()
+                                      console.log('🎥 Video loading started')
+                                    }}
+                                    onError={(e) => {
+                                      e.stopPropagation()
+                                      console.error('🎥 Video error:', e.target.error)
+                                      console.error('🎥 Video URL:', fileUrl)
+                                    }}
+                                    onLoadedData={(_e) => {
+                                      console.log('🎥 Video loaded successfully:', fileName)
+                                    }}
+                                    onCanPlay={(_e) => {
+                                      console.log('🎥 Video ready to play:', fileName)
+                                    }}
                                   />
-                                  <div style={{
-                                    padding: '0.5rem',
-                                    background: 'white',
-                                    borderTop: '1px solid #eee'
-                                  }}>
+                                  <div 
+                                    style={{
+                                      padding: '0.5rem',
+                                      background: 'white',
+                                      borderTop: '1px solid #eee'
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
                                     <span style={{
                                       fontSize: '0.85rem',
                                       fontWeight: '500',
@@ -659,13 +762,16 @@ export default function Forum() {
                                 </div>
                               )}
                               {fileType === 'audio' && (
-                                <div className={styles.audioContainer}>
+                                <div className={styles.audioContainer} onClick={(e) => e.stopPropagation()}>
                                   <div className={styles.audioIcon}>🎵</div>
                                   <audio 
                                     src={file.url} 
                                     controls 
                                     className={styles.fullAudio}
                                     preload="metadata"
+                                    onClick={(e) => e.stopPropagation()}
+                                    onPlay={(e) => e.stopPropagation()}
+                                    onPause={(e) => e.stopPropagation()}
                                   />
                                   <div className={styles.audioInfo}>
                                     <span className={styles.fileName}>{fileName}</span>

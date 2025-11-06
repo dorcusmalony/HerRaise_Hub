@@ -14,7 +14,6 @@ export const useOpportunityTracking = () => {
     const checkForInterestPopup = async () => {
       // Check URL parameters for return tracking
       const urlParams = new URLSearchParams(window.location.search)
-      const refParam = urlParams.get('ref')
       const oppIdParam = urlParams.get('opp_id')
       
       // Check localStorage for recent clicks
