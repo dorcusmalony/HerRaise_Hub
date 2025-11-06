@@ -13,7 +13,8 @@ export const getClickedOpportunities = async () => {
     if (response.ok) {
       const data = await response.json()
       console.log('Clicked opportunities data:', data)
-      return data || []
+      // Backend returns array directly or in a property
+      return Array.isArray(data) ? data : (data.opportunities || data.clickedOpportunities || [])
     } else {
       console.error('Failed to fetch clicked opportunities:', response.status)
     }
