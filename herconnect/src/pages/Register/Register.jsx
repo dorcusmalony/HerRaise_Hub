@@ -213,33 +213,34 @@ export default function Register(){
 							className="form-control" 
 							autoComplete="new-password"
 							minLength="8"
+							style={{ paddingRight: '40px' }}
 						/>
 						<button
 							type="button"
-							className="btn btn-sm position-absolute end-0 top-0 h-100"
+							className="position-absolute"
 							onClick={() => setShowPassword(!showPassword)}
-							style={{border: 'none', background: 'transparent'}}
+							style={{
+								right: '12px',
+								top: '50%',
+								transform: 'translateY(-50%)',
+								border: 'none',
+								background: 'transparent',
+								cursor: 'pointer',
+								color: '#6c757d',
+								fontSize: '16px'
+							}}
 						>
-							{showPassword ? '🙈' : '👁️'}
+							{showPassword ? (
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+									<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+								</svg>
+							) : (
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+									<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+								</svg>
+							)}
 						</button>
 					</div>
-					{form.password && (
-						<div className="mt-2">
-							<div className="small mb-1">Password strength:</div>
-							<div className="d-flex gap-1 mb-2">
-								<div className={`flex-fill rounded ${passwordStrength.length >= 8 ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
-								<div className={`flex-fill rounded ${passwordStrength.hasUpper ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
-								<div className={`flex-fill rounded ${passwordStrength.hasLower ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
-								<div className={`flex-fill rounded ${passwordStrength.hasNumber ? 'bg-success' : 'bg-light'}`} style={{height: '4px'}}></div>
-							</div>
-							<div className="small text-muted">
-								<div className={passwordStrength.length >= 8 ? 'text-success' : 'text-muted'}>✓ At least 8 characters</div>
-								<div className={passwordStrength.hasUpper ? 'text-success' : 'text-muted'}>✓ One uppercase letter</div>
-								<div className={passwordStrength.hasLower ? 'text-success' : 'text-muted'}>✓ One lowercase letter</div>
-								<div className={passwordStrength.hasNumber ? 'text-success' : 'text-muted'}>✓ One number</div>
-							</div>
-						</div>
-					)}
 					{errors.password && <div className="text-danger small">{errors.password}</div>}
 				</div>
 
