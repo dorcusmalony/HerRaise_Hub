@@ -59,7 +59,12 @@ export default function NotificationPanel({ isOpen, onClose }) {
       forum_like: '❤️',
       forum_comment: '💬',
       opportunity_new: '🎯',
+      opportunity: '🎯',
       application_reminder: '⏰',
+      deadline_reminder: '⏰',
+      reminder: '⏰',
+      opportunity_deadline: '⏰',
+      weekly_reminder: '📊',
       system: '🔔'
     }
     return icons[type] || '📢'
