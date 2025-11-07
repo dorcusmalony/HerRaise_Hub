@@ -30,8 +30,8 @@ export default function RegistrationSuccess({ userEmail }) {
           <ul>
             <li> <strong>Check your email inbox</strong> for verification link</li>
             <li> <strong>Click the verification link</strong> in the email</li>
-            <li> <strong>Complete verification</strong> to create your account</li>
-            <li> <strong>Login and start exploring!</strong></li>
+            <li> <strong>verify your email</strong> to create your account and login</li>
+            
           </ul>
         </div>
         
