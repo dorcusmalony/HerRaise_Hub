@@ -36,26 +36,31 @@ export default function Register(){
 		const { name, value } = e.target
 		if (name === 'city' || name === 'state') {
 			setForm(prev => ({ ...prev, location: { ...prev.location, [name]: value } }))
+		} else if (name === 'email') {
+			// Clean email to remove mailto: prefix
+			const cleanValue = value.replace(/^mailto:/, '')
+			setForm(prev => ({ ...prev, [name]: cleanValue }))
 		} else {
 			setForm(prev => ({ ...prev, [name]: value }))
 		}
-		
-
 	}
 
 
 
 	const validateEmail = (email) => {
+		// Remove mailto: prefix if present
+		const cleanEmail = email.replace(/^mailto:/, '')
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-		return emailRegex.test(email)
+		return emailRegex.test(cleanEmail)
 	}
 
 	const validate = (role) => {
 		const err = {}
 		if (!form.name.trim()) err.name = t('name required')
-		if (!form.email.trim()) {
+		const cleanEmail = form.email.trim().replace(/^mailto:/, '')
+		if (!cleanEmail) {
 			err.email = 'Email required'
-		} else if (!validateEmail(form.email.trim())) {
+		} else if (!validateEmail(cleanEmail)) {
 			err.email = 'Please enter a valid email address (e.g., user@gmail.com)'
 		}
 		if (!form.password) {
@@ -81,9 +86,11 @@ export default function Register(){
 	}
 
 	const buildPayload = (role) => {
+		// Clean email to remove any mailto: prefix
+		const cleanEmail = form.email.trim().replace(/^mailto:/, '')
 		return {
 			name: form.name.trim(),
-			email: form.email.trim(),
+			email: cleanEmail,
 			password: form.password,
 			role,
 			language: form.language || 'en',
