@@ -3,7 +3,6 @@
 import { useTranslation } from 'react-i18next'
 import ImageUpload from '../../components/ImageUpload/ImageUpload.jsx'
 import RegistrationSuccess from '../../components/RegistrationSuccess/RegistrationSuccess.jsx'
-import EmailVerification from '../../components/EmailVerification/EmailVerification.jsx'
 import '../../styles/BootstrapVars.module.css'
 import styles from './Register.module.css'
 
@@ -30,7 +29,6 @@ export default function Register(){
 	const [success, setSuccess] = useState(null)
 	const [error, setError] = useState(null)
 	const [showSuccess, setShowSuccess] = useState(false)
-	const [showEmailVerification, setShowEmailVerification] = useState(false)
 	const [userEmail, setUserEmail] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
 
@@ -144,21 +142,29 @@ export default function Register(){
 			console.log("Response data:", data)
 
 			if (!res.ok) {
-				// Handle specific error cases
+				// Handle specific error cases with user-friendly messages
 				if (res.status === 400) {
-					throw new Error(data.message || 'Invalid registration data. Please check all fields.')
+					// Check if it's email already in use
+					if (data.message && data.message.toLowerCase().includes('email')) {
+						throw new Error('This email is already registered. Please use a different email or try logging in.')
+					}
+					throw new Error(data.message || 'Please check your information and try again.')
 				} else if (res.status === 409) {
-					throw new Error('Email already registered. Please login instead.')
+					throw new Error('This email is already registered. Please use a different email or try logging in.')
 				} else if (res.status === 500) {
-					throw new Error('Server error. Please try again later.')
+					// Check if backend message mentions email
+					if (data.message && data.message.toLowerCase().includes('email')) {
+						throw new Error('This email is already registered. Please use a different email or try logging in.')
+					}
+					throw new Error('Unable to create account right now. Please try again in a few minutes.')
 				} else {
-					throw new Error(data.message || `Registration failed (${res.status})`)
+					throw new Error(data.message || 'Registration failed. Please try again.')
 				}
 			}
 
-			// Success - show email verification
+			// Success - show check email message
 			setUserEmail(payload.email)
-			setShowEmailVerification(true)
+			setShowSuccess(true)
 			
 		} catch (err) {
 			console.error("Registration error:", err)
@@ -172,28 +178,8 @@ export default function Register(){
 		submitToServer(role)
 	}
 
-	const handleVerificationSuccess = () => {
-		setShowEmailVerification(false)
-		setShowSuccess(true)
-	}
-
-	const handleBackToRegistration = () => {
-		setShowEmailVerification(false)
-		setUserEmail('')
-	}
-
 	if (showSuccess) {
 		return <RegistrationSuccess userEmail={userEmail} />
-	}
-
-	if (showEmailVerification) {
-		return (
-			<EmailVerification 
-				userEmail={userEmail}
-				onVerificationSuccess={handleVerificationSuccess}
-				onBack={handleBackToRegistration}
-			/>
-		)
 	}
 
 	return (
