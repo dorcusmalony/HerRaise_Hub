@@ -10,41 +10,47 @@ export default function RegistrationSuccess({ userEmail }) {
   return (
     <div className={styles.container}>
       <div className={styles.successCard}>
-        <div className={styles.successIcon}>🎉</div>
+        <div className={styles.successIcon}></div>
         <h2 className={styles.title}>{t('Welcome to HerRaise Hub!')}</h2>
-        <p className={styles.subtitle}>{t('Your account has been created successfully.')}</p>
+        
         
         <div className={styles.emailNotification}>
           <div className={styles.emailIcon}></div>
           <p>
-            {t('We\'ve sent a welcome email to your email')} <strong>{userEmail}</strong> 
-            {t(' with everything you need to get started.')}
+            <strong>Please verify your email to complete registration!</strong>
+          </p>
+          <p>
+            We've sent a verification link to <strong>{userEmail}</strong>. 
+            Click the link in your email to verify your account.
           </p>
         </div>
         
         <div className={styles.nextSteps}>
-          <h3>{t('What\'s Next?')}</h3>
+          <h3>Next Steps:</h3>
           <ul>
-            <li> {t('Check your email inbox')}</li>
-            <li> {t('Explore opportunities')}</li>
-            <li> {t('Join forum discussions')}</li>
-            <li> {t('Connect with mentors')}</li>
+            <li> <strong>Check your email inbox</strong> for verification link</li>
+            <li> <strong>Click the verification link</strong> in the email</li>
+            <li> <strong>Complete verification</strong> to create your account</li>
+            <li> <strong>Login and start exploring!</strong></li>
           </ul>
         </div>
         
         <button 
           className={styles.getStartedBtn}
           onClick={() => navigate('/login')}
+          disabled
+          style={{ opacity: 0.6, cursor: 'not-allowed' }}
         >
-          {t('Login to Get Started')} 
+          Verify Email First
         </button>
 
         <div className={styles.emailReminder}>
-          <p> {t('Didn\'t receive the email?')}</p>
+          <p><strong>Didn't receive the verification email?</strong></p>
           <ul>
-            <li>{t('Check your spam/junk folder')}</li>
-            <li>{t('Make sure you entered the correct email')}</li>
-            <li>{t('Contact support if needed')}</li>
+            <li> Check your <strong>spam/junk folder</strong></li>
+            <li> Wait a few minutes - emails can take time to arrive</li>
+            <li> Make sure you entered the correct email address</li>
+            <li> Try registering again if the email is wrong</li>
           </ul>
         </div>
       </div>
