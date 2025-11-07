@@ -195,7 +195,7 @@ export default function Profile() {
     
     const updatedUser = { ...profile, profilePicture: newPictureUrl }
     localStorage.setItem('user', JSON.stringify(updatedUser))
-    setSuccess('Profile picture updated successfully!')
+    setSuccess('Profile updated successfully!')
     setTimeout(() => setSuccess(null), 3000)
   }
 
