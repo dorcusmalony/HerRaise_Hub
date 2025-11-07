@@ -23,6 +23,10 @@ export default function Login() {
   const [forgotLoading, setForgotLoading] = useState(false)
   const [showReminders, setShowReminders] = useState(false)
   const [pendingReminders, setPendingReminders] = useState(null)
+  const [unverifiedEmail, setUnverifiedEmail] = useState('')
+  const [showResendVerification, setShowResendVerification] = useState(false)
+  const [resendLoading, setResendLoading] = useState(false)
+  const [resendMessage, setResendMessage] = useState('')
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -58,8 +62,15 @@ export default function Login() {
 
       if (!res.ok) {
         const errorMsg = data?.message || data?.error || `Login failed (${res.status})`
-        setDebugInfo(`Server error (${res.status}): ${errorMsg}`)
-        setError(errorMsg)
+        
+        // Check if user needs email verification
+        if (data?.requiresVerification) {
+          setUnverifiedEmail(data.email || email)
+          setShowResendVerification(true)
+          setError('Please verify your email before logging in. Check your inbox for the verification link.')
+        } else {
+          setError(errorMsg)
+        }
         setLoading(false)
         return
       }
@@ -198,6 +209,31 @@ export default function Login() {
     setForgotLoading(false)
   }
 
+  const handleResendVerification = async () => {
+    setResendLoading(true)
+    setResendMessage('')
+    
+    try {
+      const res = await fetch(`${API}/api/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: unverifiedEmail })
+      })
+      
+      const data = await res.json()
+      
+      if (res.ok && data.success) {
+        setResendMessage('Verification email sent successfully! Check your inbox.')
+      } else {
+        setResendMessage(data.message || 'Failed to send verification email.')
+      }
+    } catch (error) {
+      setResendMessage('Network error. Please try again.')
+    } finally {
+      setResendLoading(false)
+    }
+  }
+
   return (
     <div className={`mx-auto ${styles.container}`}>
       
@@ -229,12 +265,24 @@ export default function Login() {
 
         {error && <div className="alert alert-danger small mb-2">{error}</div>}
         
-        {debugInfo && (
-          <div className="alert alert-warning small mb-2">
-            <strong>Debug:</strong> {debugInfo}
-            <div className="small mt-1">Check browser console (F12) for more details.</div>
+        {showResendVerification && (
+          <div className="alert alert-info small mb-2">
+            <p className="mb-2">Need a new verification email?</p>
+            <button 
+              type="button" 
+              className="btn btn-sm btn-outline-primary"
+              onClick={handleResendVerification}
+              disabled={resendLoading}
+            >
+              {resendLoading ? 'Sending...' : 'Resend Verification Email'}
+            </button>
+            {resendMessage && (
+              <div className="mt-2 small">{resendMessage}</div>
+            )}
           </div>
         )}
+        
+
 
         <div className="d-flex gap-2 mb-3">
           <button className={`btn ${styles.submitButton}`} type="submit" disabled={loading}>

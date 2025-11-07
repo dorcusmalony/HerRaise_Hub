@@ -53,8 +53,18 @@ export default function Dashboard() {
       console.log('🔍 Fetching clicked opportunities...')
       const clicked = await getClickedOpportunities()
       console.log('📊 Clicked opportunities received:', clicked)
-      console.log('📊 Number of clicked opportunities:', clicked.length)
-      setClickedOpportunities(clicked.slice(0, 3)) // Show only 3 most recent
+      
+      // Filter out opportunities older than 30 days
+      const thirtyDaysAgo = new Date()
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+      
+      const recentClicked = clicked.filter(interaction => {
+        const clickedDate = new Date(interaction.createdAt)
+        return clickedDate >= thirtyDaysAgo
+      })
+      
+      console.log('📊 Filtered opportunities (last 30 days):', recentClicked.length)
+      setClickedOpportunities(recentClicked.slice(0, 3)) // Show only 3 most recent
     } catch (error) {
       console.error('💥 Error fetching clicked opportunities:', error)
     }

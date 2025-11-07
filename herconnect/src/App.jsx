@@ -9,6 +9,7 @@ import Login from './pages/Login/Login'
 import Register from './pages/Register/Register.jsx'
 import ResourcePage from './pages/ResourcePage/ResourcePage'
 import ResetPassword from './pages/Auth/ResetPassword'
+import Verify from './pages/Verify/Verify.jsx'
 import Profile from './pages/Profile/Profile.jsx'
 import Forum from './pages/forum/forum.jsx'
 import Dashboard from './pages/dashboard/dashboard.jsx'
@@ -155,6 +156,7 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/resources" element={<ResourcePage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/verify" element={<Verify />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/forum" element={<Forum />} />
             <Route path="/dashboard" element={<Dashboard />} />
