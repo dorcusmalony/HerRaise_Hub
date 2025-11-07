@@ -60,12 +60,6 @@ export default function OpportunityReminder({ reminders, onClose }) {
                 
                 <div className={styles.actions}>
                   <button 
-                    onClick={() => window.open(opp.applicationLink, '_blank')}
-                    className={styles.applyBtn}
-                  >
-                    Apply Now
-                  </button>
-                  <button 
                     onClick={() => markCompleted(opp.id)}
                     className={styles.completeBtn}
                   >

@@ -210,11 +210,7 @@ export default function Profile() {
       return
     }
 
-    // Updated phone validation with simpler regex
-    if (editForm.phoneNumber && !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(editForm.phoneNumber)) {
-      setError('Please enter a valid phone number (e.g., +211 912 345 678)')
-      return
-    }
+
 
     if (editForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editForm.email)) {
       setError('Please enter a valid email address')
@@ -374,41 +370,9 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Phone:</label>
-                    <span>{profile.phoneNumber || '—'}</span>
-                  </div>
-                </div>
 
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Location:</label>
-                    <span>
-                      {profile.location?.city || profile.location?.state 
-                        ? `${profile.location.city}, ${profile.location.state}` 
-                        : '—'}
-                    </span>
-                  </div>
-                </div>
 
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Language:</label>
-                    <span className="text-capitalize">{profile.language || 'English'}</span>
-                  </div>
-                </div>
 
-                <div className="col-12 col-md-6">
-                  <div className="info-item">
-                    <label className="d-block text-muted small fw-bold">Date of Birth:</label>
-                    <span>
-                      {profile.dateOfBirth 
-                        ? new Date(profile.dateOfBirth).toLocaleDateString()
-                        : '—'}
-                    </span>
-                  </div>
-                </div>
 
                 <div className="col-12 col-md-6">
                   <div className="info-item">
@@ -540,70 +504,9 @@ export default function Profile() {
                   />
                 </div>
 
-                <div className="col-12 col-md-6">
-                  <label className="form-label">{t('profile.phoneNumber')}</label>
-                  <input 
-                    type="tel"
-                    name="phoneNumber"
-                    value={editForm.phoneNumber || ''}
-                    onChange={handleEditChange}
-                    className="form-control"
-                    placeholder="+211 912 345 678"
-                    pattern="^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$"
-                    title="Enter a valid phone number with country code"
-                  />
-                  <small className="text-muted">Include country code, e.g., +211 912 345 678</small>
-                </div>
 
-                <div className="col-12 col-md-6">
-                  <label className="form-label">{t('profile.language')}</label>
-                  <select 
-                    name="language"
-                    value={editForm.language || 'en'}
-                    onChange={handleEditChange}
-                    className="form-select"
-                  >
-                    <option value="en">🇬🇧 {t('languages.english')}</option>
-                    <option value="sw">🇰🇪 {t('languages.swahili')}</option>
-                    <option value="ar">🇸🇦 {t('languages.arabic')}</option>
-                    <option value="fr">🇫🇷 {t('languages.french')}</option>
-                  </select>
-                </div>
 
-                <div className="col-12 col-md-6">
-                  <label className="form-label">{t('profile.dateOfBirth')}</label>
-                  <input 
-                    name="dateOfBirth"
-                    type="date"
-                    value={editForm.dateOfBirth || ''}
-                    onChange={handleEditChange}
-                    className="form-control"
-                    max={new Date().toISOString().split('T')[0]}
-                  />
-                  <small className="text-muted">Format: YYYY-MM-DD</small>
-                </div>
 
-                <div className="col-12 col-md-6">
-                  <label className="form-label">{t('profile.city')}</label>
-                  <input 
-                    name="city"
-                    value={editForm.location?.city || ''}
-                    onChange={handleEditChange}
-                    className="form-control"
-                    placeholder={t('profile.cityPlaceholder')}
-                  />
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <label className="form-label">{t('profile.state')}</label>
-                  <input 
-                    name="state"
-                    value={editForm.location?.state || ''}
-                    onChange={handleEditChange}
-                    className="form-control"
-                    placeholder={t('profile.statePlaceholder')}
-                  />
-                </div>
 
                 <div className="col-12">
                   <label className="form-label">{t('profile.interests')}</label>

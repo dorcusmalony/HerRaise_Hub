@@ -13,7 +13,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [debugInfo, setDebugInfo] = useState(null)
+
   const [_result, setResult] = useState(null)
 
   // Forgot password flow
@@ -31,12 +31,12 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault()
     setError(null)
-    setDebugInfo(null)
+
     setResult(null)
     setLoading(true)
 
     if (!API) {
-      setDebugInfo('VITE_API_URL environment variable is missing. Check your .env file.')
+      console.error('VITE_API_URL environment variable is missing. Check your .env file.')
       setLoading(false)
       return
     }
@@ -127,7 +127,7 @@ export default function Login() {
       console.error('Login error:', err)
       
       if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
-        setDebugInfo(`Network error - likely CORS issue. Backend needs to allow: ${window.location.origin}`)
+        console.error(`Network error - likely CORS issue. Backend needs to allow: ${window.location.origin}`)
         setError('Unable to connect to server. Please try again later.')
       } else {
         setError(err.message || 'Login failed')
