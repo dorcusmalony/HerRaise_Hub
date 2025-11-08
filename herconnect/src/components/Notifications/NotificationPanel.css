@@ -148,3 +148,22 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.no-more-notifications {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  border-top: 1px solid #f0f0f0;
+  background: #f8f9fa;
+}
+
+.no-more-notifications p {
+  margin: 0 0 5px 0;
+  font-weight: 600;
+  color: #28a745;
+}
+
+.no-more-notifications small {
+  color: #999;
+  font-size: 12px;
+}

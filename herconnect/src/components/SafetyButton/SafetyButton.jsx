@@ -93,7 +93,7 @@ export default function SafetyButton() {
             
             {success ? (
               <div className="text-center p-5">
-                <div style={{ fontSize: '4rem' }}>✅</div>
+                <div style={{ fontSize: '4rem' }}></div>
                 <h3 className="mb-3">Report Submitted</h3>
                 <p>Thank you. Our team will review it promptly.</p>
               </div>
@@ -131,10 +131,10 @@ export default function SafetyButton() {
                     required
                   >
                     <option value="">Select urgency...</option>
-                    <option value="critical">🔴 Critical (Immediate danger)</option>
-                    <option value="high">🟠 High (Needs quick attention)</option>
-                    <option value="medium">🟡 Medium (Important but not urgent)</option>
-                    <option value="low">🟢 Low (General inquiry)</option>
+                    <option value="critical"> Critical (Immediate danger)</option>
+                    <option value="high"> High (Needs quick attention)</option>
+                    <option value="medium"> Medium (Important but not urgent)</option>
+                    <option value="low"> Low (General inquiry)</option>
                   </select>
                 </div>
 
@@ -218,7 +218,7 @@ export default function SafetyButton() {
                 {/* Emergency Numbers */}
                 <div className="alert alert-warning mb-3">
                   <strong>Need immediate help?</strong><br />
-                  📞 Emergency: 777 • GBV Hotline: 1212
+                   Emergency: 777 • GBV Hotline: 1212
                 </div>
 
                 <div className="d-flex gap-2">
