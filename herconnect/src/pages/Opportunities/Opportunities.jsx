@@ -327,7 +327,6 @@ export default function Opportunities() {
         <div className={styles.sidebar}>
           <div className={styles.sidebarHeader}>
             <h3>Opportunities You've Liked</h3>
-            <button className={styles.viewAllBtn}>View All</button>
           </div>
           
           {sidebarLoading ? (
