@@ -2,9 +2,7 @@ import { useState } from 'react'
 import { opportunityAPI } from '../../services/opportunityAPI'
 import { applicationTrackerAPI } from '../../services/applicationTrackerAPI'
 import ApplicationModal from '../ApplicationTracker/ApplicationModal'
-import ApplicationInterestModal from '../ApplicationTracker/ApplicationInterestModal'
 import CountdownBadge from '../CountdownBadge/CountdownBadge'
-import useApplicationTracking from '../../hooks/useApplicationTracking'
 import './OpportunityCard.css'
 
 export default function OpportunityCard({ opportunity, currentUser }) {
@@ -12,26 +10,19 @@ export default function OpportunityCard({ opportunity, currentUser }) {
     opportunity.interestedUsers?.includes(currentUser?.id) || false
   )
   const [showTrackModal, setShowTrackModal] = useState(false)
-  const [showInterestModal, setShowInterestModal] = useState(false)
-  const { trackApplication, markAsVisited, shouldShowInterestModal, markModalShown } = useApplicationTracking()
 
   const handleApplyClick = async () => {
     try {
       await opportunityAPI.trackClick(opportunity.id)
-      markAsVisited(opportunity.id)
     } catch (error) {
       console.error('Error tracking click:', error)
     }
     
     window.open(opportunity.applicationLink, '_blank')
     
-    // Check if user should see interest modal when they return
     setTimeout(() => {
-      if (shouldShowInterestModal(opportunity.id)) {
-        setShowInterestModal(true)
-        markModalShown(opportunity.id)
-      }
-    }, 3000)
+      setShowTrackModal(true)
+    }, 2000)
   }
 
   const handleSaveApplication = async (applicationData) => {
@@ -43,14 +34,6 @@ export default function OpportunityCard({ opportunity, currentUser }) {
       )
     } catch (error) {
       console.error('Error saving application:', error)
-    }
-  }
-
-  const handleInterestConfirm = async (interestData) => {
-    try {
-      await trackApplication(interestData)
-    } catch (error) {
-      console.error('Error tracking interest:', error)
     }
   }
 
@@ -70,7 +53,7 @@ export default function OpportunityCard({ opportunity, currentUser }) {
   return (
     <div className="opportunity-card">
       {opportunity.isFeatured && (
-        <div className="featured-badge">⭐ Featured</div>
+        <div className="featured-badge"> Featured</div>
       )}
       
       <div className="opportunity-header">
@@ -79,7 +62,7 @@ export default function OpportunityCard({ opportunity, currentUser }) {
           className={`bookmark-btn ${bookmarked ? 'bookmarked' : ''}`}
           onClick={handleBookmark}
         >
-          {bookmarked ? '💖' : '🤍'}
+          {bookmarked ? '❤️' : '🤍'}
         </button>
       </div>
 
@@ -102,10 +85,10 @@ export default function OpportunityCard({ opportunity, currentUser }) {
 
       <div className="opportunity-details">
         <div className="deadline">
-          📅 Deadline: {new Date(opportunity.applicationDeadline).toLocaleDateString()}
+           Deadline: {new Date(opportunity.applicationDeadline).toLocaleDateString()}
           <CountdownBadge deadline={opportunity.applicationDeadline} />
         </div>
-        <div className="location">📍 {opportunity.location}</div>
+        <div className="location"> {opportunity.location}</div>
       </div>
 
       <div className="opportunity-actions">
@@ -113,10 +96,10 @@ export default function OpportunityCard({ opportunity, currentUser }) {
           className="apply-btn"
           onClick={handleApplyClick}
         >
-          🚀 Apply Now
+           Apply Now
         </button>
         <div className="stats">
-          👀 {opportunity.views || 0} views • 🔗 {opportunity.clickCount || 0} applications
+           {opportunity.views || 0}  {opportunity.clickCount || 0} applications
         </div>
       </div>
       
@@ -125,14 +108,6 @@ export default function OpportunityCard({ opportunity, currentUser }) {
           opportunity={opportunity}
           onClose={() => setShowTrackModal(false)}
           onSave={handleSaveApplication}
-        />
-      )}
-      
-      {showInterestModal && (
-        <ApplicationInterestModal
-          opportunity={opportunity}
-          onClose={() => setShowInterestModal(false)}
-          onConfirm={handleInterestConfirm}
         />
       )}
     </div>
