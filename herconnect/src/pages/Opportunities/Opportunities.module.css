@@ -1,7 +1,133 @@
-.container {
-  max-width: 1200px;
+.dashboardContainer {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 2rem;
+}
+
+.dashboardHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.dashboardTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+}
+
+.dashboardSubtitle {
+  font-size: 1.1rem;
+  color: #718096;
+  margin: 0;
+}
+
+.dashboardLayout {
+  display: flex;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 1rem;
+  gap: 1rem;
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar {
+  width: 320px;
+  background: #f8fafc;
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+}
+
+.sidebarHeader {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sidebarHeader h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.viewAllBtn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #6b7280;
+}
+
+.emptyState p {
+  margin: 0 0 0.25rem 0;
+  font-weight: 500;
+}
+
+.emptyState small {
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.opportunityList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.opportunityEntry {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.opportunityEntry:last-child {
+  border-bottom: none;
+}
+
+.opportunityName {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.organizationName {
+  margin: 0 0 1rem 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+.pendingStatus {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #fef3c7;
+  color: #92400e;
+  margin-top: 0.5rem;
 }
 
 .header {
@@ -38,12 +164,17 @@
   align-items: end;
 }
 
-.filtersRow {
+.filtersSection {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
   gap: 1rem;
+  border: 1px solid #e2e8f0;
 }
 
 .filterButtons {
@@ -118,38 +249,44 @@
   border-color: #E84393;
 }
 
-.opportunitiesGrid {
+.cardsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
 }
 
-.compactCard {
+.opportunityCard {
   background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
-  border: 1px solid #f0f0f0;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
 }
 
-.compactCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+.opportunityCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.cardContent {
+  padding: 2rem;
 }
 
 .featuredBadge {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  background: #ffd700;
-  color: #333;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a202c;
+  padding: 8px 16px;
+  border-radius: 0 0 16px 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
 }
 
 .bookmarkBtn {
@@ -213,20 +350,22 @@
   color: #666;
 }
 
-.learnMoreBtn {
-  background: #E84393;
+.applyBtn {
+  background: linear-gradient(135deg, #E84393, #d63384);
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(232, 67, 147, 0.3);
 }
 
-.learnMoreBtn:hover {
-  background: #d63384;
+.applyBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(232, 67, 147, 0.4);
 }
 
 .emptyState {
@@ -279,6 +418,17 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .pageLayout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    position: static;
+  }
+}
+
 @media (max-width: 768px) {
   .title {
     font-size: 2rem;
@@ -326,5 +476,18 @@
   
   .searchInput {
     width: 150px;
+  }
+  
+  .pageLayout {
+    padding: 0.5rem;
+    gap: 1rem;
+  }
+  
+  .sidebar {
+    padding: 1rem;
+  }
+  
+  .likedItem {
+    padding: 0.75rem;
   }
 }
