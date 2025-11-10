@@ -63,10 +63,12 @@ export default function Opportunities() {
       
       if (response.ok || response.status === 304) {
         const data = await response.json()
-        console.log('📊 Raw data keys:', Object.keys(data))
-        console.log('📊 Opportunities array:', data.opportunities)
-        console.log('📊 Array length:', data.opportunities?.length || 0)
-        setLikedOpportunities(data.opportunities || [])
+        console.log('📊 FULL API RESPONSE:', JSON.stringify(data, null, 2))
+        
+        // Try different possible data structures
+        const opportunities = data.opportunities || data.clickedOpportunities || data.data || data
+        console.log('📊 Extracted opportunities:', opportunities)
+        setLikedOpportunities(Array.isArray(opportunities) ? opportunities : [])
       } else {
         console.error('❌ Sidebar fetch failed:', response.status)
         setLikedOpportunities([])
