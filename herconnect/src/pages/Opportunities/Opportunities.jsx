@@ -63,8 +63,10 @@ export default function Opportunities() {
       
       if (response.ok || response.status === 304) {
         const data = await response.json()
-        console.log('📊 Sidebar data received:', data)
-        setLikedOpportunities(data.opportunities || [])
+        console.log('📊 Full data object:', JSON.stringify(data, null, 2))
+        const opportunities = data.opportunities || []
+        console.log('📊 Setting opportunities count:', opportunities.length)
+        setLikedOpportunities(opportunities)
       } else {
         console.error('❌ Sidebar fetch failed:', response.status)
         setLikedOpportunities([])
