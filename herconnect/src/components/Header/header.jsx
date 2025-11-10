@@ -137,7 +137,7 @@ export default function Header() {
 					<Link to="/" className={`text-decoration-none ${styles.navLink}`}>{t('home')}</Link>
 					<Link to="/about" className={`text-decoration-none ${styles.navLink}`}>{t('about')}</Link>
 					<Link to="/forum" className={`text-decoration-none ${styles.navLink}`}>{t('forum')}</Link>
-					<Link to="/content" className={`text-decoration-none ${styles.navLink}`}>ShareZone</Link>
+					<Link to="/sharezone" className={`text-decoration-none ${styles.navLink}`}>ShareZone</Link>
 					<Link to="/opportunities" className={`text-decoration-none ${styles.navLink}`}>{t('opportunities')}</Link>
 					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`}>{t('resources')}</Link>
 				</nav>
