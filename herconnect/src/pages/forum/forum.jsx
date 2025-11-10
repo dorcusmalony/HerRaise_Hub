@@ -293,13 +293,10 @@ export default function Forum() {
 
   const getPostTypeIcon = (type) => {
     const icons = {
-      project: '',
-      question: '',
-      essay: '',
-      video: '',
-      discussion: ''
+      question: '❓',
+      discussion: '🗣️'
     }
-    return icons[type] || ''
+    return icons[type] || '💬'
   }
 
   if (loading) {
@@ -324,24 +321,24 @@ export default function Forum() {
       <div className={styles.forumHeader}>
         <div className={styles.headerContent}>
           <div className={styles.headerText}>
-            <h1 className={styles.forumTitle}> Share Your Work & Get Feedback</h1>
-            <p className={styles.forumSubtitle}>Upload projects, essays, videos and connect with peers and mentors</p>
+            <h1 className={styles.forumTitle}>💬 Community Forum</h1>
+            <p className={styles.forumSubtitle}>Connect with peers, ask questions, and join discussions</p>
             <div className={styles.contributionHighlight}>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}></span>
-                <span>Share Projects</span>
+                <span className={styles.highlightIcon}>💭</span>
+                <span>Ask Questions</span>
               </div>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}></span>
-                <span>Upload Essays</span>
+                <span className={styles.highlightIcon}>🗣️</span>
+                <span>Join Discussions</span>
               </div>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}></span>
-                <span>upload Videos</span>
+                <span className={styles.highlightIcon}>🤝</span>
+                <span>Get Support</span>
               </div>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}></span>
-                
+                <span className={styles.highlightIcon}>💡</span>
+                <span>Share Ideas</span>
               </div>
             </div>
             <div className={styles.forumStats}>
@@ -357,7 +354,7 @@ export default function Forum() {
             onClick={() => setShowCreateForm(true)}
             className={styles.createPostBtn}
           >
-            ✨ Share Your Work
+            💬 Start Discussion
           </button>
         </div>
       </div>
@@ -368,11 +365,9 @@ export default function Forum() {
           <label className={styles.filterLabel}>Browse by type:</label>
           <div className={styles.filterButtons}>
             {[
-              { key: 'all', label: ' All', desc: 'All posts' },
-              { key: 'project', label: ' Projects', desc: 'Code & creative work' },
-              { key: 'essay', label: ' Essays', desc: 'Written content' },
-              { key: 'video', label: ' Videos', desc: 'Video content' },
-              { key: 'question', label: ' Questions', desc: 'Need help' }
+              { key: 'all', label: '💬 All', desc: 'All posts' },
+              { key: 'question', label: '❓ Questions', desc: 'Need help' },
+              { key: 'discussion', label: '🗣️ Discussions', desc: 'General topics' }
             ].map(f => (
               <button
                 key={f.key}
@@ -430,47 +425,25 @@ export default function Forum() {
           <div className={styles.createButtons}>
             <button 
               onClick={() => {
-                setSelectedType('project')
-                setShowCreateForm(true)
-              }}
-              className={styles.createBtn}
-            >
-              <div className={styles.btnIcon}></div>
-              <div className={styles.btnText}>Share Project</div>
-              <div className={styles.btnCount}>{posts.filter(p => p.type === 'project').length} shared</div>
-            </button>
-            <button 
-              onClick={() => {
-                setSelectedType('essay')
-                setShowCreateForm(true)
-              }}
-              className={styles.createBtn}
-            >
-              <div className={styles.btnIcon}></div>
-              <div className={styles.btnText}>Upload Essay</div>
-              <div className={styles.btnCount}>{posts.filter(p => p.type === 'essay').length} uploaded</div>
-            </button>
-            <button 
-              onClick={() => {
-                setSelectedType('video')
-                setShowCreateForm(true)
-              }}
-              className={styles.createBtn}
-            >
-              <div className={styles.btnIcon}></div>
-              <div className={styles.btnText}>Upload Video</div>
-              <div className={styles.btnCount}>{posts.filter(p => p.type === 'video').length} uploaded</div>
-            </button>
-            <button 
-              onClick={() => {
                 setSelectedType('question')
                 setShowCreateForm(true)
               }}
               className={styles.createBtn}
             >
-              <div className={styles.btnIcon}></div>
+              <div className={styles.btnIcon}>❓</div>
               <div className={styles.btnText}>Ask Question</div>
               <div className={styles.btnCount}>{posts.filter(p => p.type === 'question').length} asked</div>
+            </button>
+            <button 
+              onClick={() => {
+                setSelectedType('discussion')
+                setShowCreateForm(true)
+              }}
+              className={styles.createBtn}
+            >
+              <div className={styles.btnIcon}>🗣️</div>
+              <div className={styles.btnText}>Start Discussion</div>
+              <div className={styles.btnCount}>{posts.filter(p => p.type === 'discussion').length} started</div>
             </button>
           </div>
         </div>
@@ -481,18 +454,18 @@ export default function Forum() {
         posts.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}></div>
-            <h4 className={styles.emptyTitle}>Ready to share your amazing work?</h4>
-            <p className={styles.emptySubtitle}>Upload your projects, essays, or videos to get valuable feedback from peers and mentors</p>
+            <h4 className={styles.emptyTitle}>Start the conversation!</h4>
+            <p className={styles.emptySubtitle}>Ask questions, share ideas, or start discussions with the community</p>
             <div className={styles.emptyActions}>
               <button 
                 onClick={() => setShowCreateForm(true)}
                 className={styles.createPostBtn}
               >
-                 Share Your First Project
+                💬 Start Your First Discussion
               </button>
             </div>
             <div className={styles.emptyTips}>
-              <p> <strong>Tips:</strong> Projects with files get 3x more engagement!</p>
+              <p>💡 <strong>Tip:</strong> Questions with clear context get better responses!</p>
             </div>
           </div>
         ) : (
