@@ -28,10 +28,37 @@ import './styles/professional.css'
 import './styles/notifications.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
 import PushNotificationSetup from './components/PushNotificationSetup/PushNotificationSetup'
+import CompletionCheckModal from './components/CompletionCheckModal/CompletionCheckModal'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useState } from 'react'
 
 export default function App() {
+  const [showCompletionModal, setShowCompletionModal] = useState(false)
+  const [pendingCount, setPendingCount] = useState(0)
+
+  const checkPendingOpportunities = async () => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || ''
+      const response = await fetch(`${API_URL}/api/tracking/pending-check`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.hasPending && data.count > 0) {
+          setPendingCount(data.count)
+          setShowCompletionModal(true)
+        }
+      }
+    } catch (error) {
+      console.error('Error checking pending opportunities:', error)
+    }
+  }
+
   useEffect(() => {
     // Read from environment variable - not hardcoded
     const api = import.meta.env.VITE_API_URL || ''
@@ -50,6 +77,7 @@ export default function App() {
       initializeSocket(token)
       notificationService.initialize()
       pushNotificationService.initialize()
+      checkPendingOpportunities() // Check for pending opportunities on login
 
       // Listen for real-time notifications
       handleAppNotification = (e) => {
@@ -147,6 +175,12 @@ export default function App() {
         <PushNotificationSetup />
         <ToastContainer />
         <SafetyButton />
+        {showCompletionModal && (
+          <CompletionCheckModal 
+            pendingCount={pendingCount}
+            onClose={() => setShowCompletionModal(false)}
+          />
+        )}
         <main className="container-fluid px-3 py-4">
           <Routes>
             <Route path="/" element={<Home />} />
