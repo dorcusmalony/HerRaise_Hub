@@ -17,6 +17,12 @@ export default function CompletionCheckModal({ pendingCount, onClose }) {
         },
         body: JSON.stringify({ completed })
       })
+      
+      // Clear the pending notification from notification bar
+      window.dispatchEvent(new CustomEvent('remove-notification', {
+        detail: { id: 'pending-opportunities' }
+      }))
+      
       onClose()
     } catch (error) {
       console.error('Error updating completion status:', error)
