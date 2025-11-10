@@ -63,10 +63,10 @@ export default function Opportunities() {
       
       if (response.ok || response.status === 304) {
         const data = await response.json()
-        console.log('📊 Full data object:', JSON.stringify(data, null, 2))
-        const opportunities = data.opportunities || []
-        console.log('📊 Setting opportunities count:', opportunities.length)
-        setLikedOpportunities(opportunities)
+        console.log('📊 Raw data keys:', Object.keys(data))
+        console.log('📊 Opportunities array:', data.opportunities)
+        console.log('📊 Array length:', data.opportunities?.length || 0)
+        setLikedOpportunities(data.opportunities || [])
       } else {
         console.error('❌ Sidebar fetch failed:', response.status)
         setLikedOpportunities([])
@@ -340,7 +340,7 @@ export default function Opportunities() {
         {/* Sidebar - Liked Opportunities */}
         <div className={styles.sidebar}>
           <div className={styles.sidebarHeader}>
-            <h3>Opportunities You've Liked</h3>
+            <h3>Opportunities You've Clicked</h3>
           </div>
           
           {sidebarLoading ? (
