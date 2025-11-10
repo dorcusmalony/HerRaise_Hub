@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import FileUpload from './FileUpload'
+
 import styles from './CreatePostForm.module.css'
 
-export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project' }) {
+export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project', isShareZone = false }) {
   const navigate = useNavigate()
   const API_URL = import.meta.env.VITE_API_URL || ''
   
@@ -31,8 +31,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
 
     try {
       const endpoint = editPost 
-        ? `${API_URL}/api/forum/posts/${editPost.id}`
-        : `${API_URL}/api/forum/posts`
+        ? `${API_URL}/${isShareZone ? 'api/sharezone' : 'api/forum'}/posts/${editPost.id}`
+        : `${API_URL}/${isShareZone ? 'api/sharezone' : 'api/forum'}/posts`
       
       const response = await fetch(endpoint, {
         method: editPost ? 'PUT' : 'POST',
@@ -68,32 +68,10 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
     }
   }
 
-  const getAcceptedFileTypes = (type) => {
-    switch(type) {
-      case 'project':
-        return 'image/*,video/*,.pdf,.doc,.docx,.txt,.zip,.rar,.py,.js,.html,.css,.json'
-      case 'essay':
-        return '.pdf,.doc,.docx,.txt,.rtf'
-      case 'video':
-        return 'video/*,.mp4,.avi,.mov,.wmv,.ppt,.pptx'
-      default:
-        return 'image/*,video/*,.pdf,.doc,.docx,.txt'
-    }
-  }
 
-  const getContentPlaceholder = (type) => {
-    switch(type) {
-      case 'project':
-        return 'Describe your project: What did you build? What technologies did you use? What challenges did you face? What feedback are you looking for?'
-      case 'essay':
-        return 'Tell us about your essay: What topic did you explore? What are your main arguments? What feedback would help you improve?'
-      case 'video':
-        return 'Describe your video content: What is it about? Who is your target audience? What kind of feedback are you seeking?'
-      case 'question':
-        return 'Ask your question clearly: Provide context, what you\'ve tried, and what specific help you need...'
-      default:
-        return 'Share your thoughts, start a discussion, or ask for advice from the community...'
-    }
+
+  const getContentPlaceholder = () => {
+    return 'Share your thoughts, start a discussion, or ask for advice from the community...'
   }
 
   return (
@@ -101,26 +79,17 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
       <div className={styles.formBody}>
 
         <h3 className={styles.formTitle} style={{color: 'white'}}>
-          {editPost ? '✏️ Edit Post' : '✨ Share Your Work'}
+          {editPost ? '✏️ Edit Post' : '💬 Start a Discussion'}
         </h3>
         <p className={styles.formSubtitle} style={{color: 'white'}}>
-          💪 Showcase your projects, essays, or ideas to get feedback from peers and mentors
+          💭 Share your thoughts, ask questions, or start conversations with the community
         </p>
 
         {error && (
           <div className={styles.errorAlert}>{error}</div>
         )}
 
-        {/* Post Type Display */}
-        {formData.type === 'essay' ? (
-          <div style={{textAlign: 'center', marginBottom: '1.5rem', padding: '1.5rem', background: 'white', borderRadius: '8px', border: '2px solid #8B5CF6'}}>
-            <h2 style={{color: '#374151', marginBottom: '1rem', fontSize: '1.5rem'}}>Essays</h2>
-            <p style={{color: '#374151', lineHeight: '1.6', margin: 0, fontSize: '1rem'}}>
-              Welcome! Share your application essays for scholarships, internships, conferences, or projects.
-              Peers and mentors can review and give feedback to help you strengthen your writing and improve your chances of success.
-            </p>
-          </div>
-        ) : null}
+
 
         {/* Title */}
         <div className={styles.formGroup}>
@@ -146,7 +115,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
             onChange={(e) => setFormData({...formData, content: e.target.value})}
             required
             rows="8"
-            placeholder={getContentPlaceholder(formData.type)}
+            placeholder={getContentPlaceholder()}
             className={styles.formTextarea}
           />
           <div className={styles.characterCount} style={{color: 'white'}}>
@@ -169,25 +138,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
           </div>
         </div>
 
-        {/* Upload Section - Only for specific types */}
-        {(formData.type === 'project' || formData.type === 'essay' || formData.type === 'video') && (
-          <div className={styles.uploadSection}>
-            <label className={styles.formLabel} style={{color: 'white'}}>
-              {formData.type === 'video' ? '🎥 Upload Video *' :
-               formData.type === 'essay' ? '📝 Upload Essay/Document *' :
-               '🚀 Upload Project Files *'}
-            </label>
-            <FileUpload 
-              onFilesUploaded={(files) => setFormData({...formData, attachments: files})}
-              acceptedTypes={getAcceptedFileTypes(formData.type)}
-            />
-            {formData.attachments.length > 0 && (
-              <div className={styles.uploadSuccess}>
-                ✅ {formData.attachments.length} file(s) ready to share!
-              </div>
-            )}
-          </div>
-        )}
+
 
         {/* Buttons */}
         <div className={styles.formActions}>
