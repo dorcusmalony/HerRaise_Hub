@@ -51,17 +51,22 @@ export default function Opportunities() {
 
   const fetchSidebarOpportunities = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/api/tracking/clicked-opportunities`, {
+      const response = await fetch(`${API_URL}/api/tracking/clicked-opportunities?t=${Date.now()}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
         }
       })
       
-      if (response.ok) {
+      console.log('📊 Sidebar fetch response:', response.status)
+      
+      if (response.ok || response.status === 304) {
         const data = await response.json()
+        console.log('📊 Sidebar data received:', data)
         setLikedOpportunities(data.opportunities || [])
       } else {
+        console.error('❌ Sidebar fetch failed:', response.status)
         setLikedOpportunities([])
       }
     } catch (error) {
