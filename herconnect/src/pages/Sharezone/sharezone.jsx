@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import CommentItem from '../../components/Forum/CommentItem'
 import './sharezone.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
@@ -15,6 +16,9 @@ export default function Content() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState('')
+  const [expandedComments, setExpandedComments] = useState({})
+  const [commentText, setCommentText] = useState({})
+  const [currentUser, setCurrentUser] = useState(null)
 
   const contentTypes = [
     { value: 'project', label: 'Project', icon: '' },
@@ -46,6 +50,10 @@ export default function Content() {
 
   useEffect(() => {
     fetchContents()
+    const userData = localStorage.getItem('user')
+    if (userData) {
+      setCurrentUser(JSON.parse(userData))
+    }
   }, [])
 
   const handleInputChange = (e) => {
@@ -132,6 +140,112 @@ export default function Content() {
       setError('Failed to create post. Please try again.')
     } finally {
       setUploading(false)
+    }
+  }
+
+  const handleAddComment = async (postId) => {
+    const text = commentText[postId]
+    if (!text?.trim()) return
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/api/sharezone/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: text })
+      })
+
+      if (response.ok) {
+        setCommentText(prev => ({ ...prev, [postId]: '' }))
+        fetchContents()
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error)
+    }
+  }
+
+  const handleReplyToComment = async (parentCommentId, replyText) => {
+    const post = contents.find(p => p.ShareZoneComments?.some(c => c.id === parentCommentId))
+    if (!post) return
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/api/sharezone/${post._id}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          content: replyText,
+          parentCommentId
+        })
+      })
+
+      if (response.ok) {
+        fetchContents()
+      }
+    } catch (error) {
+      console.error('Error replying to comment:', error)
+    }
+  }
+
+  const handleUpdateComment = async (commentId, newContent) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/api/sharezone/comments/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: newContent })
+      })
+
+      if (response.ok) {
+        fetchContents()
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error('Error updating comment:', error)
+      return false
+    }
+  }
+
+  const handleLikeComment = async (commentId) => {
+    try {
+      await fetch(`${API_URL}/api/sharezone/comments/${commentId}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      fetchContents()
+    } catch (error) {
+      console.error('Error liking comment:', error)
+    }
+  }
+
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm('Delete this comment? This action cannot be undone.')) return
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/api/sharezone/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      
+      if (response.ok) {
+        fetchContents()
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error)
     }
   }
 
@@ -309,9 +423,75 @@ export default function Content() {
                             </a>
                           </div>
                         )}
-                        <small className="text-muted d-block mt-2">
-                          Shared by {content.author?.name || 'Anonymous'} • {new Date(content.createdAt).toLocaleDateString()}
-                        </small>
+                        <div className="d-flex justify-content-between align-items-center mt-3">
+                          <small className="text-muted">
+                            Shared by {content.author?.name || 'Anonymous'} • {new Date(content.createdAt).toLocaleDateString()}
+                          </small>
+                          <button 
+                            className="btn btn-sm btn-outline-secondary"
+                            onClick={() => setExpandedComments(prev => ({ ...prev, [content._id]: !prev[content._id] }))}
+                          >
+                            💬 {content.ShareZoneComments?.length || 0} Comments
+                          </button>
+                        </div>
+                        
+                        {expandedComments[content._id] && (
+                          <div className="mt-3 border-top pt-3">
+                            <div className="mb-3">
+                              <div className="d-flex gap-2">
+                                <img 
+                                  src={currentUser?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'User')}&background=8B5CF6&color=fff`}
+                                  alt={currentUser?.name}
+                                  className="rounded-circle"
+                                  style={{ width: 32, height: 32 }}
+                                />
+                                <div className="flex-grow-1">
+                                  <textarea
+                                    className="form-control mb-2"
+                                    rows="3"
+                                    placeholder="Add a comment..."
+                                    value={commentText[content._id] || ''}
+                                    onChange={(e) => setCommentText(prev => ({ ...prev, [content._id]: e.target.value }))}
+                                  />
+                                  <button 
+                                    className="btn btn-sm btn-primary"
+                                    onClick={() => handleAddComment(content._id)}
+                                    disabled={!commentText[content._id]?.trim()}
+                                  >
+                                    💬 Post Comment
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {content.ShareZoneComments && content.ShareZoneComments.length > 0 ? (
+                              <div>
+                                <h6 className="mb-3">💬 Comments ({content.ShareZoneComments.length})</h6>
+                                {content.ShareZoneComments
+                                  .filter(c => !c.parentCommentId)
+                                  .map(comment => (
+                                    <CommentItem
+                                      key={comment.id}
+                                      comment={{
+                                        ...comment,
+                                        replies: content.ShareZoneComments.filter(c => c.parentCommentId === comment.id)
+                                      }}
+                                      onReply={handleReplyToComment}
+                                      onUpdate={handleUpdateComment}
+                                      onLike={handleLikeComment}
+                                      onDelete={handleDeleteComment}
+                                      currentUser={currentUser}
+                                      postAuthorId={content.author?._id}
+                                    />
+                                  ))}
+                              </div>
+                            ) : (
+                              <div className="text-center py-3 text-muted">
+                                <p>No comments yet. Be the first to comment!</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))
