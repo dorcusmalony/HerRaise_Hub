@@ -214,7 +214,7 @@ export default function App() {
             <Route path="/forum" element={<Forum />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/opportunities" element={<Opportunities />} />
-            <Route path="/content" element={<Content />} />
+            <Route path="/sharezone" element={<Content />} />
             <Route path="/safety-report" element={<SafetyReport />} />
           </Routes>
         </main>
