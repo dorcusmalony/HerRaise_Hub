@@ -11,9 +11,8 @@ export default function OpportunityCard({ opportunity, currentUser }) {
   )
   const [showTrackModal, setShowTrackModal] = useState(false)
 
-  const handleApplyClick = async () => {
+  const handleCardClick = async () => {
     try {
-      // Track click for sidebar display
       const API_URL = import.meta.env.VITE_API_URL || ''
       await fetch(`${API_URL}/api/dashboard/track-opportunity/${opportunity.id}`, {
         method: 'POST',
@@ -22,15 +21,15 @@ export default function OpportunityCard({ opportunity, currentUser }) {
           'Content-Type': 'application/json'
         }
       })
+      console.log('💖 Opportunity liked:', opportunity.title)
     } catch (error) {
-      console.error('Error tracking click:', error)
+      console.error('Error liking opportunity:', error)
     }
-    
+  }
+
+  const handleApplyClick = async (e) => {
+    e.stopPropagation()
     window.open(opportunity.applicationLink, '_blank')
-    
-    setTimeout(() => {
-      setShowTrackModal(true)
-    }, 2000)
   }
 
   const handleSaveApplication = async (applicationData) => {
@@ -45,7 +44,8 @@ export default function OpportunityCard({ opportunity, currentUser }) {
     }
   }
 
-  const handleBookmark = async () => {
+  const handleBookmark = async (e) => {
+    e.stopPropagation()
     try {
       const response = await opportunityAPI.toggleBookmark(opportunity.id)
       if (response.success) {
@@ -59,7 +59,7 @@ export default function OpportunityCard({ opportunity, currentUser }) {
 
 
   return (
-    <div className="opportunity-card">
+    <div className="opportunity-card" onClick={handleCardClick}>
       {opportunity.isFeatured && (
         <div className="featured-badge"> Featured</div>
       )}
