@@ -14,14 +14,19 @@ export default function OpportunityCard({ opportunity, currentUser }) {
   const handleCardClick = async () => {
     try {
       const API_URL = import.meta.env.VITE_API_URL || ''
-      await fetch(`${API_URL}/api/dashboard/track-opportunity/${opportunity.id}`, {
+      const response = await fetch(`${API_URL}/api/dashboard/track-opportunity/${opportunity.id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         }
       })
-      console.log('💖 Opportunity liked:', opportunity.title)
+      
+      if (response.ok) {
+        console.log('💖 Opportunity liked:', opportunity.title)
+        // Trigger sidebar refresh
+        window.dispatchEvent(new CustomEvent('refresh-sidebar'))
+      }
     } catch (error) {
       console.error('Error liking opportunity:', error)
     }

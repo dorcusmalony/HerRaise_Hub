@@ -28,15 +28,12 @@ import './styles/professional.css'
 import './styles/notifications.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
 import PushNotificationSetup from './components/PushNotificationSetup/PushNotificationSetup'
-import CompletionCheckModal from './components/CompletionCheckModal/CompletionCheckModal'
+
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useState } from 'react'
 
 export default function App() {
-  const [showCompletionModal, setShowCompletionModal] = useState(false)
-  const [pendingCount, setPendingCount] = useState(0)
-
   const checkPendingOpportunities = async () => {
     try {
       const API_URL = import.meta.env.VITE_API_URL || ''
@@ -50,8 +47,34 @@ export default function App() {
       if (response.ok) {
         const data = await response.json()
         if (data.hasPending && data.count > 0) {
-          setPendingCount(data.count)
-          setShowCompletionModal(true)
+          const opportunityText = data.count === 1 ? 'opportunity' : 'opportunities'
+          const titleText = data.count === 1 ? 'Pending Opportunity' : 'Pending Opportunities'
+          
+          // Show toast reminder
+          toast.info(
+            <div>
+              <strong>📝 Reminder: {titleText}</strong>
+              <div>You have {data.count} pending {opportunityText} to complete!</div>
+            </div>, 
+            {
+              position: "top-right",
+              autoClose: 10000,
+              closeOnClick: true,
+              pauseOnHover: true,
+            }
+          )
+          
+          // Add to notification bar
+          window.dispatchEvent(new CustomEvent('add-notification', {
+            detail: {
+              id: 'pending-opportunities',
+              type: 'pending_opportunities',
+              title: `${titleText} Reminder`,
+              message: `You have ${data.count} pending ${opportunityText} to complete`,
+              timestamp: new Date().toISOString(),
+              read: false
+            }
+          }))
         }
       }
     } catch (error) {
@@ -77,7 +100,7 @@ export default function App() {
       initializeSocket(token)
       notificationService.initialize()
       pushNotificationService.initialize()
-      checkPendingOpportunities() // Check for pending opportunities on login
+      // checkPendingOpportunities() // Temporarily disabled to debug false notifications
 
       // Listen for real-time notifications
       handleAppNotification = (e) => {
@@ -175,12 +198,7 @@ export default function App() {
         <PushNotificationSetup />
         <ToastContainer />
         <SafetyButton />
-        {showCompletionModal && (
-          <CompletionCheckModal 
-            pendingCount={pendingCount}
-            onClose={() => setShowCompletionModal(false)}
-          />
-        )}
+
         <main className="container-fluid px-3 py-4">
           <Routes>
             <Route path="/" element={<Home />} />

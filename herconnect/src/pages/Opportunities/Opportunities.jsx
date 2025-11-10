@@ -63,12 +63,20 @@ export default function Opportunities() {
       
       if (response.ok || response.status === 304) {
         const data = await response.json()
-        console.log('📊 FULL API RESPONSE:', JSON.stringify(data, null, 2))
+        console.log('📊 BACKEND RESPONSE:', JSON.stringify(data, null, 2))
+        console.log('📊 Response keys:', Object.keys(data))
+        console.log('📊 Success field:', data.success)
+        console.log('📊 Opportunities field:', data.opportunities)
+        console.log('📊 Array length:', data.opportunities?.length)
         
-        // Try different possible data structures
-        const opportunities = data.opportunities || data.clickedOpportunities || data.data || data
-        console.log('📊 Extracted opportunities:', opportunities)
-        setLikedOpportunities(Array.isArray(opportunities) ? opportunities : [])
+        // Set opportunities from backend response
+        if (data.success && Array.isArray(data.opportunities)) {
+          setLikedOpportunities(data.opportunities)
+          console.log('📊 Setting', data.opportunities.length, 'liked opportunities')
+        } else {
+          setLikedOpportunities([])
+          console.log('📊 No opportunities found, sidebar empty')
+        }
       } else {
         console.error('❌ Sidebar fetch failed:', response.status)
         setLikedOpportunities([])
@@ -112,10 +120,17 @@ export default function Opportunities() {
     }
     
     window.addEventListener('refresh-opportunities', handleRefresh)
+    
+    // Listen for sidebar refresh events
+    const handleSidebarRefresh = () => {
+      fetchSidebarOpportunities()
+    }
+    window.addEventListener('refresh-sidebar', handleSidebarRefresh)
 
     return () => {
       socket.off('notification', handleNotification)
       window.removeEventListener('refresh-opportunities', handleRefresh)
+      window.removeEventListener('refresh-sidebar', handleSidebarRefresh)
     }
   }, [fetchOpportunities])
 
@@ -184,26 +199,23 @@ export default function Opportunities() {
     }
   }
 
-  const handleStatusUpdate = async (opportunityId, status) => {
+  const handleCompletionAnswer = async (opportunityId, completed) => {
     try {
-      const completed = status === 'completed'
-      const response = await fetch(`${API_URL}/api/tracking/complete-application`, {
+      const response = await fetch(`${API_URL}/api/tracking/completion-question/${opportunityId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          opportunityId,
-          completed
-        })
+        body: JSON.stringify({ completed })
       })
       
       if (response.ok) {
-        fetchSidebarOpportunities() // Refresh sidebar
+        console.log(`✅ User answered ${completed ? 'Yes' : 'No'} - Backend automatically updated status`)
+        fetchSidebarOpportunities() // Refresh sidebar to show updated status
       }
     } catch (error) {
-      console.error('Error updating status:', error)
+      console.error('Error updating completion status:', error)
     }
   }
 
@@ -348,34 +360,46 @@ export default function Opportunities() {
           {sidebarLoading ? (
             <div className={styles.loading}>Loading...</div>
           ) : likedOpportunities.length === 0 ? (
-            <div className={styles.emptyState}></div>
+            <div className={styles.emptyState}>
+              <p>No opportunities liked yet. Click on opportunity cards to add them here!</p>
+            </div>
           ) : (
             <div className={styles.opportunityList}>
-              {likedOpportunities.map(opportunity => (
-                <div key={opportunity.id} className={styles.opportunityEntry}>
-                  <h4 className={styles.opportunityName}>{opportunity.title}</h4>
-                  <p className={styles.organizationName}>{opportunity.organization}</p>
-                  <div className={styles.statusSection}>
-                    <span className={`${styles.statusBadge} ${opportunity.status === 'completed' ? styles.completed : styles.pending}`}>
-                      {opportunity.status === 'completed' ? 'Completed' : 'Pending'}
-                    </span>
-                    <div className={styles.statusButtons}>
-                      <button 
-                        className={styles.pendingBtn}
-                        onClick={() => handleStatusUpdate(opportunity.id, 'pending')}
-                      >
-                        Pending
-                      </button>
-                      <button 
-                        className={styles.completeBtn}
-                        onClick={() => handleStatusUpdate(opportunity.id, 'completed')}
-                      >
-                        Complete
-                      </button>
+              {likedOpportunities.map(item => {
+                const opportunity = item.opportunity || item
+                const status = item.status || 'pending'
+                const trackingId = item.id || item.opportunityId
+                
+                return (
+                  <div key={trackingId} className={styles.opportunityEntry}>
+                    <h4 className={styles.opportunityName}>{opportunity.title}</h4>
+                    <p className={styles.organizationName}>{opportunity.organization}</p>
+                    <div className={styles.applicationStatus}>
+                      <span>Application: </span>
+                      <span className={`${styles.statusText} ${status === 'completed' ? styles.completed : styles.pending}`}>
+                        {status === 'completed' ? 'Completed' : 'Pending'}
+                      </span>
+                    </div>
+                    <div className={styles.completionQuestion}>
+                      <p>Have you completed this opportunity?</p>
+                      <div className={styles.yesNoButtons}>
+                        <button 
+                          className={styles.noBtn}
+                          onClick={() => handleCompletionAnswer(opportunity.id, false)}
+                        >
+                          No
+                        </button>
+                        <button 
+                          className={styles.yesBtn}
+                          onClick={() => handleCompletionAnswer(opportunity.id, true)}
+                        >
+                          Yes
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
