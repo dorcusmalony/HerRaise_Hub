@@ -51,7 +51,6 @@ export default function Opportunities() {
 
   const fetchSidebarOpportunities = useCallback(async () => {
     try {
-      // Temporarily use existing endpoint until new one is created
       const response = await fetch(`${API_URL}/api/tracking/clicked-opportunities`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -114,7 +113,6 @@ export default function Opportunities() {
   const handleCardClick = async (opportunityId) => {
     try {
       const token = localStorage.getItem('token')
-      // First add opportunity to tracking
       const response = await fetch(`${API_URL}/api/dashboard/track-opportunity/${opportunityId}`, {
         method: 'POST',
         headers: {
@@ -124,27 +122,13 @@ export default function Opportunities() {
       })
       
       if (response.ok) {
-        console.log('✅ Opportunity added to dashboard:', opportunityId)
-        
-        // Then set status as pending (completed: false)
-        await fetch(`${API_URL}/api/tracking/complete-application`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            opportunityId,
-            completed: false // Set as pending
-          })
-        })
-        
+        console.log('✅ Opportunity added to sidebar:', opportunityId)
         fetchSidebarOpportunities() // Refresh sidebar
       } else {
-        console.error('❌ Failed to add opportunity to dashboard:', response.status)
+        console.error('❌ Failed to add opportunity to sidebar:', response.status)
       }
     } catch (error) {
-      console.error('Error adding opportunity to dashboard:', error)
+      console.error('Error adding opportunity to sidebar:', error)
     }
   }
 
@@ -188,6 +172,29 @@ export default function Opportunities() {
       }
     } catch (error) {
       console.error('Error toggling bookmark:', error)
+    }
+  }
+
+  const handleStatusUpdate = async (opportunityId, status) => {
+    try {
+      const completed = status === 'completed'
+      const response = await fetch(`${API_URL}/api/tracking/complete-application`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          opportunityId,
+          completed
+        })
+      })
+      
+      if (response.ok) {
+        fetchSidebarOpportunities() // Refresh sidebar
+      }
+    } catch (error) {
+      console.error('Error updating status:', error)
     }
   }
 
@@ -339,6 +346,25 @@ export default function Opportunities() {
                 <div key={opportunity.id} className={styles.opportunityEntry}>
                   <h4 className={styles.opportunityName}>{opportunity.title}</h4>
                   <p className={styles.organizationName}>{opportunity.organization}</p>
+                  <div className={styles.statusSection}>
+                    <span className={`${styles.statusBadge} ${opportunity.status === 'completed' ? styles.completed : styles.pending}`}>
+                      {opportunity.status === 'completed' ? 'Completed' : 'Pending'}
+                    </span>
+                    <div className={styles.statusButtons}>
+                      <button 
+                        className={styles.pendingBtn}
+                        onClick={() => handleStatusUpdate(opportunity.id, 'pending')}
+                      >
+                        Pending
+                      </button>
+                      <button 
+                        className={styles.completeBtn}
+                        onClick={() => handleStatusUpdate(opportunity.id, 'completed')}
+                      >
+                        Complete
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
