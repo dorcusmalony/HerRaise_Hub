@@ -39,7 +39,7 @@ export default function ImageUpload({ onImageUpload, currentImage, label = "Prof
     try {
       const token = localStorage.getItem('token')
       
-      // ✅ Using correct backend endpoint: POST /api/profile/picture
+      //  Using correct backend endpoint: POST /api/profile/picture
       const response = await fetch(`${API}/api/profile/picture`, {
         method: 'POST',
         headers: {

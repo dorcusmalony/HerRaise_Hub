@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { FORUM_CATEGORIES } from './CategorySelector'
 import styles from './CreatePostForm.module.css'
 
-export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project', isShareZone = false }) {
+export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project', initialCategory = '', initialSubcategory = '', isShareZone = false }) {
   const navigate = useNavigate()
   const API_URL = import.meta.env.VITE_API_URL || ''
   
@@ -11,6 +11,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
     title: editPost?.title || '',
     content: editPost?.content || '',
     type: editPost?.type || initialType,
+    category: editPost?.category || initialCategory,
+    subcategory: editPost?.subcategory || initialSubcategory,
     tags: editPost?.tags?.join(', ') || '',
     attachments: editPost?.attachments || []
   })
@@ -44,6 +46,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
           title: formData.title,
           content: formData.content,
           type: formData.type,
+          category: formData.category,
+          subcategory: formData.subcategory,
           tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
           attachments: formData.attachments
         })
@@ -79,14 +83,63 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
       <div className={styles.formBody}>
 
         <h3 className={styles.formTitle} style={{color: 'white'}}>
-          {editPost ? '✏️ Edit Post' : '💬 Start a Discussion'}
+          {editPost ? 'Edit Post' : 'Start a Discussion'}
         </h3>
         <p className={styles.formSubtitle} style={{color: 'white'}}>
-          💭 Share your thoughts, ask questions, or start conversations with the community
+          Share your thoughts, ask questions, or start conversations with the community
         </p>
 
         {error && (
           <div className={styles.errorAlert}>{error}</div>
+        )}
+
+
+
+        {/* Category Selection - Hidden when pre-selected */}
+        {!initialCategory && (
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} style={{color: 'white'}}>Category *</label>
+            <select
+              value={formData.category}
+              onChange={(e) => {
+                setFormData({...formData, category: e.target.value, subcategory: ''})
+              }}
+              required
+              className={styles.formSelect}
+            >
+              <option value="">Select a category...</option>
+              {Object.values(FORUM_CATEGORIES).map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.icon} {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Subcategory Selection - Hidden when pre-selected */}
+        {formData.category && !initialCategory && !initialSubcategory && (
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} style={{color: 'white'}}>Subcategory *</label>
+            <select
+              value={formData.subcategory}
+              onChange={(e) => setFormData({...formData, subcategory: e.target.value})}
+              required
+              className={styles.formSelect}
+            >
+              <option value="">Select a subcategory...</option>
+              {Object.values(FORUM_CATEGORIES[formData.category]?.subcategories || {}).map(subcategory => (
+                <option key={subcategory.id} value={subcategory.id}>
+                  {subcategory.icon} {subcategory.name}
+                </option>
+              ))}
+            </select>
+            {formData.subcategory && (
+              <div className={styles.topicsHint} style={{color: 'white'}}>
+                Suggested topics: {FORUM_CATEGORIES[formData.category]?.subcategories[formData.subcategory]?.topics.slice(0, 3).join(', ')}
+              </div>
+            )}
+          </div>
         )}
 
 

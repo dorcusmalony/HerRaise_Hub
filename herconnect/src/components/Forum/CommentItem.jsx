@@ -45,7 +45,7 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
       className="border-start ps-3 mb-3" 
       style={{ 
         borderWidth: '3px',
-        borderColor: comment.parentCommentId ? '#e0e0e0' : 'var(--brand-magenta)' 
+        borderColor: comment.parentCommentId ? '#e0e0e0' : '#6c757d' 
       }}
     >
       <div className="d-flex gap-2">
@@ -83,13 +83,13 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
                 <ul className="dropdown-menu dropdown-menu-end shadow-sm">
                   <li>
                     <button className="dropdown-item small" onClick={() => setEditMode(true)}>
-                      ✏️ Edit
+                       Edit
                     </button>
                   </li>
                   <li><hr className="dropdown-divider" /></li>
                   <li>
                     <button className="dropdown-item small text-danger" onClick={() => onDelete(comment.id)}>
-                      🗑️ Delete
+                       Delete
                     </button>
                   </li>
                 </ul>
@@ -110,8 +110,7 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
                 <button 
                   onClick={handleEdit}
                   disabled={submitting || !editText.trim()}
-                  className="btn btn-sm text-white"
-                  style={{ background: 'var(--brand-magenta)' }}
+                  className="btn btn-sm btn-success"
                 >
                   {submitting ? 'Saving...' : 'Save'}
                 </button>
@@ -143,13 +142,13 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
                     className="btn btn-link btn-sm p-0 text-decoration-none text-muted"
                     title={isPostAuthor ? 'Reply as post author' : 'Reply to comment'}
                   >
-                    💬 Reply {isPostAuthor && '(as Author)'}
+                    Reply {isPostAuthor && '(as Author)'}
                   </button>
                 )}
               </div>
 
               {showReplyForm && (
-                <div className="mt-3 p-3 bg-light rounded">
+                <div className="mt-3 p-3 bg-light border rounded">
                   <div className="mb-2 small text-muted">
                     {isPostAuthor && (
                       <span className="badge bg-primary me-2">Replying as Post Author</span>
@@ -168,8 +167,7 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
                     <button
                       onClick={handleReply}
                       disabled={submitting || !replyText.trim()}
-                      className="btn btn-sm text-white"
-                      style={{ background: 'var(--brand-magenta)' }}
+                      className="btn btn-sm btn-success"
                     >
                       {submitting ? 'Posting...' : 'Post Reply'}
                     </button>
@@ -179,7 +177,7 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
                         setReplyText('')
                       }}
                       disabled={submitting}
-                      className="btn btn-sm btn-primary"
+                      className="btn btn-sm btn-secondary"
                     >
                       Cancel
                     </button>

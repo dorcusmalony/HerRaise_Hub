@@ -236,7 +236,7 @@ export default function Opportunities() {
         <div className={styles.mainContent}>
           {showNewOpportunityBanner && (
             <div className={styles.newOpportunityBanner}>
-              🎉 New opportunities have been added! Check them out below.
+              New opportunities have been added! Check them out below.
             </div>
           )}
 
@@ -286,7 +286,7 @@ export default function Opportunities() {
                 className={`${styles.bookmarkButton} ${bookmarked ? styles.active : ''}`}
                 onClick={() => setBookmarked(!bookmarked)}
               >
-                {bookmarked ? '💖' : '🤍'}
+                {bookmarked ? '♥' : '♡'}
               </button>
             </div>
           </div>
@@ -308,7 +308,7 @@ export default function Opportunities() {
                   onClick={() => handleCardClick(opportunity.id)}
                 >
                   {opportunity.isFeatured && (
-                    <div className={styles.featuredBadge}>⭐ Featured</div>
+                    <div className={styles.featuredBadge}>Featured</div>
                   )}
                   
                   <button 
@@ -318,7 +318,7 @@ export default function Opportunities() {
                       handleBookmark(opportunity.id)
                     }}
                   >
-                    {opportunity.bookmarked ? '💖' : '🤍'}
+                    {opportunity.bookmarked ? '♥' : '♡'}
                   </button>
 
                   <div className={styles.cardContent}>
@@ -332,7 +332,7 @@ export default function Opportunities() {
 
                     <div className={styles.cardFooter}>
                       <span className={styles.cardDeadline}>
-                        📅 {new Date(opportunity.applicationDeadline).toLocaleDateString()}
+                        {new Date(opportunity.applicationDeadline).toLocaleDateString()}
                       </span>
                       <button 
                         onClick={(e) => {

@@ -14,7 +14,7 @@ export default function ResourcePage() {
         desc: 'Professional CV templates designed for young women entering the workforce.', 
         type: 'PDF', 
         category: 'career',
-        icon: '📄',
+        icon: '',
         link: '#',
         downloadCount: '2.3k',
         rating: 4.8
@@ -24,7 +24,7 @@ export default function ResourcePage() {
         desc: 'Compelling cover letter examples for internships and entry-level positions.', 
         type: 'Article', 
         category: 'career',
-        icon: '📝',
+        icon: '',
         link: '#',
         downloadCount: '1.8k',
         rating: 4.6
@@ -34,7 +34,7 @@ export default function ResourcePage() {
         desc: 'Complete guide to ace your interviews with confidence and preparation tips.', 
         type: 'PDF', 
         category: 'career',
-        icon: '🎯',
+        icon: '',
         link: '#',
         downloadCount: '3.1k',
         rating: 4.9
@@ -46,7 +46,7 @@ export default function ResourcePage() {
         desc: 'Essential leadership skills for young women in professional environments.', 
         type: 'Presentation', 
         category: 'leadership',
-        icon: '👑',
+        icon: '',
         link: '#',
         downloadCount: '1.5k',
         rating: 4.7
@@ -56,7 +56,7 @@ export default function ResourcePage() {
         desc: 'Overcome speaking anxiety and deliver impactful presentations.', 
         type: 'Video', 
         category: 'leadership',
-        icon: '🎤',
+        icon: '',
         link: '#',
         downloadCount: '2.7k',
         rating: 4.8
@@ -66,7 +66,7 @@ export default function ResourcePage() {
         desc: 'Build meaningful professional relationships and expand your network.', 
         type: 'Article', 
         category: 'leadership',
-        icon: '🤝',
+        icon: '',
         link: '#',
         downloadCount: '1.9k',
         rating: 4.5
@@ -78,7 +78,7 @@ export default function ResourcePage() {
         desc: 'Effective study methods and time management for academic success.', 
         type: 'PDF', 
         category: 'education',
-        icon: '📚',
+        icon: '',
         link: '#',
         downloadCount: '4.2k',
         rating: 4.9
@@ -88,7 +88,7 @@ export default function ResourcePage() {
         desc: 'Step-by-step guide to writing winning scholarship applications.', 
         type: 'Article', 
         category: 'education',
-        icon: '🎓',
+        icon: '',
         link: '#',
         downloadCount: '3.8k',
         rating: 4.8
@@ -100,7 +100,7 @@ export default function ResourcePage() {
         desc: 'Interactive workbook to set and achieve your personal and professional goals.', 
         type: 'Workbook', 
         category: 'personal',
-        icon: '🎯',
+        icon: '',
         link: '#',
         downloadCount: '2.1k',
         rating: 4.6
@@ -110,7 +110,7 @@ export default function ResourcePage() {
         desc: 'Practical exercises to build self-confidence and overcome imposter syndrome.', 
         type: 'PDF', 
         category: 'personal',
-        icon: '💪',
+        icon: '',
         link: '#',
         downloadCount: '2.9k',
         rating: 4.7
@@ -135,10 +135,9 @@ export default function ResourcePage() {
     
     Object.entries(resources).forEach(([category, items]) => {
       const categoryItems = items.filter(item => {
-        const matchesFilter = activeFilter === 'all' || item.category === activeFilter
         const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                              item.desc.toLowerCase().includes(searchTerm.toLowerCase())
-        return matchesFilter && matchesSearch
+        return matchesSearch
       })
       
       if (categoryItems.length > 0) {
@@ -161,46 +160,23 @@ export default function ResourcePage() {
     <div className="container py-5">
       {/* Header Section */}
       <div className="text-center mb-5">
-        <h1 className="display-4 fw-bold text-primary mb-3">📚 Resource Library</h1>
+        <h1 className="display-4 fw-bold text-dark mb-3">Resource Library</h1>
         <p className="lead text-muted mb-4">
           Curated resources to empower your journey in education, career, and personal development
         </p>
         
-        {/* Search Bar */}
         <div className="row justify-content-center mb-4">
           <div className="col-md-6">
-            <div className="input-group input-group-lg">
-              <span className="input-group-text bg-white border-end-0">
-                <i className="fas fa-search text-muted"></i>
-              </span>
-              <input
-                type="text"
-                className="form-control border-start-0 ps-0"
-                placeholder="Search resources..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+            <input
+              type="text"
+              className="form-control form-control-lg"
+              placeholder="Search resources..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
-          {['all', 'career', 'leadership', 'education', 'personal'].map(filter => (
-            <button
-              key={filter}
-              className={`btn ${
-                activeFilter === filter ? 'btn-primary' : 'btn-outline-primary'
-              } btn-sm px-3`}
-              onClick={() => setActiveFilter(filter)}
-            >
-              {filter === 'all' ? 'All Resources' : 
-               filter === 'career' ? '💼 Career' :
-               filter === 'leadership' ? '👑 Leadership' :
-               filter === 'education' ? '🎓 Education' : '🌟 Personal'}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Document Resources */}
@@ -218,33 +194,14 @@ export default function ResourcePage() {
               <div key={idx} className="col-12 col-md-6 col-lg-4">
                 <div className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll}`}>
                   <div className="card-body p-4">
-                    <div className="d-flex justify-content-between align-items-start mb-3">
-                      <div className={styles.resourceIcon}>
-                        <span style={{ fontSize: '2rem' }}>{resource.icon}</span>
-                      </div>
-                      <span 
-                        className="badge px-2 py-1 text-white fw-normal"
-                        style={{ backgroundColor: getTypeColor(resource.type) }}
-                      >
-                        {resource.type}
-                      </span>
-                    </div>
+
                     
                     <h5 className="card-title mb-2 text-dark">{resource.title}</h5>
                     <p className={`card-text text-muted small mb-3 ${styles.lineHeightRelaxed}`}>
                       {resource.desc}
                     </p>
                     
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <span className="text-warning">{'★'.repeat(Math.floor(resource.rating))}</span>
-                        <small className="text-muted">{resource.rating}</small>
-                      </div>
-                      <small className="text-muted">
-                        <i className="fas fa-download me-1"></i>
-                        {resource.downloadCount}
-                      </small>
-                    </div>
+
                     
                     <div className="d-grid gap-2">
                       <a 
@@ -253,10 +210,11 @@ export default function ResourcePage() {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <i className="fas fa-external-link-alt me-2"></i>
                         Access Resource
                       </a>
                     </div>
+                    
+
                   </div>
                 </div>
               </div>
@@ -270,7 +228,7 @@ export default function ResourcePage() {
         <div className="mb-5">
           <div className="d-flex align-items-center mb-4">
             <div className="flex-grow-1">
-              <h2 className="h3 mb-1 text-dark">🎥 Video Resources</h2>
+              <h2 className="h3 mb-1 text-dark">Video Resources</h2>
               <p className="text-muted mb-0">
                 {getFilteredResources().videoResources.reduce((total, [, items]) => total + items.length, 0)} videos available
               </p>
@@ -285,33 +243,14 @@ export default function ResourcePage() {
                   <div key={idx} className="col-12 col-md-6 col-lg-4">
                     <div className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll}`}>
                       <div className="card-body p-4">
-                        <div className="d-flex justify-content-between align-items-start mb-3">
-                          <div className={styles.resourceIcon}>
-                            <span style={{ fontSize: '2rem' }}>{resource.icon}</span>
-                          </div>
-                          <span 
-                            className="badge px-2 py-1 text-white fw-normal"
-                            style={{ backgroundColor: getTypeColor(resource.type) }}
-                          >
-                            {resource.type}
-                          </span>
-                        </div>
+
                         
                         <h5 className="card-title mb-2 text-dark">{resource.title}</h5>
                         <p className={`card-text text-muted small mb-3 ${styles.lineHeightRelaxed}`}>
                           {resource.desc}
                         </p>
                         
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <div className="d-flex align-items-center gap-2">
-                            <span className="text-warning">{'★'.repeat(Math.floor(resource.rating))}</span>
-                            <small className="text-muted">{resource.rating}</small>
-                          </div>
-                          <small className="text-muted">
-                            <i className="fas fa-play me-1"></i>
-                            {resource.downloadCount}
-                          </small>
-                        </div>
+
                         
                         <div className="d-grid gap-2">
                           <a 
@@ -320,10 +259,11 @@ export default function ResourcePage() {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <i className="fas fa-play me-2"></i>
                             Watch Video
                           </a>
                         </div>
+                        
+
                       </div>
                     </div>
                   </div>
@@ -342,15 +282,7 @@ export default function ResourcePage() {
             <h4 className="text-muted">No resources found</h4>
             <p className="text-muted">Try adjusting your search or filter criteria</p>
           </div>
-          <button 
-            className="btn btn-outline-primary"
-            onClick={() => {
-              setSearchTerm('')
-              setActiveFilter('all')
-            }}
-          >
-            Clear Filters
-          </button>
+
         </div>
       )}
 
