@@ -306,12 +306,12 @@ export default function Content() {
                       value={formData.category}
                       onChange={handleInputChange}
                     >
-                      <option value="project">📁 Project</option>
-                      <option value="essay">📝 Essay</option>
-                      <option value="resume">📄 Resume</option>
-                      <option value="video">🎥 Video</option>
-                      <option value="document">📋 Document</option>
-                      <option value="other">🔗 Other</option>
+                      <option value="project">Project</option>
+                      <option value="essay">Essay</option>
+                      <option value="resume">Resume</option>
+                      <option value="video">Video</option>
+                      <option value="document">Document</option>
+                      <option value="other">Other</option>
                     </select>
                   </div>
 
@@ -364,7 +364,7 @@ export default function Content() {
                     {selectedFile && !preview && (
                       <div className="mt-2">
                         <div className="alert alert-info py-2">
-                          <small>📎 {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
+                          <small>{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
                         </div>
                       </div>
                     )}
@@ -419,7 +419,7 @@ export default function Content() {
                         {content.fileUrl && (
                           <div className="mt-2">
                             <a href={content.fileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
-                              📎 View File
+                              View File
                             </a>
                           </div>
                         )}
@@ -431,7 +431,7 @@ export default function Content() {
                             className="btn btn-sm btn-outline-secondary"
                             onClick={() => setExpandedComments(prev => ({ ...prev, [content._id]: !prev[content._id] }))}
                           >
-                            💬 {content.ShareZoneComments?.length || 0} Comments
+                            {content.ShareZoneComments?.length || 0} Comments
                           </button>
                         </div>
                         
@@ -458,7 +458,7 @@ export default function Content() {
                                     onClick={() => handleAddComment(content._id)}
                                     disabled={!commentText[content._id]?.trim()}
                                   >
-                                    💬 Post Comment
+                                    Post Comment
                                   </button>
                                 </div>
                               </div>
@@ -466,7 +466,7 @@ export default function Content() {
                             
                             {content.ShareZoneComments && content.ShareZoneComments.length > 0 ? (
                               <div>
-                                <h6 className="mb-3">💬 Comments ({content.ShareZoneComments.length})</h6>
+                                <h6 className="mb-3">Comments ({content.ShareZoneComments.length})</h6>
                                 {content.ShareZoneComments
                                   .filter(c => !c.parentCommentId)
                                   .map(comment => (

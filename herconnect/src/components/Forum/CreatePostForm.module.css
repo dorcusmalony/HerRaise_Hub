@@ -57,6 +57,18 @@
   transition: border-color 0.2s ease;
   background: white;
   color: black;
+  cursor: pointer;
+}
+
+.topicsHint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-style: italic;
+  padding: 0.5rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  border-left: 3px solid rgba(255,255,255,0.3);
 }
 
 .formSelect:focus,

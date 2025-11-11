@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
+import CategorySelector, { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
 import LikeButton from '../../components/LikeButton/LikeButton'
 import styles from './forum.module.css'
 import './youtube-video.css'
@@ -26,6 +27,8 @@ export default function Forum() {
   const [successMessage, setSuccessMessage] = useState('')
   const [selectedType, setSelectedType] = useState('project')
   const [showPostDropdown, setShowPostDropdown] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null)
 
 
   // Load current user
@@ -83,7 +86,15 @@ export default function Forum() {
     try {
       console.log('📡 Fetching posts with token:', token.substring(0, 20) + '...')
       
-      const response = await fetch(`${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`, {
+      let url = `${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`
+      if (selectedCategory) {
+        url += `&category=${selectedCategory}`
+      }
+      if (selectedSubcategory) {
+        url += `&subcategory=${selectedSubcategory}`
+      }
+      
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -112,7 +123,7 @@ export default function Forum() {
     } finally {
       setLoading(false)
     }
-  }, [API, filter, sortBy])
+  }, [API, filter, sortBy, selectedCategory, selectedSubcategory])
 
   useEffect(() => {
     fetchPosts()
@@ -325,19 +336,19 @@ export default function Forum() {
             <p className={styles.forumSubtitle}>Connect with peers, ask questions, and join discussions</p>
             <div className={styles.contributionHighlight}>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}>💭</span>
+                <span className={styles.highlightIcon}></span>
                 <span>Ask Questions</span>
               </div>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}>🗣️</span>
+                <span className={styles.highlightIcon}></span>
                 <span>Join Discussions</span>
               </div>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}>🤝</span>
+                <span className={styles.highlightIcon}></span>
                 <span>Get Support</span>
               </div>
               <div className={styles.highlightItem}>
-                <span className={styles.highlightIcon}>💡</span>
+                <span className={styles.highlightIcon}></span>
                 <span>Share Ideas</span>
               </div>
             </div>
@@ -359,47 +370,69 @@ export default function Forum() {
         </div>
       </div>
 
-      {/* Enhanced Filter Bar */}
-      <div className={styles.filterBar}>
-        <div className={styles.filterSection}>
-          <label className={styles.filterLabel}>Browse by type:</label>
-          <div className={styles.filterButtons}>
-            {[
-              { key: 'all', label: '💬 All', desc: 'All posts' },
-              { key: 'question', label: '❓ Questions', desc: 'Need help' },
-              { key: 'discussion', label: '🗣️ Discussions', desc: 'General topics' }
-            ].map(f => (
-              <button
-                key={f.key}
-                className={`${styles.filterBtn} ${filter === f.key ? styles.active : ''}`}
-                onClick={() => setFilter(f.key)}
-                title={f.desc}
-              >
-                {f.label}
-              </button>
-            ))}
+      {/* Category Navigation - Hidden when form is shown */}
+      {!showCreateForm && !editingPost && (
+        <CategorySelector
+          selectedCategory={selectedCategory}
+          selectedSubcategory={selectedSubcategory}
+          onCategoryChange={setSelectedCategory}
+          onSubcategoryChange={setSelectedSubcategory}
+          onCategoryClick={(categoryId, subcategoryId) => {
+            setSelectedCategory(categoryId)
+            if (subcategoryId) {
+              setSelectedSubcategory(subcategoryId)
+            }
+            setShowCreateForm(true)
+          }}
+        />
+      )}
+
+      {/* Enhanced Filter Bar - Hidden when form is shown */}
+      {!showCreateForm && !editingPost && (
+        <div className={styles.filterBar}>
+          <div className={styles.filterSection}>
+            <label className={styles.filterLabel}>Browse by type:</label>
+            <div className={styles.filterButtons}>
+              {[
+                { key: 'all', label: 'All', desc: 'All posts' },
+                { key: 'question', label: 'Questions', desc: 'Need help' },
+                { key: 'discussion', label: 'Discussions', desc: 'General topics' }
+              ].map(f => (
+                <button
+                  key={f.key}
+                  className={`${styles.filterBtn} ${filter === f.key ? styles.active : ''}`}
+                  onClick={() => setFilter(f.key)}
+                  title={f.desc}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className={styles.sortSection}>
+            <label className={styles.sortLabel}>{t('sort_by')}:</label>
+            <select 
+              className={styles.sortSelect} 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="recent">{t('recent')}</option>
+              <option value="popular">{t('popular')}</option>
+              <option value="trending">{t('trending')}</option>
+            </select>
           </div>
         </div>
-        <div className={styles.sortSection}>
-          <label className={styles.sortLabel}>{t('sort_by')}:</label>
-          <select 
-            className={styles.sortSelect} 
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <option value="recent">{t('recent')}</option>
-            <option value="popular">{t('popular')}</option>
-            <option value="trending">{t('trending')}</option>
-          </select>
-        </div>
-      </div>
+      )}
 
       {/* Create/Edit Post Form */}
       {(showCreateForm || editingPost) && (
         <div className={styles.postFormContainer}>
+
           <CreatePostForm
             editPost={editingPost}
             initialType={selectedType}
+            initialCategory={selectedCategory}
+            initialSubcategory={selectedSubcategory}
             onSuccess={(post) => {
               if (editingPost) {
                 handleUpdatePost(post)
@@ -419,29 +452,33 @@ export default function Forum() {
         </div>
       )}
 
-      {/* Quick Create Button - Always Visible */}
+      {/* Quick Create Buttons - Hidden when form is shown */}
       {!showCreateForm && !editingPost && (
         <div className={styles.quickCreateSection}>
           <div className={styles.createButtons}>
             <button 
               onClick={() => {
                 setSelectedType('question')
+                setSelectedCategory(null)
+                setSelectedSubcategory(null)
                 setShowCreateForm(true)
               }}
               className={styles.createBtn}
             >
-              <div className={styles.btnIcon}>❓</div>
+              <div className={styles.btnIcon}></div>
               <div className={styles.btnText}>Ask Question</div>
               <div className={styles.btnCount}>{posts.filter(p => p.type === 'question').length} asked</div>
             </button>
             <button 
               onClick={() => {
                 setSelectedType('discussion')
+                setSelectedCategory(null)
+                setSelectedSubcategory(null)
                 setShowCreateForm(true)
               }}
               className={styles.createBtn}
             >
-              <div className={styles.btnIcon}>🗣️</div>
+              <div className={styles.btnIcon}></div>
               <div className={styles.btnText}>Start Discussion</div>
               <div className={styles.btnCount}>{posts.filter(p => p.type === 'discussion').length} started</div>
             </button>
@@ -461,11 +498,11 @@ export default function Forum() {
                 onClick={() => setShowCreateForm(true)}
                 className={styles.createPostBtn}
               >
-                💬 Start Your First Discussion
+                Start Your First Discussion
               </button>
             </div>
             <div className={styles.emptyTips}>
-              <p>💡 <strong>Tip:</strong> Questions with clear context get better responses!</p>
+              <p><strong>Tip:</strong> Questions with clear context get better responses!</p>
             </div>
           </div>
         ) : (
@@ -490,6 +527,11 @@ export default function Forum() {
                           <span className={`${styles.postTypeBadge} ${styles[post.type]}`}>
                             {getPostTypeIcon(post.type)} {post.type}
                           </span>
+                          {post.category && (
+                            <span className={styles.categoryBadge}>
+                              Published in {FORUM_CATEGORIES[post.category]?.subcategories[post.subcategory]?.name || post.subcategory}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -548,7 +590,7 @@ export default function Forum() {
                                     cursor: 'pointer'
                                   }}
                                 >
-                                  ✏️ Edit Post
+                                  Edit Post
                                 </button>
                               </li>
                               <li><hr className="dropdown-divider" style={{ margin: '0.25rem 0', border: 'none', borderTop: '1px solid #e5e7eb' }} /></li>
@@ -570,7 +612,7 @@ export default function Forum() {
                                     color: '#dc2626'
                                   }}
                                 >
-                                  🗑️ Delete Post
+                                  Delete Post
                                 </button>
                               </li>
                             </>
@@ -646,7 +688,7 @@ export default function Forum() {
                                     }}
                                   />
                                   <div className={styles.imageOverlay}>
-                                    🔍
+                                    
                                   </div>
                                 </div>
                               )}
@@ -736,7 +778,7 @@ export default function Forum() {
                               )}
                               {fileType === 'audio' && (
                                 <div className={styles.audioContainer} onClick={(e) => e.stopPropagation()}>
-                                  <div className={styles.audioIcon}>🎵</div>
+                                  <div className={styles.audioIcon}></div>
                                   <audio 
                                     src={file.url} 
                                     controls 
@@ -753,7 +795,7 @@ export default function Forum() {
                               )}
                               {(fileType === 'document' || !['image', 'video', 'audio'].includes(fileType)) && (
                                 <div className={styles.documentContainer}>
-                                  <div className={styles.documentIcon}>📄</div>
+                                  <div className={styles.documentIcon}></div>
                                   <div className={styles.documentInfo}>
                                     <span className={styles.fileName}>{fileName} (Type: {fileType})</span>
                                     <a 
@@ -762,7 +804,7 @@ export default function Forum() {
                                       rel="noopener noreferrer"
                                       className={styles.downloadBtn}
                                     >
-                                      📎 Download
+                                      Download
                                     </a>
                                   </div>
                                 </div>
@@ -776,7 +818,7 @@ export default function Forum() {
                       {/* File Count Info */}
                     {post.attachments && post.attachments.length > 0 && (
                       <div className={styles.fileInfo}>
-                        📎 {post.attachments.length} file{post.attachments.length > 1 ? 's' : ''} attached
+                        {post.attachments.length} file{post.attachments.length > 1 ? 's' : ''} attached
                       </div>
                     )}
 
