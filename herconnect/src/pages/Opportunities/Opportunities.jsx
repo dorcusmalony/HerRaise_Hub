@@ -354,7 +354,7 @@ export default function Opportunities() {
         {/* Sidebar - Liked Opportunities */}
         <div className={styles.sidebar}>
           <div className={styles.sidebarHeader}>
-            <h3>Opportunities You've Clicked</h3>
+            <h3>Opportunities You Liked</h3>
           </div>
           
           {sidebarLoading ? (
