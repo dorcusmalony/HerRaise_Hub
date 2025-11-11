@@ -206,7 +206,7 @@ export default function ResourcePage() {
                     <div className="d-grid gap-2">
                       <a 
                         href={resource.link} 
-                        className="btn btn-primary btn-sm"
+                        className={`btn btn-sm ${styles.resourceButton}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -255,7 +255,7 @@ export default function ResourcePage() {
                         <div className="d-grid gap-2">
                           <a 
                             href={resource.link} 
-                            className="btn btn-primary btn-sm"
+                            className={`btn btn-sm ${styles.resourceButton}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >

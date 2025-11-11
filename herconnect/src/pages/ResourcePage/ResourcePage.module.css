@@ -25,3 +25,16 @@
   border-radius: 12px;
   color: white;
 }
+
+.resourceButton {
+  background: var(--footer-bg) !important;
+  border: none !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+}
+
+.resourceButton:hover {
+  background: var(--brand-magenta) !important;
+  color: white !important;
+  transform: translateY(-1px);
+}
