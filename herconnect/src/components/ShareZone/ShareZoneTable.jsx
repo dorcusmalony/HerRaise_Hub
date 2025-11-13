@@ -183,22 +183,38 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                   
                   <td className="actions-cell">
                     {content.author?._id === currentUser?.id ? (
-                      <div className="action-buttons">
+                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                         <button 
-                          className="edit-btn"
+                          style={{
+                            padding: '0.3rem 0.6rem',
+                            backgroundColor: '#e84393',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer'
+                          }}
                           onClick={() => onEditPost(content._id)}
                         >
                           Edit
                         </button>
                         <button 
-                          className="delete-btn"
+                          style={{
+                            padding: '0.3rem 0.6rem',
+                            backgroundColor: '#333333',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer'
+                          }}
                           onClick={() => onDeletePost(content._id)}
                         >
                           Delete
                         </button>
                       </div>
                     ) : (
-                      <span className="text-muted">-</span>
+                      <span style={{ color: '#6c757d' }}>-</span>
                     )}
                   </td>
                 </tr>
