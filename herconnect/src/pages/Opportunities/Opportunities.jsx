@@ -53,23 +53,17 @@ export default function Opportunities() {
 
   const fetchSidebarOpportunities = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/api/tracking/clicked-opportunities?t=${Date.now()}`, {
+      const response = await fetch(`${API_URL}/api/tracking/clicked-opportunities`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache'
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       
       console.log('📊 Sidebar fetch response:', response.status)
       
-      if (response.ok || response.status === 304) {
+      if (response.ok) {
         const data = await response.json()
         console.log('📊 BACKEND RESPONSE:', JSON.stringify(data, null, 2))
-        console.log('📊 Response keys:', Object.keys(data))
-        console.log('📊 Success field:', data.success)
-        console.log('📊 Opportunities field:', data.opportunities)
-        console.log('📊 Array length:', data.opportunities?.length)
         
         // Set opportunities from backend response
         if (data.success && Array.isArray(data.opportunities)) {
@@ -139,11 +133,10 @@ export default function Opportunities() {
   const handleCardClick = async (opportunityId) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API_URL}/api/dashboard/track-opportunity/${opportunityId}`, {
+      const response = await fetch(`${API_URL}/api/tracking/track/${opportunityId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       })
       
