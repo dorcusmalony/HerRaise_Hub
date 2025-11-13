@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { initializeSocket, requestNotificationPermission } from '../../services/socketService'
-import OpportunityReminder from '../../components/OpportunityReminder/OpportunityReminder'
+import { useNotification } from '../../contexts/NotificationContext'
 import styles from './Login.module.css'
 
 export default function Login() {
@@ -21,8 +21,7 @@ export default function Login() {
   const [forgotEmail, setForgotEmail] = useState('')
   const [forgotStatus, setForgotStatus] = useState(null)
   const [forgotLoading, setForgotLoading] = useState(false)
-  const [showReminders, setShowReminders] = useState(false)
-  const [pendingReminders, setPendingReminders] = useState(null)
+  const { showPendingOpportunitiesPopup } = useNotification()
   const [unverifiedEmail, setUnverifiedEmail] = useState('')
   const [showResendVerification, setShowResendVerification] = useState(false)
   const [resendLoading, setResendLoading] = useState(false)
@@ -111,10 +110,9 @@ export default function Login() {
         console.warn(' No user data in login response')
       }
 
-      // Check for pending reminders
+      // Check for pending reminders (liked opportunities)
       if (data?.pendingReminders && data.pendingReminders.count > 0) {
-        setPendingReminders(data.pendingReminders)
-        setShowReminders(true)
+        showPendingOpportunitiesPopup(data.pendingReminders.opportunities)
       } else {
         // Direct navigation if no reminders
         if (data.user?.role === 'admin') {
@@ -234,6 +232,8 @@ export default function Login() {
       setResendLoading(false)
     }
   }
+
+
 
   return (
     <div className={`mx-auto ${styles.container}`}>
@@ -406,22 +406,7 @@ export default function Login() {
         </div>
       )}
       
-      {/* Opportunity Reminder Popup */}
-      {showReminders && (
-        <OpportunityReminder 
-          reminders={pendingReminders}
-          onClose={() => {
-            setShowReminders(false)
-            // Navigate after closing popup
-            const userData = JSON.parse(localStorage.getItem('user') || '{}')
-            if (userData.role === 'admin') {
-              navigate('/admin/dashboard')
-            } else {
-              navigate('/dashboard')
-            }
-          }}
-        />
-      )}
+
     </div>
   )
 }
