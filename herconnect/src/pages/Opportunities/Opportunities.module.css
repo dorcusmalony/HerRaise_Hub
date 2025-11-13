@@ -214,8 +214,20 @@
   color: white;
 }
 
-.yesBtn:hover {
+.yesBtn:hover:not(:disabled) {
   background: #059669;
+}
+
+.yesBtn:disabled {
+  background: #6b7280 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.noBtn:disabled {
+  background: #9ca3af !important;
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 .header {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getSocket } from '../../services/socketService'
+import { toast } from 'react-toastify'
 import styles from './Opportunities.module.css'
 import './purple-buttons.css'
 
@@ -13,6 +14,7 @@ export default function Opportunities() {
   const [likedOpportunities, setLikedOpportunities] = useState([])
   const [loading, setLoading] = useState(true)
   const [sidebarLoading, setSidebarLoading] = useState(true)
+  const [opportunityStatuses, setOpportunityStatuses] = useState({})
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [bookmarked, setBookmarked] = useState(false)
@@ -199,23 +201,78 @@ export default function Opportunities() {
     }
   }
 
+  const setOpportunityStatus = (opportunityId, status) => {
+    setOpportunityStatuses(prev => ({ ...prev, [opportunityId]: status }))
+  }
+
   const handleCompletionAnswer = async (opportunityId, completed) => {
+    if (!completed) {
+      // Handle "No" answer - just refresh
+      try {
+        const response = await fetch(`${API_URL}/api/tracking/completion-question/${opportunityId}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ completed: false })
+        })
+        
+        if (response.ok) {
+          fetchSidebarOpportunities()
+        }
+      } catch (error) {
+        console.error('Error updating completion status:', error)
+      }
+      return
+    }
+
+    // Handle "Yes" answer with improved UX
     try {
+      // Show loading state
+      setOpportunityStatus(opportunityId, 'completing')
+      
       const response = await fetch(`${API_URL}/api/tracking/completion-question/${opportunityId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ completed })
+        body: JSON.stringify({ completed: true })
       })
       
+      const data = await response.json()
+      
       if (response.ok) {
-        console.log(`✅ User answered ${completed ? 'Yes' : 'No'} - Backend automatically updated status`)
-        fetchSidebarOpportunities() // Refresh sidebar to show updated status
+        // Show completed status briefly
+        setOpportunityStatus(opportunityId, 'completed')
+        
+        // Show success message
+        toast.success('✅ Opportunity completed!')
+        
+        // Remove after showing completion
+        setTimeout(() => {
+          setLikedOpportunities(prev => 
+            prev.filter(item => {
+              const oppId = item.opportunity?.id || item.opportunityId
+              return oppId !== opportunityId
+            })
+          )
+          // Clean up status
+          setOpportunityStatus(opportunityId, null)
+        }, 2000)
+      } else {
+        throw new Error(data.message || 'Failed to complete')
       }
     } catch (error) {
+      setOpportunityStatus(opportunityId, 'error')
+      toast.error('Failed to complete opportunity')
       console.error('Error updating completion status:', error)
+      
+      // Reset status after error
+      setTimeout(() => {
+        setOpportunityStatus(opportunityId, null)
+      }, 3000)
     }
   }
 
@@ -386,14 +443,18 @@ export default function Opportunities() {
                         <button 
                           className={styles.noBtn}
                           onClick={() => handleCompletionAnswer(opportunity.id, false)}
+                          disabled={opportunityStatuses[opportunity.id]}
                         >
                           No
                         </button>
                         <button 
                           className={styles.yesBtn}
                           onClick={() => handleCompletionAnswer(opportunity.id, true)}
+                          disabled={opportunityStatuses[opportunity.id]}
                         >
-                          Yes
+                          {opportunityStatuses[opportunity.id] === 'completing' ? 'Completing...' :
+                           opportunityStatuses[opportunity.id] === 'completed' ? '✅ Completed!' :
+                           opportunityStatuses[opportunity.id] === 'error' ? 'Error' : 'Yes'}
                         </button>
                       </div>
                     </div>
