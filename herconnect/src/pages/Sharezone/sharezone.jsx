@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import CommentItem from '../../components/Forum/CommentItem'
 import ShareZoneTable from '../../components/ShareZone/ShareZoneTable'
+import CommentsModal from '../../components/ShareZone/CommentsModal'
 import './sharezone.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
@@ -12,7 +13,7 @@ export default function Content() {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category: 'project'
+    category: 'projects'
   })
   const [selectedFile, setSelectedFile] = useState(null)
   const [preview, setPreview] = useState(null)
@@ -132,7 +133,7 @@ export default function Content() {
         setContents(prev => [newPost, ...prev])
         
         // Reset form
-        setFormData({ title: '', content: '', category: 'project' })
+        setFormData({ title: '', content: '', category: 'projects' })
         setSelectedFile(null)
         setPreview(null)
         setShowForm(false)
@@ -360,12 +361,11 @@ export default function Content() {
                         value={formData.category}
                         onChange={handleInputChange}
                       >
-                        <option value="project">Project</option>
-                        <option value="essay">Essay</option>
-                        <option value="resume">Resume</option>
-                        <option value="video">Video</option>
-                        <option value="document">Document</option>
-                        <option value="other">Other</option>
+                        <option value="projects">Projects</option>
+                        <option value="essays">Essays</option>
+                        <option value="resumes">Resumes</option>
+                        <option value="videos">Videos</option>
+                        <option value="cover-letters">Cover Letters</option>
                       </select>
                     </div>
 
@@ -475,6 +475,22 @@ export default function Content() {
             onCommentToggle={handleCommentToggle}
             onDeletePost={handleDeletePost}
             onEditPost={handleEditPost}
+          />
+        )}
+
+        {/* Comments Modal */}
+        {Object.keys(expandedComments).some(key => expandedComments[key]) && (
+          <CommentsModal
+            content={contents.find(c => expandedComments[c._id])}
+            currentUser={currentUser}
+            commentText={commentText}
+            setCommentText={setCommentText}
+            onAddComment={handleAddComment}
+            onReplyToComment={handleReplyToComment}
+            onUpdateComment={handleUpdateComment}
+            onLikeComment={handleLikeComment}
+            onDeleteComment={handleDeleteComment}
+            onClose={() => setExpandedComments({})}
           />
         )}
       </div>
