@@ -299,18 +299,26 @@
 }
 
 .searchInput {
-  background: white;
+  background: #f8f9fa;
+  color: #666;
   padding: 0.5rem 1rem;
   border: 1px solid #e5e7eb;
   border-radius: 20px;
   font-size: 0.9rem;
+  font-weight: 500;
   width: 200px;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
 }
 
 .searchInput:focus {
   outline: none;
   border-color: #E84393;
+  background: white;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .bookmarkButton {
@@ -507,13 +515,21 @@
 }
 
 @media (max-width: 1024px) {
-  .pageLayout {
+  .dashboardLayout {
     flex-direction: column;
   }
   
   .sidebar {
     width: 100%;
     position: static;
+  }
+  
+  .filtersSection {
+    flex-wrap: wrap;
+  }
+  
+  .searchInput {
+    min-width: 180px;
   }
 }
 
@@ -547,7 +563,7 @@
     font-size: 1rem;
   }
   
-  .filtersRow {
+  .filtersSection {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
@@ -560,15 +576,16 @@
   
   .searchAndBookmark {
     justify-content: center;
+    width: 100%;
   }
   
   .searchInput {
-    width: 150px;
+    flex: 1;
+    max-width: 200px;
   }
   
-  .pageLayout {
-    padding: 0.5rem;
-    gap: 1rem;
+  .dashboardLayout {
+    gap: 2rem;
   }
   
   .sidebar {

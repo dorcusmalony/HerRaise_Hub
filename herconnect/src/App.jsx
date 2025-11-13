@@ -18,6 +18,7 @@ import Content from './pages/Sharezone/sharezone.jsx'
 import SafetyReport from './pages/SafetyReport/SafetyReport'
 import SafetyButton from './components/SafetyButton/SafetyButton'
 import { LanguageProvider } from './contexts/LanguageContext'
+import { NotificationProvider } from './contexts/NotificationContext'
 import { initializeSocket, disconnectSocket } from './services/socketService'
 import { pushNotificationService } from './services/pushNotificationService'
 import { notificationService } from './services/notificationService'
@@ -193,33 +194,35 @@ export default function App() {
 
   return (
     <LanguageProvider>
-      <div className="app-root">
-        <Header />
-        <NotificationToast />
-        <PushNotificationSetup />
-        <ToastContainer />
-        <SafetyButton />
+      <NotificationProvider>
+        <div className="app-root">
+          <Header />
+          <NotificationToast />
+          <PushNotificationSetup />
+          <ToastContainer />
+          <SafetyButton />
 
-        <main className="container-fluid px-3 py-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/resources" element={<ResourcePage />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/verify" element={<Verify />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/forum" element={<Forum />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/opportunities" element={<Opportunities />} />
-            <Route path="/sharezone" element={<Content />} />
-            <Route path="/safety-report" element={<SafetyReport />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+          <main className="container-fluid px-3 py-4">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/resources" element={<ResourcePage />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/verify" element={<Verify />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/forum" element={<Forum />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/opportunities" element={<Opportunities />} />
+              <Route path="/sharezone" element={<Content />} />
+              <Route path="/safety-report" element={<SafetyReport />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </NotificationProvider>
     </LanguageProvider>
   )
 }
