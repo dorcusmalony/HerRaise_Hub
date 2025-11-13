@@ -215,7 +215,6 @@ export default function Register(){
 						onChange={handleChange} 
 						className="form-control" 
 						autoComplete="email"
-						placeholder="Enter your email (e.g., user@gmail.com)"
 					/>
 					{errors.email && <div className="text-danger small">{errors.email}</div>}
 				</div>
@@ -288,7 +287,20 @@ export default function Register(){
 					</select>
 				</div>
 
-				<button type="submit" className={`btn ${styles.brandButton} w-100`} onClick={(e) => { e.preventDefault(); submitToServer(form.role); }} disabled={loading}>
+				<button 
+					type="submit" 
+					className="btn w-100" 
+					onClick={(e) => { e.preventDefault(); submitToServer(form.role); }} 
+					disabled={loading}
+					style={{
+						backgroundColor: '#e84393',
+						color: 'white',
+						border: 'none',
+						padding: '0.75rem 1.5rem',
+						borderRadius: '8px',
+						fontWeight: '600'
+					}}
+				>
 					{loading ? 'creating account' : 'Create Account'}
 				</button>
 			</form>

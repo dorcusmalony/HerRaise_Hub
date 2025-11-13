@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import CommentItem from '../../components/Forum/CommentItem'
+import ShareZoneTable from '../../components/ShareZone/ShareZoneTable'
 import './sharezone.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
@@ -19,6 +20,8 @@ export default function Content() {
   const [expandedComments, setExpandedComments] = useState({})
   const [commentText, setCommentText] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
+  const [showForm, setShowForm] = useState(false)
+
 
   const contentTypes = [
     { value: 'project', label: 'Project', icon: '' },
@@ -127,6 +130,7 @@ export default function Content() {
         setFormData({ title: '', content: '', category: 'project' })
         setSelectedFile(null)
         setPreview(null)
+        setShowForm(false)
         
         // Reset file input
         const fileInput = document.querySelector('input[type="file"]')
@@ -249,6 +253,40 @@ export default function Content() {
     }
   }
 
+  const handleCommentToggle = (postId) => {
+    setExpandedComments(prev => ({ ...prev, [postId]: !prev[postId] }))
+  }
+
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm('Delete this post? This action cannot be undone.')) return
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_URL}/api/sharezone/${postId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      
+      if (response.ok) {
+        setContents(prev => prev.filter(content => content._id !== postId))
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error)
+    }
+  }
+
+  const handleEditPost = (postId) => {
+    const content = contents.find(c => c._id === postId)
+    if (content) {
+      setFormData({
+        title: content.title,
+        content: content.content,
+        category: content.category
+      })
+      setShowForm(true)
+    }
+  }
+
   return (
     <div className="content-page">
       {/* ShareZone Banner */}
@@ -292,214 +330,148 @@ export default function Content() {
       <div className="container mt-4">
         <div className="row">
           <div className="col-lg-8 mx-auto">
-            <div className="card mb-4">
-              <div className="card-header">
-                <h5 className="mb-0">Share Your Content</h5>
-              </div>
-              <div className="card-body">
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Category</label>
-                    <select 
-                      className="form-select"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                    >
-                      <option value="project">Project</option>
-                      <option value="essay">Essay</option>
-                      <option value="resume">Resume</option>
-                      <option value="video">Video</option>
-                      <option value="document">Document</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Title *</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="title"
-                      value={formData.title}
-                      onChange={handleInputChange}
-                      placeholder="Enter a title for your content"
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Description</label>
-                    <textarea
-                      className="form-control"
-                      name="content"
-                      value={formData.content}
-                      onChange={handleInputChange}
-                      rows="4"
-                      placeholder="Describe your content, what you learned, or any details you'd like to share..."
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Upload File</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      onChange={handleFileChange}
-                      accept="*/*"
-                    />
-                    <small className="text-muted">Max file size: 10MB. Supports documents, images, videos, and more.</small>
-                    
-                    {preview && (
-                      <div className="mt-2">
-                        <img 
-                          src={preview} 
-                          alt="Preview" 
-                          className="img-thumbnail"
-                          style={{ maxWidth: '200px', maxHeight: '200px' }}
-                        />
-                      </div>
-                    )}
-                    
-                    {selectedFile && !preview && (
-                      <div className="mt-2">
-                        <div className="alert alert-info py-2">
-                          <small>{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {error && (
-                    <div className="alert alert-danger">
-                      {error}
-                    </div>
-                  )}
-
-                  <button 
-                    type="submit" 
-                    className="btn btn-primary"
-                    disabled={uploading}
-                  >
-                    {uploading ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                        Uploading...
-                      </>
-                    ) : (
-                      'Share Content'
-                    )}
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            {loading ? (
-              <div className="text-center py-4">
-                <div className="spinner-border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
+            {!showForm ? (
+              <div className="text-center mb-4">
+                <button 
+                  className="btn btn-lg"
+                  style={{ backgroundColor: '#e84393', color: 'white', border: 'none' }}
+                  onClick={() => setShowForm(true)}
+                >
+                  Share Your Work
+                </button>
               </div>
             ) : (
-              <div className="posts-container">
-                {contents.length === 0 ? (
-                  <div className="text-center py-5">
-                    <h5>No content shared yet</h5>
-                    <p className="text-muted">Be the first to share your work!</p>
-                  </div>
-                ) : (
-                  contents.map(content => (
-                    <div key={content._id} className="card mb-3">
-                      <div className="card-body">
-                        <div className="d-flex justify-content-between align-items-start mb-2">
-                          <h6 className="card-title mb-0">{content.title}</h6>
-                          <span className="badge bg-secondary">{content.category}</span>
-                        </div>
-                        {content.content && <p className="card-text">{content.content}</p>}
-                        {content.fileUrl && (
-                          <div className="mt-2">
-                            <a href={content.fileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
-                              View File
-                            </a>
-                          </div>
-                        )}
-                        <div className="d-flex justify-content-between align-items-center mt-3">
-                          <small className="text-muted">
-                            Shared by {content.author?.name || 'Anonymous'} • {new Date(content.createdAt).toLocaleDateString()}
-                          </small>
-                          <button 
-                            className="btn btn-sm btn-outline-secondary"
-                            onClick={() => setExpandedComments(prev => ({ ...prev, [content._id]: !prev[content._id] }))}
-                          >
-                            {content.ShareZoneComments?.length || 0} Comments
-                          </button>
-                        </div>
-                        
-                        {expandedComments[content._id] && (
-                          <div className="mt-3 border-top pt-3">
-                            <div className="mb-3">
-                              <div className="d-flex gap-2">
-                                <img 
-                                  src={currentUser?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'User')}&background=8B5CF6&color=fff`}
-                                  alt={currentUser?.name}
-                                  className="rounded-circle"
-                                  style={{ width: 32, height: 32 }}
-                                />
-                                <div className="flex-grow-1">
-                                  <textarea
-                                    className="form-control mb-2"
-                                    rows="3"
-                                    placeholder="Add a comment..."
-                                    value={commentText[content._id] || ''}
-                                    onChange={(e) => setCommentText(prev => ({ ...prev, [content._id]: e.target.value }))}
-                                  />
-                                  <button 
-                                    className="btn btn-sm btn-primary"
-                                    onClick={() => handleAddComment(content._id)}
-                                    disabled={!commentText[content._id]?.trim()}
-                                  >
-                                    Post Comment
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {content.ShareZoneComments && content.ShareZoneComments.length > 0 ? (
-                              <div>
-                                <h6 className="mb-3">Comments ({content.ShareZoneComments.length})</h6>
-                                {content.ShareZoneComments
-                                  .filter(c => !c.parentCommentId)
-                                  .map(comment => (
-                                    <CommentItem
-                                      key={comment.id}
-                                      comment={{
-                                        ...comment,
-                                        replies: content.ShareZoneComments.filter(c => c.parentCommentId === comment.id)
-                                      }}
-                                      onReply={handleReplyToComment}
-                                      onUpdate={handleUpdateComment}
-                                      onLike={handleLikeComment}
-                                      onDelete={handleDeleteComment}
-                                      currentUser={currentUser}
-                                      postAuthorId={content.author?._id}
-                                    />
-                                  ))}
-                              </div>
-                            ) : (
-                              <div className="text-center py-3 text-muted">
-                                <p>No comments yet. Be the first to comment!</p>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
+              <div className="card mb-4">
+                <div className="card-header">
+                  <h5 className="mb-0">Share Your Content</h5>
+                </div>
+                <div className="card-body">
+                  <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                      <label className="form-label">Category</label>
+                      <select 
+                        className="form-select"
+                        name="category"
+                        value={formData.category}
+                        onChange={handleInputChange}
+                      >
+                        <option value="project">Project</option>
+                        <option value="essay">Essay</option>
+                        <option value="resume">Resume</option>
+                        <option value="video">Video</option>
+                        <option value="document">Document</option>
+                        <option value="other">Other</option>
+                      </select>
                     </div>
-                  ))
-                )}
+
+                    <div className="mb-3">
+                      <label className="form-label">Title *</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleInputChange}
+                        placeholder="Enter a title for your content"
+                        required
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">Description</label>
+                      <textarea
+                        className="form-control"
+                        name="content"
+                        value={formData.content}
+                        onChange={handleInputChange}
+                        rows="4"
+                        placeholder="Describe your content, what you learned, or any details you'd like to share..."
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">Upload File</label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        onChange={handleFileChange}
+                        accept="*/*"
+                      />
+                      <small className="text-muted">Max file size: 10MB. Supports documents, images, videos, and more.</small>
+                      
+                      {preview && (
+                        <div className="mt-2">
+                          <img 
+                            src={preview} 
+                            alt="Preview" 
+                            className="img-thumbnail"
+                            style={{ maxWidth: '200px', maxHeight: '200px' }}
+                          />
+                        </div>
+                      )}
+                      
+                      {selectedFile && !preview && (
+                        <div className="mt-2">
+                          <div className="alert alert-info py-2">
+                            <small>{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {error && (
+                      <div className="alert alert-danger">
+                        {error}
+                      </div>
+                    )}
+
+                    <div className="d-flex gap-2">
+                      <button 
+                        type="submit" 
+                        className="btn btn-primary"
+                        disabled={uploading}
+                      >
+                        {uploading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Uploading...
+                          </>
+                        ) : (
+                          'Share Content'
+                        )}
+                      </button>
+                      <button 
+                        type="button" 
+                        className="btn btn-secondary"
+                        onClick={() => setShowForm(false)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             )}
           </div>
         </div>
+      </div>
+
+      <div className="container-fluid px-3">
+        {loading ? (
+          <div className="text-center py-4">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : (
+          <ShareZoneTable 
+            contents={contents}
+            currentUser={currentUser}
+            onCommentToggle={handleCommentToggle}
+            onDeletePost={handleDeletePost}
+            onEditPost={handleEditPost}
+          />
+        )}
       </div>
     </div>
   )

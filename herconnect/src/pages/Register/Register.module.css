@@ -32,9 +32,9 @@
 }
 
 .brandButton {
-  background: #c33764;
-  color: white;
-  border: none;
+  background: #e84393 !important;
+  color: white !important;
+  border: none !important;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -42,7 +42,7 @@
 }
 
 .brandButton:hover {
-  background: #a12d54;
+  background: #d63384 !important;
   transform: translateY(-1px);
 }
 
