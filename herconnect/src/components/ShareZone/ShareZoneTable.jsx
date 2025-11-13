@@ -182,27 +182,24 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                   </td>
                   
                   <td className="actions-cell">
-                    <div className="action-buttons">
-                      {content.author?._id === currentUser?.id && (
-                        <div className="dropdown">
-                          <button 
-                            className="dots-btn"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setOpenDropdown(openDropdown === content._id ? null : content._id)
-                            }}
-                          >
-                            ⋮
-                          </button>
-                          {openDropdown === content._id && (
-                            <div className="dropdown-menu show">
-                              <button onClick={() => { onEditPost(content._id); setOpenDropdown(null) }}>Edit</button>
-                              <button onClick={() => { onDeletePost(content._id); setOpenDropdown(null) }}>Delete</button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    {content.author?._id === currentUser?.id ? (
+                      <div className="action-buttons">
+                        <button 
+                          className="edit-btn"
+                          onClick={() => onEditPost(content._id)}
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          className="delete-btn"
+                          onClick={() => onDeletePost(content._id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-muted">-</span>
+                    )}
                   </td>
                 </tr>
               ))
