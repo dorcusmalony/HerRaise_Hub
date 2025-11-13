@@ -215,7 +215,6 @@ export default function Register(){
 						onChange={handleChange} 
 						className="form-control" 
 						autoComplete="email"
-						placeholder="Enter your email (e.g., user@gmail.com)"
 					/>
 					{errors.email && <div className="text-danger small">{errors.email}</div>}
 				</div>

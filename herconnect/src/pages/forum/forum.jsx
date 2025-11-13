@@ -529,7 +529,7 @@ export default function Forum() {
                           </span>
                           {post.category && (
                             <span className={styles.categoryBadge}>
-                              Published in {FORUM_CATEGORIES[post.category]?.subcategories[post.subcategory]?.name || post.subcategory}
+                              Published from {FORUM_CATEGORIES[post.category]?.name || post.category}
                             </span>
                           )}
                         </div>
