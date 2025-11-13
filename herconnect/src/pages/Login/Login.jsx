@@ -314,7 +314,19 @@ export default function Login() {
 
 
         <div className="d-flex gap-2 mb-3">
-          <button className={`btn ${styles.submitButton}`} type="submit" disabled={loading}>
+          <button 
+            className="btn" 
+            type="submit" 
+            disabled={loading}
+            style={{
+              backgroundColor: '#e84393',
+              color: 'white',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              fontWeight: '600'
+            }}
+          >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
           <button
