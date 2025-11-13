@@ -66,15 +66,20 @@ export default function Content() {
     })
   }
 
+  const validateFile = (file) => {
+    const maxSize = 100 * 1024 * 1024 // 100MB
+    if (file.size > maxSize) {
+      setError('File too large. Maximum size is 100MB')
+      return false
+    }
+    return true
+  }
+
   const handleFileChange = (e) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setError('File size should be less than 10MB')
-      return
-    }
+    if (!validateFile(file)) return
 
     setError('')
     setSelectedFile(file)
@@ -397,7 +402,7 @@ export default function Content() {
                         onChange={handleFileChange}
                         accept="*/*"
                       />
-                      <small className="text-muted">Max file size: 10MB. Supports documents, images, videos, and more.</small>
+                      <small className="text-muted">Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.</small>
                       
                       {preview && (
                         <div className="mt-2">
