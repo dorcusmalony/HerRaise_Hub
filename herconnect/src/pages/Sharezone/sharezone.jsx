@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import CommentItem from '../../components/Forum/CommentItem'
 import ShareZoneTable from '../../components/ShareZone/ShareZoneTable'
+import CommentsModal from '../../components/ShareZone/CommentsModal'
 import './sharezone.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
@@ -475,6 +476,22 @@ export default function Content() {
             onCommentToggle={handleCommentToggle}
             onDeletePost={handleDeletePost}
             onEditPost={handleEditPost}
+          />
+        )}
+
+        {/* Comments Modal */}
+        {Object.keys(expandedComments).some(key => expandedComments[key]) && (
+          <CommentsModal
+            content={contents.find(c => expandedComments[c._id])}
+            currentUser={currentUser}
+            commentText={commentText}
+            setCommentText={setCommentText}
+            onAddComment={handleAddComment}
+            onReplyToComment={handleReplyToComment}
+            onUpdateComment={handleUpdateComment}
+            onLikeComment={handleLikeComment}
+            onDeleteComment={handleDeleteComment}
+            onClose={() => setExpandedComments({})}
           />
         )}
       </div>
