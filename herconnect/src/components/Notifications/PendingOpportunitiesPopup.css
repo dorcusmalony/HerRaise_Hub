@@ -128,20 +128,50 @@
   color: #e84393;
 }
 
-.apply-btn {
-  background: #e84393 !important;
+.opportunity-actions {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.yes-btn {
+  background: #28a745 !important;
   color: white !important;
   border: none !important;
   padding: 8px 16px !important;
   border-radius: 6px !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   cursor: pointer !important;
   transition: all 0.2s !important;
   font-size: 0.9rem !important;
   white-space: nowrap !important;
 }
 
-.apply-btn:hover {
+.yes-btn:hover:not(:disabled) {
+  background: #218838 !important;
+  transform: translateY(-1px) !important;
+}
+
+.yes-btn:disabled {
+  background: #6c757d !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.view-btn {
+  background: #e84393 !important;
+  color: white !important;
+  border: none !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  font-size: 0.85rem !important;
+  white-space: nowrap !important;
+}
+
+.view-btn:hover {
   background: #d63384 !important;
   transform: translateY(-1px) !important;
 }
@@ -213,7 +243,12 @@
     gap: 12px;
   }
   
-  .apply-btn {
+  .opportunity-actions {
+    flex-direction: column;
+  }
+  
+  .yes-btn,
+  .view-btn {
     width: 100% !important;
     text-align: center !important;
   }

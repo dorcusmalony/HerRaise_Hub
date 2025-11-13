@@ -1,14 +1,40 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import NotificationItem from '../Notifications/NotificationItem'
 import './NotificationBell.css'
 
 const NotificationBell = () => {
   const [unreadCount, setUnreadCount] = useState(0)
   const [notifications, setNotifications] = useState([])
   const [showDropdown, setShowDropdown] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchNotifications()
     fetchUnreadCount()
+    
+    // Listen for real-time notifications
+    const handleNewNotification = (event) => {
+      const newNotification = event.detail
+      setNotifications(prev => {
+        const updated = [newNotification, ...prev]
+        const unreadCount = updated.filter(n => !n.readStatus).length
+        setUnreadCount(unreadCount)
+        return updated
+      })
+      
+      // Show popup for deadline reminders
+      if (newNotification.type === 'deadline_reminder') {
+        showDeadlinePopup(newNotification)
+      }
+    }
+    
+    window.addEventListener('new-notification', handleNewNotification)
+    
+    return () => {
+      window.removeEventListener('new-notification', handleNewNotification)
+    }
   }, [])
 
   const fetchNotifications = async () => {
@@ -36,7 +62,8 @@ const NotificationBell = () => {
       })
       if (response.ok) {
         const data = await response.json()
-        setUnreadCount(data.count || 0)
+        const count = notifications.filter(n => !n.readStatus).length
+        setUnreadCount(count)
       }
     } catch (error) {
       console.error('Failed to fetch unread count:', error)
@@ -45,9 +72,6 @@ const NotificationBell = () => {
 
   const toggleNotifications = () => {
     setShowDropdown(!showDropdown)
-    if (!showDropdown) {
-      markAllAsRead()
-    }
   }
 
   const markAllAsRead = async () => {
@@ -59,9 +83,42 @@ const NotificationBell = () => {
         }
       })
       setUnreadCount(0)
+      setNotifications(prev => prev.map(n => ({ ...n, readStatus: true })))
     } catch (error) {
       console.error('Failed to mark notifications as read:', error)
     }
+  }
+
+  const markAsRead = async (notificationId) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/notifications/${notificationId}/read`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      setNotifications(prev => 
+        prev.map(n => n.id === notificationId ? { ...n, readStatus: true } : n)
+      )
+      setUnreadCount(prev => Math.max(0, prev - 1))
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error)
+    }
+  }
+
+  const showDeadlinePopup = (notification) => {
+    toast.error(notification.message, {
+      duration: 10000,
+      action: {
+        label: 'Apply Now',
+        onClick: () => navigate(`/opportunities/${notification.data.opportunityId}`)
+      }
+    })
+  }
+
+  const handleViewOpportunity = (opportunityId) => {
+    setShowDropdown(false)
+    navigate(`/opportunities/${opportunityId}`)
   }
 
   const formatTimestamp = (timestamp) => {
@@ -92,18 +149,22 @@ const NotificationBell = () => {
           <div className="notifications-list">
             {notifications.length > 0 ? (
               notifications.map(notif => (
-                <div key={notif.id || Math.random()} className="notification-item">
-                  <span className="notif-icon">🎯</span>
-                  <div className="notif-content">
-                    <p className="notif-title">{notif?.title || 'New notification'}</p>
-                    <small className="notif-time">{formatTimestamp(notif?.createdAt || new Date())}</small>
-                  </div>
-                </div>
+                <NotificationItem
+                  key={notif.id || Math.random()}
+                  notification={notif}
+                  onMarkRead={markAsRead}
+                  onViewOpportunity={handleViewOpportunity}
+                />
               ))
             ) : (
               <div className="no-notifications">
                 <p>No notifications yet</p>
               </div>
+            )}
+            {notifications.length > 0 && (
+              <button onClick={markAllAsRead} className="mark-all-btn">
+                Mark All Read
+              </button>
             )}
           </div>
         </div>

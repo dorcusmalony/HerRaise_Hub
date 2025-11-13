@@ -20,6 +20,27 @@ export const NotificationProvider = ({ children }) => {
   const showPendingOpportunitiesPopup = (opportunities) => {
     setPendingOpportunities(opportunities)
     setShowPendingPopup(true)
+    
+    // Also add these as notifications to the bell
+    opportunities.forEach(opp => {
+      const notification = {
+        id: `deadline_${opp.id}`,
+        type: 'deadline_reminder',
+        title: `Deadline Reminder: ${opp.title}`,
+        message: opp.message,
+        createdAt: new Date().toISOString(),
+        readStatus: false,
+        data: {
+          opportunityId: opp.id,
+          priority: opp.priority
+        }
+      }
+      
+      // Dispatch event for notification bell
+      window.dispatchEvent(new CustomEvent('new-notification', {
+        detail: notification
+      }))
+    })
   }
 
   const handleViewOpportunity = (opportunityId) => {
