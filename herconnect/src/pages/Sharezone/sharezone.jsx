@@ -142,12 +142,12 @@ export default function Content() {
         const fileInput = document.querySelector('input[type="file"]')
         if (fileInput) fileInput.value = ''
       } else {
-        const errorData = await response.json()
-        setError(errorData.message || 'Failed to create post')
+        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }))
+        setError(errorData.error || errorData.message || 'Upload failed')
       }
     } catch (error) {
       console.error('Error creating post:', error)
-      setError('Failed to create post. Please try again.')
+      setError('Network error. Please try again.')
     } finally {
       setUploading(false)
     }
