@@ -182,7 +182,12 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                   </td>
                   
                   <td className="actions-cell">
-                    {(content.author?._id === currentUser?.id || content.author?.id === currentUser?.id) ? (
+                    {(content.author?._id === currentUser?.id || 
+                      content.author?.id === currentUser?.id || 
+                      content.author?._id === currentUser?._id || 
+                      content.author?.id === currentUser?._id || 
+                      String(content.author?._id) === String(currentUser?.id) || 
+                      String(content.author?.id) === String(currentUser?.id)) ? (
                       <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                         <button 
                           style={{
