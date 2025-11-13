@@ -332,7 +332,7 @@ export default function Opportunities() {
 
                     <div className={styles.cardFooter}>
                       <span className={styles.cardDeadline}>
-                        {new Date(opportunity.applicationDeadline).toLocaleDateString()}
+                        Deadline: {new Date(opportunity.applicationDeadline).toLocaleDateString()}
                       </span>
                       <button 
                         onClick={(e) => {
