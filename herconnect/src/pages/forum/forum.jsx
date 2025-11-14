@@ -86,9 +86,11 @@ export default function Forum() {
     try {
       console.log('📡 Fetching posts with token:', token.substring(0, 20) + '...')
       
-      let url = `${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`
+      let url
       if (selectedCategory) {
-        url += `&category=${selectedCategory}`
+        url = `${API}/api/forum/categories/${selectedCategory}/posts?filter=${filter}&sort=${sortBy}`
+      } else {
+        url = `${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`
       }
       if (selectedSubcategory) {
         url += `&subcategory=${selectedSubcategory}`
@@ -97,7 +99,9 @@ export default function Forum() {
       const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
         }
       })
 
@@ -113,10 +117,17 @@ export default function Forum() {
       
       if (response.ok) {
         const data = await response.json()
-        setPosts(data.posts || [])
-        console.log('✅ Posts loaded successfully:', data.posts?.length || 0)
+        console.log('📊 Raw API response:', data)
+        // Handle both old and new response formats
+        const posts = data.posts || data.data?.posts || []
+        console.log('📊 Posts array:', posts)
+        console.log('📊 First post sample:', posts?.[0])
+        setPosts(posts)
+        console.log('✅ Posts loaded successfully:', posts?.length || 0)
       } else {
         console.error('❌ Failed to fetch posts:', response.status, response.statusText)
+        const errorText = await response.text()
+        console.error('❌ Error response:', errorText)
       }
     } catch (error) {
       console.error('❌ Error fetching posts:', error)
@@ -488,7 +499,12 @@ export default function Forum() {
 
       {/* Posts List */}
       {!showCreateForm && !editingPost && (
-        posts.length === 0 ? (
+        (() => {
+          console.log('🎯 Rendering posts section. Posts length:', posts.length)
+          console.log('🎯 Show create form:', showCreateForm)
+          console.log('🎯 Editing post:', editingPost)
+          return posts.length === 0
+        })() ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}></div>
             <h4 className={styles.emptyTitle}>Start the conversation!</h4>
