@@ -22,6 +22,8 @@ export default function Content() {
   const [commentText, setCommentText] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
   const [showForm, setShowForm] = useState(false)
+  const [editingPostId, setEditingPostId] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
 
 
   const contentTypes = [
@@ -120,8 +122,11 @@ export default function Content() {
         submitData.append('file', selectedFile)
       }
 
-      const response = await fetch(`${API_URL}/api/sharezone`, {
-        method: 'POST',
+      const url = isEditing ? `${API_URL}/api/sharezone/${editingPostId}` : `${API_URL}/api/sharezone`
+      const method = isEditing ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -129,24 +134,33 @@ export default function Content() {
       })
 
       if (response.ok) {
-        const newPost = await response.json()
-        setContents(prev => [newPost, ...prev])
+        const updatedPost = await response.json()
+        
+        if (isEditing) {
+          setContents(prev => prev.map(post => 
+            post._id === editingPostId ? updatedPost : post
+          ))
+        } else {
+          setContents(prev => [updatedPost, ...prev])
+        }
         
         // Reset form
         setFormData({ title: '', content: '', category: 'projects' })
         setSelectedFile(null)
         setPreview(null)
         setShowForm(false)
+        setIsEditing(false)
+        setEditingPostId(null)
         
         // Reset file input
         const fileInput = document.querySelector('input[type="file"]')
         if (fileInput) fileInput.value = ''
       } else {
-        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }))
-        setError(errorData.error || errorData.message || 'Upload failed')
+        const errorData = await response.json().catch(() => ({ error: isEditing ? 'Update failed' : 'Upload failed' }))
+        setError(errorData.error || errorData.message || (isEditing ? 'Update failed' : 'Upload failed'))
       }
     } catch (error) {
-      console.error('Error creating post:', error)
+      console.error(`Error ${isEditing ? 'updating' : 'creating'} post:`, error)
       setError('Network error. Please try again.')
     } finally {
       setUploading(false)
@@ -286,10 +300,17 @@ export default function Content() {
     if (content) {
       setFormData({
         title: content.title,
-        content: content.content,
+        content: content.content || '',
         category: content.category
       })
+      setEditingPostId(postId)
+      setIsEditing(true)
       setShowForm(true)
+      
+      // Show existing file info if available
+      if (content.fileUrl) {
+        setPreview(content.fileUrl.includes('image') ? content.fileUrl : null)
+      }
     }
   }
 
@@ -349,7 +370,7 @@ export default function Content() {
             ) : (
               <div className="card mb-4">
                 <div className="card-header">
-                  <h5 className="mb-0">Share Your Content</h5>
+                  <h5 className="mb-0">{isEditing ? 'Edit Your Content' : 'Share Your Content'}</h5>
                 </div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit}>
@@ -439,16 +460,23 @@ export default function Content() {
                         {uploading ? (
                           <>
                             <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                            Uploading...
+                            {isEditing ? 'Updating...' : 'Uploading...'}
                           </>
                         ) : (
-                          'Share Content'
+                          isEditing ? 'Update Content' : 'Share Content'
                         )}
                       </button>
                       <button 
                         type="button" 
                         className="btn btn-secondary"
-                        onClick={() => setShowForm(false)}
+                        onClick={() => {
+                          setShowForm(false)
+                          setIsEditing(false)
+                          setEditingPostId(null)
+                          setFormData({ title: '', content: '', category: 'projects' })
+                          setSelectedFile(null)
+                          setPreview(null)
+                        }}
                       >
                         Cancel
                       </button>

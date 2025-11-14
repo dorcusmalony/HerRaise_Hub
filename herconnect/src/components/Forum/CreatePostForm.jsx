@@ -48,6 +48,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
           type: formData.type,
           category: formData.category,
           subcategory: formData.subcategory,
+          publishedFrom: formData.category ? FORUM_CATEGORIES[formData.category]?.name : null,
           tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
           attachments: formData.attachments
         })

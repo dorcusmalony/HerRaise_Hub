@@ -1,6 +1,7 @@
 import LikeButton from '../LikeButton/LikeButton'
 import { YouTubeStyleMedia } from '../MediaUpload'
 import { forumAPI } from '../../services/forumAPI'
+import { FORUM_CATEGORIES } from '../Forum/CategorySelector'
 import './ForumPost.css'
 
 export default function ForumPost({ post, currentUser, onEdit, onDelete }) {
@@ -63,6 +64,11 @@ export default function ForumPost({ post, currentUser, onEdit, onDelete }) {
       </div>
 
       <div className="post-content">
+        {post.category && (
+          <div className="category-badge">
+            Published from {FORUM_CATEGORIES[post.category]?.name || post.category}
+          </div>
+        )}
         <h3 className="post-title">{post.title}</h3>
         <p className="post-text">{post.content}</p>
         
