@@ -67,6 +67,18 @@
   padding: 0 16px 16px;
 }
 
+.category-badge {
+  display: inline-block;
+  background: #e84393;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+
 .post-title {
   font-size: 18px;
   font-weight: 600;
