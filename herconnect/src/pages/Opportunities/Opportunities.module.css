@@ -24,7 +24,7 @@
 
 .dashboardLayout {
   display: flex;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   gap: 4rem;
 }
@@ -266,20 +266,26 @@
 
 .filtersSection {
   background: white;
-  padding: 1.5rem;
+  padding: 1.5rem 2rem;
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   border: 1px solid #e2e8f0;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: fit-content;
 }
 
 .filterButtons {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .filterBtn {
@@ -308,6 +314,8 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  flex-shrink: 1;
+  min-width: fit-content;
 }
 
 .searchInput {
@@ -318,8 +326,10 @@
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
-  width: 200px;
+  width: 180px;
+  min-width: 120px;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .searchInput:focus {
@@ -579,6 +589,8 @@
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .filterButtons {
@@ -589,6 +601,8 @@
   .searchAndBookmark {
     justify-content: center;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .searchInput {
