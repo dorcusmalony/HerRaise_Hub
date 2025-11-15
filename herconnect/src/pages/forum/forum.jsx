@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useLanguage } from '../../hooks/useLanguage'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
 import CategorySelector, { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
@@ -24,7 +24,7 @@ const getAuthorColor = (name) => {
 }
 
 export default function Forum() {
-  const { t } = useTranslation()
+  const { t } = useLanguage()
   const API = import.meta.env.VITE_API_URL || ''
   
   // Debug: Check API URL on Vercel
@@ -361,24 +361,24 @@ export default function Forum() {
       <div className={styles.forumHeader}>
         <div className={styles.headerContent}>
           <div className={styles.headerText}>
-            <h1 className={styles.forumTitle}>Community Forum</h1>
-            <p className={styles.forumSubtitle}>Connect with peers, ask questions, and join discussions</p>
+            <h1 className={styles.forumTitle}>{t('Community Forum')}</h1>
+            <p className={styles.forumSubtitle}>{t('Connect with peers, ask questions, and join discussions')}</p>
             <div className={styles.contributionHighlight}>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Ask Questions</span>
+                <span>{t('Ask Questions')}</span>
               </div>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Join Discussions</span>
+                <span>{t('Join Discussions')}</span>
               </div>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Get Support</span>
+                <span>{t('Get Support')}</span>
               </div>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Share Ideas</span>
+                <span>{t('Share Ideas')}</span>
               </div>
             </div>
 
@@ -405,7 +405,7 @@ export default function Forum() {
             onClick={() => setSelectedCategory(null)}
             className={styles.backBtn}
           >
-            ← All Categories
+            ← {t('All Categories')}
           </button>
           <h2 className={styles.categoryTitle}>
             {FORUM_CATEGORIES[selectedCategory]?.name || selectedCategory}
@@ -414,7 +414,7 @@ export default function Forum() {
             onClick={() => setShowCreateForm(true)}
             className={styles.createPostBtn}
           >
-            + New Post
+            + {t('New Post')}
           </button>
         </div>
       )}
@@ -426,9 +426,9 @@ export default function Forum() {
             <label className={styles.filterLabel}>Browse by type:</label>
             <div className={styles.filterButtons}>
               {[
-                { key: 'all', label: 'All', desc: 'All posts' },
-                { key: 'question', label: 'Questions', desc: 'Need help' },
-                { key: 'discussion', label: 'Discussions', desc: 'General topics' }
+                { key: 'all', label: t('All'), desc: 'All posts' },
+                { key: 'question', label: t('Questions'), desc: 'Need help' },
+                { key: 'discussion', label: t('Discussions'), desc: 'General topics' }
               ].map(f => (
                 <button
                   key={f.key}
@@ -492,14 +492,14 @@ export default function Forum() {
         posts.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}></div>
-            <h4 className={styles.emptyTitle}>Start the conversation!</h4>
-            <p className={styles.emptySubtitle}>Ask questions, share ideas, or start discussions with the community</p>
+            <h4 className={styles.emptyTitle}>{t('Start the conversation!')}</h4>
+            <p className={styles.emptySubtitle}>{t('Ask questions, share ideas, or start discussions with the community')}</p>
             <div className={styles.emptyActions}>
               <button 
                 onClick={() => setShowCreateForm(true)}
                 className={styles.createPostBtn}
               >
-                Start Your First Discussion
+                {t('Start Your First Discussion')}
               </button>
             </div>
             <div className={styles.emptyTips}>
@@ -871,7 +871,7 @@ export default function Forum() {
                       title={t('view comments')}
                     >
                        <span className={styles.count}>{post.ForumComments?.length || 0}</span>
-                      <span className={styles.label}>Comments</span>
+                      <span className={styles.label}>{t('Comments')}</span>
                     </button>
 
                     <div className={styles.viewsCount}>
