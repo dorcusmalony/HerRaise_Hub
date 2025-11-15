@@ -41,10 +41,8 @@ export default function Forum() {
   const [commentText, setCommentText] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
-  const [selectedType, setSelectedType] = useState('project')
   const [showPostDropdown, setShowPostDropdown] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null)
 
 
   // Load current user
@@ -108,9 +106,7 @@ export default function Forum() {
       } else {
         url = `${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`
       }
-      if (selectedSubcategory) {
-        url += `&subcategory=${selectedSubcategory}`
-      }
+
       
       console.log('📡 Fetching from URL:', url)
       
@@ -136,23 +132,27 @@ export default function Forum() {
       if (response.ok) {
         const data = await response.json()
         console.log('📊 Raw API response:', data)
+        console.log('📊 Response keys:', Object.keys(data))
+        console.log('📊 Response type:', typeof data)
         // Handle both old and new response formats
-        const posts = data.posts || data.data?.posts || []
+        const posts = data.posts || data.data?.posts || data || []
         console.log('📊 Posts array:', posts)
+        console.log('📊 Posts length:', posts?.length)
         console.log('📊 First post sample:', posts?.[0])
-        setPosts(posts)
-        console.log('✅ Posts loaded successfully:', posts?.length || 0)
+        setPosts(Array.isArray(posts) ? posts : [])
+        console.log('✅ Posts loaded successfully:', Array.isArray(posts) ? posts.length : 0)
       } else {
         console.error('❌ Failed to fetch posts:', response.status, response.statusText)
         const errorText = await response.text()
         console.error('❌ Error response:', errorText)
+        setPosts([])
       }
     } catch (error) {
       console.error('❌ Error fetching posts:', error)
     } finally {
       setLoading(false)
     }
-  }, [API, filter, sortBy, selectedCategory, selectedSubcategory])
+  }, [API, filter, sortBy, selectedCategory])
 
   useEffect(() => {
     fetchPosts()
@@ -361,7 +361,7 @@ export default function Forum() {
       <div className={styles.forumHeader}>
         <div className={styles.headerContent}>
           <div className={styles.headerText}>
-            <h1 className={styles.forumTitle}>💬 Community Forum</h1>
+            <h1 className={styles.forumTitle}>Community Forum</h1>
             <p className={styles.forumSubtitle}>Connect with peers, ask questions, and join discussions</p>
             <div className={styles.contributionHighlight}>
               <div className={styles.highlightItem}>
@@ -381,20 +381,13 @@ export default function Forum() {
                 <span>Share Ideas</span>
               </div>
             </div>
-            <div className={styles.forumStats}>
-              <span className={styles.statItem}>
-                 {posts.length} Posts
-              </span>
-              <span className={styles.statItem}>
-                 {new Set(posts.map(p => p.author?.id)).size} Contributors
-              </span>
-            </div>
+
           </div>
           <button 
             onClick={() => setShowCreateForm(true)}
             className={styles.createPostBtn}
           >
-            💬 Start Discussion
+            Start Discussion
           </button>
         </div>
       </div>
@@ -474,17 +467,18 @@ export default function Forum() {
 
           <CreatePostForm
             editPost={editingPost}
-            initialType={selectedType}
             initialCategory={selectedCategory}
-            initialSubcategory={selectedSubcategory}
             onSuccess={(post) => {
               if (editingPost) {
                 handleUpdatePost(post)
-                setSuccessMessage('Post update')
+                setSuccessMessage('Post updated successfully!')
               } else {
                 setShowCreateForm(false)
-                setSuccessMessage('Post created!')
-                fetchPosts()
+                setSuccessMessage('Post created successfully!')
+                // Force immediate refresh of posts
+                setTimeout(() => {
+                  fetchPosts()
+                }, 100)
               }
               setTimeout(() => setSuccessMessage(''), 3000)
             }}
