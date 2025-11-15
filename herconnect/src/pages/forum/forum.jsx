@@ -383,12 +383,7 @@ export default function Forum() {
             </div>
 
           </div>
-          <button 
-            onClick={() => setShowCreateForm(true)}
-            className={styles.createPostBtn}
-          >
-            Start Discussion
-          </button>
+
         </div>
       </div>
 
