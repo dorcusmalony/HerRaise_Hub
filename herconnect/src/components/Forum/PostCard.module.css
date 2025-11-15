@@ -130,6 +130,15 @@
   color: #374151;
 }
 
+.actionBtn.liked {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.actionBtn.liked:hover {
+  background: rgba(220, 38, 38, 0.2);
+}
+
 .viewsCount {
   margin-left: auto;
   color: #9ca3af;

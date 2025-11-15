@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { notificationAPI } from '../../utils/notificationAPI'
 import styles from './CommentSection.module.css'
 
-export default function CommentSection({ postId, comments, onUpdate, currentUser }) {
+export default function CommentSection({ postId, comments, onUpdate, currentUser, postAuthorId }) {
   const [newComment, setNewComment] = useState('')
   const [replyTo, setReplyTo] = useState(null)
 
@@ -22,8 +23,24 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
         })
       })
       if (response.ok) {
+        const data = await response.json()
         setNewComment('')
         setReplyTo(null)
+        
+        // Create notification for comment or reply
+        if (replyTo) {
+          // Find the parent comment author
+          const parentComment = comments.find(c => c.id === replyTo)
+          if (parentComment && currentUser?.id !== parentComment.author?.id) {
+            notificationAPI.createReplyNotification(replyTo, parentComment.author?.id, data.comment?.id)
+          }
+        } else {
+          // Regular comment - notify post author
+          if (currentUser?.id !== postAuthorId) {
+            notificationAPI.createCommentNotification(postId, postAuthorId, data.comment?.id)
+          }
+        }
+        
         onUpdate()
       }
     } catch (error) {
@@ -33,14 +50,24 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
 
   const handleLikeComment = async (commentId) => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/forum/comments/${commentId}/like`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/forum/comments/${commentId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         }
       })
-      onUpdate()
+      if (response.ok) {
+        const data = await response.json()
+        
+        // Create notification for comment like (not own comment)
+        const comment = comments.find(c => c.id === commentId)
+        if (comment && currentUser?.id !== comment.author?.id && data.liked) {
+          notificationAPI.createCommentLikeNotification(commentId, comment.author?.id)
+        }
+        
+        onUpdate()
+      }
     } catch (error) {
       console.error('Error liking comment:', error)
     }
