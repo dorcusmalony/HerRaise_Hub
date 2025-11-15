@@ -139,22 +139,20 @@
 
 /* Purple Create Post Button */
 .createPostBtn {
-  background: linear-gradient(-45deg, #9d4edd, #7209b7, #480ca8) !important;
-  background-size: 300% 300% !important;
-  animation: purpleWave 3s ease-in-out infinite !important;
+  background: #e84393;
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.createPostBtn:hover {
+  background: #d63384;
+  transform: translateY(-1px);
 }
 
 .createPostBtn::before {
@@ -296,6 +294,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .postCard {
@@ -1168,4 +1167,31 @@
   margin: 0;
   flex: 1;
   text-align: center;
+}
+
+.categoryActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sortSelect {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.sortSelect:focus {
+  outline: none;
+  border-color: #e84393;
+  box-shadow: 0 0 0 3px rgba(232, 67, 147, 0.1);
+}
+
+.sortSelect option {
+  background: white;
+  color: #374151;
 }

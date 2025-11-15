@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import styles from './CategorySelector.module.css'
 
 const FORUM_CATEGORIES = {
@@ -40,6 +41,13 @@ const FORUM_CATEGORIES = {
 }
 
 export default function CategorySelector({ selectedCategory, onCategoryChange, showAsGrid = false }) {
+  const navigate = useNavigate()
+  
+  const handleCategoryClick = (categoryId) => {
+    // Navigate to dedicated category page
+    navigate(`/forum/category/${categoryId}`)
+  }
+  
   if (showAsGrid) {
     return (
       <div className={styles.forumMain}>
@@ -53,12 +61,13 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
             <div 
               key={category.id} 
               className={`${styles.categoryCard} ${selectedCategory === category.id ? styles.selected : ''}`}
-              onClick={() => onCategoryChange(selectedCategory === category.id ? null : category.id)}
+              onClick={() => handleCategoryClick(category.id)}
+              style={{ cursor: 'pointer' }}
             >
               <h4 className={styles.categoryName}>{category.name}</h4>
               <p className={styles.categoryDesc}>{category.description}</p>
               <div className={styles.categoryStats}>
-                <span>{selectedCategory === category.id ? 'Selected' : 'Explore'} →</span>
+                <span>Explore →</span>
               </div>
             </div>
           ))}
