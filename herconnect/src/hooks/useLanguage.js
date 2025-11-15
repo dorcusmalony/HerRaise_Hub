@@ -158,6 +158,11 @@ const translations = {
     'step_3': '3️⃣',
     'step_4': '4️⃣',
     
+    // Additional translations
+    '10K': '10K',
+    'BY 2030': 'BY 2030',
+    'Join Our Mission': 'Join Our Mission',
+    
     // Remaining mentor section text
     'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.',
     'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.': 'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.',
@@ -376,6 +381,7 @@ const translations = {
     'Explore Opportunities': 'استكشف الفرص',
     'BY 2030': 'بحلول 2030',
     '10K': '10آلاف',
+    'Join Our Mission': 'انضم إلى مهمتنا',
     
     // Testimonial stories
     'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
