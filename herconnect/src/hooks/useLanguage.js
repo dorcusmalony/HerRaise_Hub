@@ -332,16 +332,11 @@ const translations = {
     'Because when you rise, your community rises with you.': 'لأنه عندما ترتقي، يرتقي مجتمعك معك.',
     'Join thousands of young women taking charge of their future with courage, education, and purpose.': 'انضم إلى آلاف الشابات اللواتي يتحكمن في مستقبلهن بشجاعة وتعليم وهدف.',
     
-    // Mentor names and professions in Arabic
-    'Dr. Sarah Johnson': 'د. سارة جونسون',
+    // Mentor professions in Arabic (names stay in English)
     'Education Director & Women Rights Advocate': 'مديرة التعليم ومدافعة عن حقوق المرأة',
-    'Grace Akello': 'جريس أكيلو',
     'Tech Entrepreneur & Startup Founder': 'رائدة أعمال تقنية ومؤسسة شركة ناشئة',
-    'Mary Nyandeng': 'ماري نياندينغ',
     'Healthcare Professional & Community Leader': 'أخصائية رعاية صحية وقائدة مجتمعية',
-    'Rebecca Garang': 'ريبيكا قرنق',
     'Legal Advisor & Human Rights Lawyer': 'مستشارة قانونية ومحامية حقوق إنسان',
-    'Amina Hassan': 'أمينة حسن',
     'Financial Advisor & Business Consultant': 'مستشارة مالية واستشارية أعمال',
     
     // Arabic step numbers
@@ -353,7 +348,38 @@ const translations = {
     // Remaining mentor section Arabic text
     'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'تواصل مع مرشدين ملهمين يوجهونك في التعليم والمهنة والنمو الشخصي. لست تسير في هذه الرحلة وحدك.',
     'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.': 'استكشف مواد التعلم حول الثقة والقيادة وبناء المهنة والتطوير الشخصي المصممة خصيصاً للشابات.',
-    'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.': 'تعلم عن المنح الدراسية والتدريبات والفرص العالمية التي يمكن أن تساعدك في تحقيق أحلامك.'
+    'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.': 'تعلم عن المنح الدراسية والتدريبات والفرص العالمية التي يمكن أن تساعدك في تحقيق أحلامك.',
+    
+    // About page additional translations
+    'Success Stories from Our Community': 'قصص نجاح من مجتمعنا',
+    'Hear from young women whose lives have been transformed by HerRaise Hub': 'استمع إلى الشابات اللواتي تغيرت حياتهن بفضل هير رايز هاب',
+    'Secondary School Student': 'طالبة مدرسة ثانوية',
+    'University Student': 'طالبة جامعية',
+    'High School Graduate': 'خريجة مدرسة ثانوية',
+    'Our Community Guidelines': 'إرشادات مجتمعنا',
+    'Creating a safe, supportive, and empowering space for all members': 'إنشاء مساحة آمنة وداعمة ومُمكِّنة لجميع الأعضاء',
+    'Be Respectful': 'كن محترماً',
+    'Treat everyone with kindness and dignity': 'تعامل مع الجميع بلطف وكرامة',
+    'Embrace Inclusivity': 'احتضن الشمولية',
+    'Celebrate diversity and welcome all voices': 'احتفل بالتنوع ورحب بجميع الأصوات',
+    'Communicate Positively': 'تواصل بإيجابية',
+    'Use encouraging and constructive language': 'استخدم لغة مشجعة وبناءة',
+    'Stay Safe': 'ابق آمناً',
+    'Protect your privacy and report concerns': 'احم خصوصيتك وأبلغ عن المخاوف',
+    'Support Each Other': 'ادعموا بعضكم البعض',
+    'Lift others up and share knowledge': 'ارفعوا الآخرين وشاركوا المعرفة',
+    'Be Authentic': 'كن أصيلاً',
+    'Share genuine experiences and advice': 'شارك التجارب والنصائح الحقيقية',
+    'Ready to Make a Difference?': 'مستعد لإحداث فرق؟',
+    'Join thousands of young women and mentors creating positive change together': 'انضم إلى آلاف الشابات والمرشدين الذين يخلقون تغييراً إيجابياً معاً',
+    'Create Account': 'إنشاء حساب',
+    'Explore Opportunities': 'استكشف الفرص',
+    'BY 2030': 'بحلول 2030',
+    
+    // Testimonial stories
+    'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
+    'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.': 'من خلال هير رايز هاب، وجدت فرص منح دراسية لم أعرف بوجودها. المجتمع هنا داعم ومشجع جداً. حصلت على منحة دراسية كاملة لدراساتي الجامعية والآن أرشد فتيات أصغر على المنصة. من الرائع رد الجميل للمساعدة التي تلقيتها.',
+    'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!': 'قبل الانضمام إلى هير رايز هاب، شعرت بالوحدة في رحلتي. الآن لدي شبكة من الزميلات والمرشدين الذين يفهمون تحدياتي. قسم الموارد ساعدني في الاستعداد للاختبارات المعيارية، وقد تم قبولي في برنامج التدريب الذي أحلم به. أنا ممتنة جداً لهذه المنصة!'
   }
 }
 

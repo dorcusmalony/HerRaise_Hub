@@ -9,7 +9,7 @@ const alumniImg1 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 const alumniImg2 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 const alumniImg3 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 
-export default function Home() {
+export default function About() {
   const { t } = useLanguage()
   
   const values = [
@@ -171,11 +171,11 @@ export default function Home() {
                   <div className="bg-white text-dark rounded-circle mx-auto mb-3" style={{ width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div>
                       <div className="display-4 fw-bold" style={{ color: 'var(--brand-magenta)' }}>10K</div>
-                      <div className="small fw-bold">BY 2030</div>
+                      <div className="small fw-bold">{t('BY 2030')}</div>
                     </div>
                   </div>
                   <Link to="/register" className="btn btn-light btn-lg fw-bold">
-                    Join Our Mission
+                    {t('Join Our Mission')}
                   </Link>
                 </div>
               </div>
@@ -185,9 +185,9 @@ export default function Home() {
 
         {/* Alumni Testimonials */}
         <section className="mb-5">
-          <h2 className="text-center mb-4 fw-bold">Success Stories from Our Community</h2>
+          <h2 className="text-center mb-4 fw-bold">{t('Success Stories from Our Community')}</h2>
           <p className="text-center text-muted mb-5">
-            Hear from young women whose lives have been transformed by HerRaise Hub
+            {t('Hear from young women whose lives have been transformed by HerRaise Hub')}
           </p>
           <div className="row g-4">
             {testimonials.map((testimonial, idx) => (
@@ -202,12 +202,12 @@ export default function Home() {
                         style={{ width: 100, height: 100, objectFit: 'cover', border: '4px solid var(--brand-magenta)' }}
                       />
                       <h5 className="fw-bold mb-1">{testimonial.name}</h5>
-                      <p className="text-muted small mb-0">{testimonial.role}</p>
+                      <p className="text-muted small mb-0">{t(testimonial.role)}</p>
                     </div>
                     <div className="position-relative">
                       <div className="text-muted mb-2" style={{ fontSize: '2rem', lineHeight: 1, opacity: 0.3 }}>"</div>
                       <p className="text-muted fst-italic" style={{ fontSize: '0.95rem' }}>
-                        {testimonial.testimony}
+                        {t(testimonial.testimony)}
                       </p>
                       <div className="text-end text-muted" style={{ fontSize: '2rem', lineHeight: 1, opacity: 0.3 }}>"</div>
                     </div>
@@ -220,9 +220,9 @@ export default function Home() {
 
         {/* Community Guidelines */}
         <section className="mb-5">
-          <h2 className="text-center mb-4 fw-bold">Our Community Guidelines</h2>
+          <h2 className="text-center mb-4 fw-bold">{t('Our Community Guidelines')}</h2>
           <p className="text-center text-muted mb-5">
-            Creating a safe, supportive, and empowering space for all members
+            {t('Creating a safe, supportive, and empowering space for all members')}
           </p>
           <div className="row g-4">
             {communityGuidelines.map((guideline, idx) => (
@@ -230,8 +230,8 @@ export default function Home() {
                 <div className="card h-100 border-0 bg-light">
                   <div className="card-body text-center p-4">
                     <div className="fs-1 mb-3">{guideline.icon}</div>
-                    <h5 className="fw-bold mb-2">{guideline.title}</h5>
-                    <p className="text-muted mb-0 small">{guideline.description}</p>
+                    <h5 className="fw-bold mb-2">{t(guideline.title)}</h5>
+                    <p className="text-muted mb-0 small">{t(guideline.description)}</p>
                   </div>
                 </div>
               </div>
@@ -243,16 +243,16 @@ export default function Home() {
         <section className="text-center mb-5">
           <div className="card border-0 bg-light">
             <div className="card-body p-5">
-              <h2 className="display-6 fw-bold mb-4">Ready to Make a Difference?</h2>
+              <h2 className="display-6 fw-bold mb-4">{t('Ready to Make a Difference?')}</h2>
               <p className="lead text-muted mb-4">
-                Join thousands of young women and mentors creating positive change together
+                {t('Join thousands of young women and mentors creating positive change together')}
               </p>
               <div className="d-flex gap-3 justify-content-center flex-wrap">
                 <Link to="/register" className={`btn btn-lg ${styles.brandButton}`}>
-                  Create Account
+                  {t('Create Account')}
                 </Link>
                 <Link to="/opportunities" className="btn btn-lg btn-primary">
-                  Explore Opportunities
+                  {t('Explore Opportunities')}
                 </Link>
                 <Link to="/about" className="btn btn-lg btn-outline-secondary">
                   Learn More
