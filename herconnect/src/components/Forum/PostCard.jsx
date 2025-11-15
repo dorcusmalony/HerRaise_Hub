@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import LikeButton from '../LikeButton/LikeButton'
 import CommentSection from './CommentSection'
+import { notificationAPI } from '../../utils/notificationAPI'
 import styles from './PostCard.module.css'
 
 const getAuthorColor = (name) => {
@@ -21,6 +22,17 @@ export default function PostCard({ post, onUpdate, currentUser }) {
   const [showComments, setShowComments] = useState(false)
   const cardColor = getAuthorColor(post.author?.name || 'User')
 
+  const [likeCount, setLikeCount] = useState(post.likesCount || 0)
+  const [isLiked, setIsLiked] = useState(false)
+
+  useEffect(() => {
+    // Check if current user has liked this post
+    if (currentUser && post.likes) {
+      setIsLiked(post.likes.some(like => like.userId === currentUser.id))
+    }
+    setLikeCount(post.likesCount || post.likes?.length || 0)
+  }, [post, currentUser])
+
   const handleLike = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/forum/posts/${post.id}/like`, {
@@ -31,6 +43,15 @@ export default function PostCard({ post, onUpdate, currentUser }) {
         }
       })
       if (response.ok) {
+        const data = await response.json()
+        setIsLiked(data.liked)
+        setLikeCount(data.likesCount)
+        
+        // Create notification if user liked the post (not their own)
+        if (data.liked && currentUser?.id !== post.author?.id) {
+          notificationAPI.createPostLikeNotification(post.id, post.author?.id)
+        }
+        
         onUpdate()
       }
     } catch (error) {
@@ -70,8 +91,11 @@ export default function PostCard({ post, onUpdate, currentUser }) {
       </Link>
 
       <div className={styles.postActions}>
-        <button onClick={handleLike} className={styles.actionBtn}>
-          ❤️ {post.likesCount || 0}
+        <button 
+          onClick={handleLike} 
+          className={`${styles.actionBtn} ${isLiked ? styles.liked : ''}`}
+        >
+          {isLiked ? '❤️' : '🤍'} {likeCount}
         </button>
         <button 
           onClick={() => setShowComments(!showComments)}
@@ -88,6 +112,7 @@ export default function PostCard({ post, onUpdate, currentUser }) {
           comments={post.ForumComments || []}
           onUpdate={onUpdate}
           currentUser={currentUser}
+          postAuthorId={post.author?.id}
         />
       )}
     </div>
