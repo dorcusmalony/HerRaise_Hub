@@ -136,16 +136,20 @@ export default function Forum() {
       if (response.ok) {
         const data = await response.json()
         console.log('📊 Raw API response:', data)
+        console.log('📊 Response keys:', Object.keys(data))
+        console.log('📊 Response type:', typeof data)
         // Handle both old and new response formats
-        const posts = data.posts || data.data?.posts || []
+        const posts = data.posts || data.data?.posts || data || []
         console.log('📊 Posts array:', posts)
+        console.log('📊 Posts length:', posts?.length)
         console.log('📊 First post sample:', posts?.[0])
-        setPosts(posts)
-        console.log('✅ Posts loaded successfully:', posts?.length || 0)
+        setPosts(Array.isArray(posts) ? posts : [])
+        console.log('✅ Posts loaded successfully:', Array.isArray(posts) ? posts.length : 0)
       } else {
         console.error('❌ Failed to fetch posts:', response.status, response.statusText)
         const errorText = await response.text()
         console.error('❌ Error response:', errorText)
+        setPosts([])
       }
     } catch (error) {
       console.error('❌ Error fetching posts:', error)
@@ -480,11 +484,14 @@ export default function Forum() {
             onSuccess={(post) => {
               if (editingPost) {
                 handleUpdatePost(post)
-                setSuccessMessage('Post update')
+                setSuccessMessage('Post updated successfully!')
               } else {
                 setShowCreateForm(false)
-                setSuccessMessage('Post created!')
-                fetchPosts()
+                setSuccessMessage('Post created successfully!')
+                // Force immediate refresh of posts
+                setTimeout(() => {
+                  fetchPosts()
+                }, 100)
               }
               setTimeout(() => setSuccessMessage(''), 3000)
             }}
