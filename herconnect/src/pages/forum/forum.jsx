@@ -96,6 +96,8 @@ export default function Forum() {
         url += `&subcategory=${selectedSubcategory}`
       }
       
+      console.log('📡 Fetching from URL:', url)
+      
       const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
