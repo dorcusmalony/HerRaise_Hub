@@ -170,7 +170,7 @@ export default function About() {
                 <div className="col-lg-4 text-center">
                   <div className="bg-white text-dark rounded-circle mx-auto mb-3" style={{ width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div>
-                      <div className="display-4 fw-bold" style={{ color: 'var(--brand-magenta)' }}>10K</div>
+                      <div className="display-4 fw-bold" style={{ color: 'var(--brand-magenta)' }}>{t('10K')}</div>
                       <div className="small fw-bold">{t('BY 2030')}</div>
                     </div>
                   </div>
@@ -255,7 +255,7 @@ export default function About() {
                   {t('Explore Opportunities')}
                 </Link>
                 <Link to="/about" className="btn btn-lg btn-outline-secondary">
-                  Learn More
+                  {t('learn_more')}
                 </Link>
               </div>
             </div>

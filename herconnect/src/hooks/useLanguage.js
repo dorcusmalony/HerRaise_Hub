@@ -375,6 +375,7 @@ const translations = {
     'Create Account': 'إنشاء حساب',
     'Explore Opportunities': 'استكشف الفرص',
     'BY 2030': 'بحلول 2030',
+    '10K': '10آلاف',
     
     // Testimonial stories
     'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
