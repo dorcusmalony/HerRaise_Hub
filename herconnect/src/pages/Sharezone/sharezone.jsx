@@ -62,6 +62,20 @@ export default function Content() {
     }
   }, [])
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showForm) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('modal-open')
+    }
+  }, [showForm])
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -357,134 +371,15 @@ export default function Content() {
       <div className="container mt-4">
         <div className="row">
           <div className="col-lg-8 mx-auto">
-            {!showForm ? (
-              <div className="text-center mb-4">
-                <button 
-                  className="btn btn-lg"
-                  style={{ backgroundColor: '#e84393', color: 'white', border: 'none' }}
-                  onClick={() => setShowForm(true)}
-                >
-                  Share Your Work
-                </button>
-              </div>
-            ) : (
-              <div className="card mb-4">
-                <div className="card-header">
-                  <h5 className="mb-0">{isEditing ? 'Edit Your Content' : 'Share Your Content'}</h5>
-                </div>
-                <div className="card-body">
-                  <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                      <label className="form-label">Category</label>
-                      <select 
-                        className="form-select"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleInputChange}
-                      >
-                        <option value="projects">Projects</option>
-                        <option value="essays">Essays</option>
-                        <option value="resumes">Resumes</option>
-                        <option value="videos">Videos</option>
-                        <option value="cover-letters">Cover Letters</option>
-                      </select>
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Title *</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleInputChange}
-                        placeholder="Enter a title for your content"
-                        required
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Description</label>
-                      <textarea
-                        className="form-control"
-                        name="content"
-                        value={formData.content}
-                        onChange={handleInputChange}
-                        rows="4"
-                        placeholder="Describe your content, what you learned, or any details you'd like to share..."
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Upload File</label>
-                      <input
-                        type="file"
-                        className="form-control"
-                        onChange={handleFileChange}
-                        accept="*/*"
-                      />
-                      <small className="text-muted">Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.</small>
-                      
-                      {preview && (
-                        <div className="mt-2">
-                          <img 
-                            src={preview} 
-                            alt="Preview" 
-                            className="img-thumbnail"
-                            style={{ maxWidth: '200px', maxHeight: '200px' }}
-                          />
-                        </div>
-                      )}
-                      
-                      {selectedFile && !preview && (
-                        <div className="mt-2">
-                          <div className="alert alert-info py-2">
-                            <small>{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {error && (
-                      <div className="alert alert-danger">
-                        {error}
-                      </div>
-                    )}
-
-                    <div className="d-flex gap-2">
-                      <button 
-                        type="submit" 
-                        className="btn btn-primary"
-                        disabled={uploading}
-                      >
-                        {uploading ? (
-                          <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                            {isEditing ? 'Updating...' : 'Uploading...'}
-                          </>
-                        ) : (
-                          isEditing ? 'Update Content' : 'Share Content'
-                        )}
-                      </button>
-                      <button 
-                        type="button" 
-                        className="btn btn-secondary"
-                        onClick={() => {
-                          setShowForm(false)
-                          setIsEditing(false)
-                          setEditingPostId(null)
-                          setFormData({ title: '', content: '', category: 'projects' })
-                          setSelectedFile(null)
-                          setPreview(null)
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
+            <div className="text-center mb-4">
+              <button 
+                className="btn btn-lg"
+                style={{ backgroundColor: '#e84393', color: 'white', border: 'none' }}
+                onClick={() => setShowForm(true)}
+              >
+                Share Your Work
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -522,6 +417,150 @@ export default function Content() {
           />
         )}
       </div>
+
+      {/* Share Form Modal */}
+      {showForm && (
+        <div className="modal-overlay" onClick={() => {
+          setShowForm(false)
+          setIsEditing(false)
+          setEditingPostId(null)
+          setFormData({ title: '', content: '', category: 'projects' })
+          setSelectedFile(null)
+          setPreview(null)
+        }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h5 className="modal-title">{isEditing ? 'Edit Your Content' : 'Share Your Content'}</h5>
+              <button 
+                type="button" 
+                className="btn-close"
+                onClick={() => {
+                  setShowForm(false)
+                  setIsEditing(false)
+                  setEditingPostId(null)
+                  setFormData({ title: '', content: '', category: 'projects' })
+                  setSelectedFile(null)
+                  setPreview(null)
+                }}
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label className="form-label">Category</label>
+                  <select 
+                    className="form-select"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                  >
+                    <option value="projects">Projects</option>
+                    <option value="essays">Essays</option>
+                    <option value="resumes">Resumes</option>
+                    <option value="videos">Videos</option>
+                    <option value="cover-letters">Cover Letters</option>
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Title *</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    placeholder="Enter a title for your content"
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Description</label>
+                  <textarea
+                    className="form-control"
+                    name="content"
+                    value={formData.content}
+                    onChange={handleInputChange}
+                    rows="4"
+                    placeholder="Describe your content, what you learned, or any details you'd like to share..."
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Upload File</label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    onChange={handleFileChange}
+                    accept="*/*"
+                  />
+                  <small className="text-muted">Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.</small>
+                  
+                  {preview && (
+                    <div className="mt-2">
+                      <img 
+                        src={preview} 
+                        alt="Preview" 
+                        className="img-thumbnail"
+                        style={{ maxWidth: '200px', maxHeight: '200px' }}
+                      />
+                    </div>
+                  )}
+                  
+                  {selectedFile && !preview && (
+                    <div className="mt-2">
+                      <div className="alert alert-info py-2">
+                        <small>{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {error && (
+                  <div className="alert alert-danger">
+                    {error}
+                  </div>
+                )}
+
+                <div className="d-flex gap-2 justify-content-end">
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setShowForm(false)
+                      setIsEditing(false)
+                      setEditingPostId(null)
+                      setFormData({ title: '', content: '', category: 'projects' })
+                      setSelectedFile(null)
+                      setPreview(null)
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="btn"
+                    style={{ backgroundColor: '#e84393', color: 'white', border: 'none' }}
+                    disabled={uploading}
+                  >
+                    {uploading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                        {isEditing ? 'Updating...' : 'Uploading...'}
+                      </>
+                    ) : (
+                      isEditing ? 'Update Content' : 'Share Content'
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
