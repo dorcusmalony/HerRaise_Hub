@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 import './ShareZoneTable.css'
 
 const SHAREZONE_CATEGORIES = {
@@ -16,6 +17,7 @@ const SHAREZONE_CATEGORIES = {
 }
 
 const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, onEditPost }) => {
+  const { t } = useLanguage()
   const [sortBy, setSortBy] = useState('date')
   const [filterCategory, setFilterCategory] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
@@ -69,7 +71,7 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
         <div className="search-filter-row">
           <input
             type="text"
-            placeholder="Search by title or author..."
+            placeholder={t('Search by title or author...')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -80,7 +82,7 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
             onChange={(e) => setFilterCategory(e.target.value)}
             className="filter-select"
           >
-            <option value="">All Categories</option>
+            <option value="">{t('All Categories')}</option>
             {Object.entries(SHAREZONE_CATEGORIES).map(([key, label]) => (
               <option key={key} value={key}>{label}</option>
             ))}
@@ -91,11 +93,11 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
             onChange={(e) => setSortBy(e.target.value)}
             className="sort-select"
           >
-            <option value="date">Sort by Date</option>
-            <option value="title">Sort by Title</option>
-            <option value="author">Sort by Author</option>
-            <option value="category">Sort by Category</option>
-            <option value="comments">Sort by Comments</option>
+            <option value="date">{t('Sort by Date')}</option>
+            <option value="title">{t('Sort by Title')}</option>
+            <option value="author">{t('Sort by Author')}</option>
+            <option value="category">{t('Sort by Category')}</option>
+            <option value="comments">{t('Sort by Comments')}</option>
           </select>
         </div>
       </div>
@@ -104,20 +106,20 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
         <table className="sharezone-table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Author</th>
-              <th>Date</th>
-              <th>File</th>
-              <th>Comments</th>
-              <th>Actions</th>
+              <th>{t('Title')}</th>
+              <th>{t('Category')}</th>
+              <th>{t('Author')}</th>
+              <th>{t('Date')}</th>
+              <th>{t('File')}</th>
+              <th>{t('Comments')}</th>
+              <th>{t('Actions')}</th>
             </tr>
           </thead>
           <tbody>
             {filteredAndSortedContents.length === 0 ? (
               <tr>
                 <td colSpan="7" className="no-data">
-                  {contents.length === 0 ? 'No content shared yet' : 'No content matches your filters'}
+                  {contents.length === 0 ? t('No content shared yet') : t('No content matches your filters')}
                 </td>
               </tr>
             ) : (
@@ -148,7 +150,7 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                         className="author-avatar"
                       />
                       <span className="author-name">
-                        {content.author?.name || 'Anonymous'}
+                        {content.author?.name || t('Anonymous')}
                       </span>
                     </div>
                   </td>
@@ -165,10 +167,10 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                         rel="noopener noreferrer"
                         className="file-link"
                       >
-                        View File
+                        {t('View File')}
                       </a>
                     ) : (
-                      <span className="no-file">No file</span>
+                      <span className="no-file">{t('No file')}</span>
                     )}
                   </td>
                   
@@ -177,7 +179,7 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                       className="comments-btn"
                       onClick={() => onCommentToggle(content._id)}
                     >
-                      Comments ({content.ShareZoneComments?.length || 0})
+                      {t('Comments')} ({content.ShareZoneComments?.length || 0})
                     </button>
                   </td>
                   
@@ -201,7 +203,7 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                           }}
                           onClick={() => onEditPost(content._id)}
                         >
-                          Edit
+                          {t('Edit')}
                         </button>
                         <button 
                           style={{
@@ -215,7 +217,7 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                           }}
                           onClick={() => onDeletePost(content._id)}
                         >
-                          Delete
+                          {t('Delete')}
                         </button>
                       </div>
                     ) : (
@@ -231,7 +233,7 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
 
       <div className="table-footer">
         <span className="results-count">
-          Showing {filteredAndSortedContents.length} of {contents.length} posts
+          {t('Showing')} {filteredAndSortedContents.length} {t('of')} {contents.length} {t('posts')}
         </span>
       </div>
     </div>
