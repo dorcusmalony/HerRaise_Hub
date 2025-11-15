@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../../hooks/useLanguage'
 import styles from '../../styles/Pages.module.css'
 
 // image assets within src/images
@@ -9,15 +10,17 @@ const alumniImg2 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 const alumniImg3 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 
 export default function Home() {
+  const { t } = useLanguage()
+  
   const values = [
-    { name: 'Respect', icon: '', color: '#FFD700' },
-    { name: 'Mentorship', icon: '', color: '#E84393' },
-    { name: 'Diversity', icon: '', color: '#4A90E2' },
-    { name: 'Equality', icon: '', color: '#9B59B6' },
-    { name: 'Inclusion', icon: '', color: '#FF6B6B' },
-    { name: 'Empowerment', icon: '', color: '#F39C12' },
-    { name: 'Collaboration', icon: '', color: '#3498DB' },
-    { name: 'Lifelong Learning', icon: '', color: '#8E44AD' }
+    { name: t('respect'), icon: '', color: '#FFD700' },
+    { name: t('mentorship'), icon: '', color: '#E84393' },
+    { name: t('diversity'), icon: '', color: '#4A90E2' },
+    { name: t('equality'), icon: '', color: '#9B59B6' },
+    { name: t('inclusion'), icon: '', color: '#FF6B6B' },
+    { name: t('empowerment'), icon: '', color: '#F39C12' },
+    { name: t('collaboration'), icon: '', color: '#3498DB' },
+    { name: t('lifelong_learning'), icon: '', color: '#8E44AD' }
   ]
 
   const testimonials = [
@@ -59,15 +62,15 @@ export default function Home() {
           <div className={styles.heroOverlay}>
             <div className="container">
               <h1 className={`${styles.heroTitle} display-3 fw-bold text-white mb-4`}>
-                Every Girl Deserves Education & A Bright Future
+                {t('hero_title') || 'Every Girl Deserves Education & A Bright Future'}
               </h1>
               
               <div className="d-flex gap-3">
                 <Link to="/register" className={`btn btn-lg ${styles.brandButton}`}>
-                  Join Our Community
+                  {t('join_community')}
                 </Link>
                 <Link to="/about" className="btn btn-lg btn-outline-light">
-                  Learn More
+                  {t('learn_more')}
                 </Link>
               </div>
             </div>
@@ -79,22 +82,22 @@ export default function Home() {
         {/* Mission Statement */}
         <section className="mb-5 text-center">
           <h2 className="display-5 fw-bold mb-4">
-            Our Mission
+            {t('our_mission')}
           </h2>
           <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            To empower and mentor young women and girls in South Sudan to rise beyond societal limitations through education, storytelling, and mentorship  helping them realize their worth and build independent, confident lives.
+            {t('mission_text')}
           </p>
           <h2 className="display-5 fw-bold mb-4">
-            Our Vision
+            {t('our_vision')}
           </h2>
           <p className="lead mx-auto" style={{ maxWidth: '800px' }}>
-            A South Sudan where every girl grows with courage, education, and purpose , free to dream, lead, and transform her community.
+            {t('vision_text')}
           </p>
         </section>
 
         {/* Our Values */}
         <section className="mb-5">
-          <h2 className="text-center mb-4 fw-bold">Our Core Values</h2>
+          <h2 className="text-center mb-4 fw-bold">{t('core_values')}</h2>
           <div className="row g-3">
             {values.map((value, idx) => (
               <div key={idx} className="col-6 col-md-3">
@@ -123,46 +126,45 @@ export default function Home() {
             <div className="card-body text-white p-5">
               <div className="row align-items-center">
                 <div className="col-lg-8">
-                  <h2 className="display-6 fw-bold mb-4"> Our 2030 Goal: Reach 10,000 Girls</h2>
+                  <h2 className="display-6 fw-bold mb-4">{t('goal_2030')}</h2>
                   <p className="lead mb-4">
-                    By 2030, we aim to connect <strong>10,000 girls</strong> with resources for undergraduate opportunities,
-                    conferences, and internships.
+                    {t('goal_text')}
                   </p>
                   <div className="mb-4">
-                    <h5 className="fw-bold mb-3">We Fight Against:</h5>
+                    <h5 className="fw-bold mb-3">{t('fight_against')}</h5>
                     <div className="row g-2">
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
                           
-                          <span>Gender Inequality</span>
+                          <span>{t('gender_inequality')}</span>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
                           
-                          <span>Gender-Based Violence</span>
+                          <span>{t('gender_violence')}</span>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
                           
-                          <span>Early Marriage</span>
+                          <span>{t('early_marriage')}</span>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
                           
-                          <span>Lack of Opportunities</span>
+                          <span>{t('lack_opportunities')}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <h5 className="fw-bold mb-3">Help Us Reach Our Goal By:</h5>
+                  <h5 className="fw-bold mb-3">{t('help_reach_goal')}</h5>
                   <ul className="list-unstyled mb-4">
-                    <li className="mb-2"> <strong>Joining</strong> our platform to learn and connect</li>
-                    <li className="mb-2"> <strong>Becoming a mentor</strong> to guide young women</li>
-                    <li className="mb-2"> <strong>Spreading the word</strong> to reach more girls</li>
-                    <li className="mb-2"> <strong>Supporting</strong> our mission and programs</li>
+                    <li className="mb-2">{t('joining_platform')}</li>
+                    <li className="mb-2">{t('becoming_mentor')}</li>
+                    <li className="mb-2">{t('spreading_word')}</li>
+                    <li className="mb-2">{t('supporting_mission')}</li>
                   </ul>
                 </div>
                 <div className="col-lg-4 text-center">

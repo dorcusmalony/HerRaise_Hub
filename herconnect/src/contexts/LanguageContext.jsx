@@ -22,39 +22,8 @@ export const LanguageProvider = ({ children }) => {
   }, [])
 
   const getDefaultTranslations = (lang) => {
-    const defaults = {
-      en: {
-        'nav.home': 'Home',
-        'nav.about': 'About',
-        'nav.opportunities': 'Opportunities',
-        'nav.forum': 'Forum',
-        'nav.resources': 'Resources',
-        'nav.login': 'Login',
-        'nav.register': 'Register',
-        'opportunities.apply': 'Apply Now',
-        'opportunities.bookmark': 'Bookmark',
-        'opportunities.deadline': 'Deadline',
-        'common.loading': 'Loading...',
-        'common.search': 'Search',
-        'common.filter': 'Filter'
-      },
-      ar: {
-        'nav.home': 'الرئيسية',
-        'nav.about': 'حول',
-        'nav.opportunities': 'الفرص',
-        'nav.forum': 'المنتدى',
-        'nav.resources': 'الموارد',
-        'nav.login': 'تسجيل الدخول',
-        'nav.register': 'التسجيل',
-        'opportunities.apply': 'تقدم الآن',
-        'opportunities.bookmark': 'حفظ',
-        'opportunities.deadline': 'الموعد النهائي',
-        'common.loading': 'جاري التحميل...',
-        'common.search': 'بحث',
-        'common.filter': 'تصفية'
-      }
-    }
-    return defaults[lang] || defaults.en
+    // Return empty object since we're using useLanguage hook for translations
+    return {}
   }
 
   const switchLanguage = async (lang) => {
