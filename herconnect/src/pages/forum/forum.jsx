@@ -41,10 +41,8 @@ export default function Forum() {
   const [commentText, setCommentText] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
-  const [selectedType, setSelectedType] = useState('project')
   const [showPostDropdown, setShowPostDropdown] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null)
 
 
   // Load current user
@@ -108,9 +106,7 @@ export default function Forum() {
       } else {
         url = `${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`
       }
-      if (selectedSubcategory) {
-        url += `&subcategory=${selectedSubcategory}`
-      }
+
       
       console.log('📡 Fetching from URL:', url)
       
@@ -156,7 +152,7 @@ export default function Forum() {
     } finally {
       setLoading(false)
     }
-  }, [API, filter, sortBy, selectedCategory, selectedSubcategory])
+  }, [API, filter, sortBy, selectedCategory])
 
   useEffect(() => {
     fetchPosts()
@@ -478,9 +474,7 @@ export default function Forum() {
 
           <CreatePostForm
             editPost={editingPost}
-            initialType={selectedType}
             initialCategory={selectedCategory}
-            initialSubcategory={selectedSubcategory}
             onSuccess={(post) => {
               if (editingPost) {
                 handleUpdatePost(post)

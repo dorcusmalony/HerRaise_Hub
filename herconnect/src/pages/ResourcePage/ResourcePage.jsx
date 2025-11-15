@@ -118,6 +118,21 @@ export default function ResourcePage() {
     ]
   }
 
+  // Generate consistent color for each resource like Zoom profiles
+  const getResourceColor = (title) => {
+    const colors = [
+      '#e84393', '#00b894', '#6c5ce7', '#fd79a8', 
+      '#fdcb6e', '#e17055', '#74b9ff', '#a29bfe',
+      '#fd79a8', '#55a3ff', '#26de81', '#fc5c65',
+      '#fed330', '#45aaf2', '#a55eea', '#778ca3'
+    ]
+    let hash = 0
+    for (let i = 0; i < title.length; i++) {
+      hash = title.charCodeAt(i) + ((hash << 5) - hash)
+    }
+    return colors[Math.abs(hash) % colors.length]
+  }
+
   const getTypeColor = (type) => {
     const colors = {
       'PDF': '#dc3545',
@@ -192,7 +207,13 @@ export default function ResourcePage() {
           <div className="row g-4">
             {items.map((resource, idx) => (
               <div key={idx} className="col-12 col-md-6 col-lg-4">
-                <div className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll}`}>
+                <div 
+                  className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll} ${styles.zoomCard}`}
+                  style={{
+                    borderLeft: `4px solid ${getResourceColor(resource.title)}`,
+                    background: `linear-gradient(135deg, ${getResourceColor(resource.title)}40, ${getResourceColor(resource.title)}20, white)`
+                  }}
+                >
                   <div className="card-body p-4">
 
                     
@@ -241,7 +262,13 @@ export default function ResourcePage() {
               <div className="row g-4">
                 {items.map((resource, idx) => (
                   <div key={idx} className="col-12 col-md-6 col-lg-4">
-                    <div className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll}`}>
+                    <div 
+                      className={`card h-100 shadow-sm border-0 ${styles.hoverShadow} ${styles.transitionAll} ${styles.zoomCard}`}
+                      style={{
+                        borderLeft: `4px solid ${getResourceColor(resource.title)}`,
+                        background: `linear-gradient(135deg, ${getResourceColor(resource.title)}40, ${getResourceColor(resource.title)}20, white)`
+                      }}
+                    >
                       <div className="card-body p-4">
 
                         

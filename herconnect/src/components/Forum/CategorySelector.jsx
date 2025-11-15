@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import styles from './CategorySelector.module.css'
 
 const FORUM_CATEGORIES = {
