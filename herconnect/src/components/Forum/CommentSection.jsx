@@ -5,6 +5,7 @@ import styles from './CommentSection.module.css'
 export default function CommentSection({ postId, comments, onUpdate, currentUser, postAuthorId }) {
   const [newComment, setNewComment] = useState('')
   const [replyTo, setReplyTo] = useState(null)
+  const [showCommentForm, setShowCommentForm] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -26,6 +27,7 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
         const data = await response.json()
         setNewComment('')
         setReplyTo(null)
+        setShowCommentForm(false)
         
         // Create notification for comment or reply
         if (replyTo) {
@@ -75,7 +77,15 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
 
   return (
     <div className={styles.commentSection}>
-      <form onSubmit={handleSubmit} className={styles.commentForm}>
+      {!showCommentForm ? (
+        <button 
+          onClick={() => setShowCommentForm(true)}
+          className={styles.showCommentBtn}
+        >
+          💬 Add a comment...
+        </button>
+      ) : (
+        <form onSubmit={handleSubmit} className={styles.commentForm}>
         <div className={styles.commentInputWrapper}>
           <img 
             src={currentUser?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'User')}&background=8B5CF6&color=fff`}
@@ -92,16 +102,23 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
           />
         </div>
         <div className={styles.commentActions}>
-          {replyTo && (
-            <button type="button" onClick={() => setReplyTo(null)} className={styles.cancelBtn}>
-              Cancel Reply
-            </button>
-          )}
+          <button 
+            type="button" 
+            onClick={() => {
+              setShowCommentForm(false)
+              setNewComment('')
+              setReplyTo(null)
+            }} 
+            className={styles.cancelBtn}
+          >
+            Cancel
+          </button>
           <button type="submit" className={styles.submitBtn}>
             {replyTo ? 'Reply' : 'Comment'}
           </button>
         </div>
       </form>
+      )}
 
       <div className={styles.commentsList}>
         {comments.filter(c => !c.parentCommentId).map(comment => (
@@ -126,7 +143,10 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
                 ❤️ {comment.likes?.length || 0}
               </button>
               <button 
-                onClick={() => setReplyTo(comment.id)}
+                onClick={() => {
+                  setReplyTo(comment.id)
+                  setShowCommentForm(true)
+                }}
                 className={styles.replyBtn}
               >
                 Reply
