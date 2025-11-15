@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 import CommentItem from '../../components/Forum/CommentItem'
 import ShareZoneTable from '../../components/ShareZone/ShareZoneTable'
 import CommentsModal from '../../components/ShareZone/CommentsModal'
@@ -7,6 +8,7 @@ import './sharezone.css'
 const API_URL = import.meta.env.VITE_API_URL || ''
 
 export default function Content() {
+  const { t } = useLanguage()
   const [contents, setContents] = useState([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
@@ -86,7 +88,7 @@ export default function Content() {
   const validateFile = (file) => {
     const maxSize = 100 * 1024 * 1024 // 100MB
     if (file.size > maxSize) {
-      setError('File too large. Maximum size is 100MB')
+      setError(t('File too large. Maximum size is 100MB'))
       return false
     }
     return true
@@ -117,7 +119,7 @@ export default function Content() {
     e.preventDefault()
     
     if (!formData.title.trim()) {
-      setError('Title is required')
+      setError(t('Title is required'))
       return
     }
 
@@ -170,12 +172,12 @@ export default function Content() {
         const fileInput = document.querySelector('input[type="file"]')
         if (fileInput) fileInput.value = ''
       } else {
-        const errorData = await response.json().catch(() => ({ error: isEditing ? 'Update failed' : 'Upload failed' }))
-        setError(errorData.error || errorData.message || (isEditing ? 'Update failed' : 'Upload failed'))
+        const errorData = await response.json().catch(() => ({ error: isEditing ? t('Update failed') : t('Upload failed') }))
+        setError(errorData.error || errorData.message || (isEditing ? t('Update failed') : t('Upload failed')))
       }
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'creating'} post:`, error)
-      setError('Network error. Please try again.')
+      setError(t('Network error. Please try again.'))
     } finally {
       setUploading(false)
     }
@@ -270,7 +272,7 @@ export default function Content() {
   }
 
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm('Delete this comment? This action cannot be undone.')) return
+    if (!window.confirm(t('Delete this comment? This action cannot be undone.'))) return
 
     try {
       const token = localStorage.getItem('token')
@@ -292,7 +294,7 @@ export default function Content() {
   }
 
   const handleDeletePost = async (postId) => {
-    if (!window.confirm('Delete this post? This action cannot be undone.')) return
+    if (!window.confirm(t('Delete this post? This action cannot be undone.'))) return
 
     try {
       const token = localStorage.getItem('token')
@@ -334,34 +336,34 @@ export default function Content() {
       <div className="content-banner">
         <div className="banner-content">
           <div className="header-text">
-            <h1>Welcome to ShareZone</h1>
-            <p className="main-subtitle">Share Your Work & Get Feedback</p>
-            <p className="description">Upload projects, essays, videos and connect with peers and mentors</p>
+            <h1>{t('Welcome to ShareZone')}</h1>
+            <p className="main-subtitle">{t('Share Your Work & Get Feedback')}</p>
+            <p className="description">{t('Upload projects, essays, videos and connect with peers and mentors')}</p>
             
             <div className="contribution-highlight">
               <div className="highlight-item">
                 <span className="highlight-icon"></span>
-                <span>Share Projects</span>
+                <span>{t('Share Projects')}</span>
               </div>
               <div className="highlight-item">
                 <span className="highlight-icon"></span>
-                <span>Upload Essays</span>
+                <span>{t('Upload Essays')}</span>
               </div>
               <div className="highlight-item">
                 <span className="highlight-icon"></span>
-                <span>Upload Videos</span>
+                <span>{t('Upload Videos')}</span>
               </div>
               <div className="highlight-item">
                 <span className="highlight-icon"></span>
-                <span>Share Images</span>
+                <span>{t('Share Images')}</span>
               </div>
               <div className="highlight-item">
                 <span className="highlight-icon"></span>
-                <span>Upload Resume</span>
+                <span>{t('Upload Resume')}</span>
               </div>
               <div className="highlight-item">
                 <span className="highlight-icon"></span>
-                <span>Cover Letters</span>
+                <span>{t('Cover Letters')}</span>
               </div>
             </div>
           </div>
@@ -377,7 +379,7 @@ export default function Content() {
                 style={{ backgroundColor: '#e84393', color: 'white', border: 'none' }}
                 onClick={() => setShowForm(true)}
               >
-                Share Your Work
+                {t('Share Your Work')}
               </button>
             </div>
           </div>
@@ -388,7 +390,7 @@ export default function Content() {
         {loading ? (
           <div className="text-center py-4">
             <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
+              <span className="visually-hidden">{t('Loading...')}</span>
             </div>
           </div>
         ) : (
@@ -430,7 +432,7 @@ export default function Content() {
         }}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h5 className="modal-title">{isEditing ? 'Edit Your Content' : 'Share Your Content'}</h5>
+              <h5 className="modal-title">{isEditing ? t('Edit Your Content') : t('Share Your Content')}</h5>
               <button 
                 type="button" 
                 className="btn-close"
@@ -449,55 +451,55 @@ export default function Content() {
             <div className="modal-body">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label className="form-label">Category</label>
+                  <label className="form-label">{t('Category')}</label>
                   <select 
                     className="form-select"
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
                   >
-                    <option value="projects">Projects</option>
-                    <option value="essays">Essays</option>
-                    <option value="resumes">Resumes</option>
-                    <option value="videos">Videos</option>
-                    <option value="cover-letters">Cover Letters</option>
+                    <option value="projects">{t('Projects')}</option>
+                    <option value="essays">{t('Essays')}</option>
+                    <option value="resumes">{t('Resumes')}</option>
+                    <option value="videos">{t('Videos')}</option>
+                    <option value="cover-letters">{t('Cover Letters')}</option>
                   </select>
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Title *</label>
+                  <label className="form-label">{t('Title *')}</label>
                   <input
                     type="text"
                     className="form-control"
                     name="title"
                     value={formData.title}
                     onChange={handleInputChange}
-                    placeholder="Enter a title for your content"
+                    placeholder={t('Enter a title for your content')}
                     required
                   />
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">{t('Description')}</label>
                   <textarea
                     className="form-control"
                     name="content"
                     value={formData.content}
                     onChange={handleInputChange}
                     rows="4"
-                    placeholder="Describe your content, what you learned, or any details you'd like to share..."
+                    placeholder={t('Describe your content, what you learned, or any details you\'d like to share...')}
                   />
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Upload File</label>
+                  <label className="form-label">{t('Upload File')}</label>
                   <input
                     type="file"
                     className="form-control"
                     onChange={handleFileChange}
                     accept="*/*"
                   />
-                  <small className="text-muted">Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.</small>
+                  <small className="text-muted">{t('Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.')}</small>
                   
                   {preview && (
                     <div className="mt-2">
@@ -538,7 +540,7 @@ export default function Content() {
                       setPreview(null)
                     }}
                   >
-                    Cancel
+                    {t('Cancel')}
                   </button>
                   <button 
                     type="submit" 
@@ -549,10 +551,10 @@ export default function Content() {
                     {uploading ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                        {isEditing ? 'Updating...' : 'Uploading...'}
+                        {isEditing ? t('Updating...') : t('Uploading...')}
                       </>
                     ) : (
-                      isEditing ? 'Update Content' : 'Share Content'
+                      isEditing ? t('Update Content') : t('Share Content')
                     )}
                   </button>
                 </div>

@@ -215,6 +215,62 @@ const translations = {
     'Cancel': 'Cancel',
     'Please login to continue': 'Please login to continue',
     
+    // Post card and actions
+    'views': 'views',
+    'Edit Post': 'Edit Post',
+    'Delete Post': 'Delete Post',
+    'No permissions': 'No permissions',
+    'Published from': 'Published from',
+    'file': 'file',
+    'files': 'files',
+    'attached': 'attached',
+    'Download': 'Download',
+    'Type:': 'Type:',
+    'Are you sure you want to delete this post? This action cannot be undone.': 'Are you sure you want to delete this post? This action cannot be undone.',
+    'Delete this comment? This action cannot be undone.': 'Delete this comment? This action cannot be undone.',
+    'Browse by type:': 'Browse by type',
+    'Tip:': 'Tip',
+    'Questions with clear context get better responses!': 'Questions with clear context get better responses!',
+    'Comment posted successfully!': 'Comment posted successfully!',
+    'Post updated successfully!': 'Post updated successfully!',
+    'Post created successfully!': 'Post created successfully!',
+    'Failed to delete post. Please try again.': 'Failed to delete post. Please try again.',
+    'Failed to delete comment. Please try again.': 'Failed to delete comment. Please try again.',
+    'Loading...': 'Loading...',
+    
+    // ShareZone translations
+    'Welcome to ShareZone': 'Welcome to ShareZone',
+    'Share Your Work & Get Feedback': 'Share Your Work & Get Feedback',
+    'Upload projects, essays, videos and connect with peers and mentors': 'Upload projects, essays, videos and connect with peers and mentors',
+    'Share Projects': 'Share Projects',
+    'Upload Essays': 'Upload Essays',
+    'Upload Videos': 'Upload Videos',
+    'Share Images': 'Share Images',
+    'Upload Resume': 'Upload Resume',
+    'Cover Letters': 'Cover Letters',
+    'Share Your Work': 'Share Your Work',
+    'Edit Your Content': 'Edit Your Content',
+    'Share Your Content': 'Share Your Content',
+    'Category': 'Category',
+    'Projects': 'Projects',
+    'Essays': 'Essays',
+    'Resumes': 'Resumes',
+    'Videos': 'Videos',
+    'Title *': 'Title *',
+    'Enter a title for your content': 'Enter a title for your content',
+    'Description': 'Description',
+    'Describe your content, what you learned, or any details you\'d like to share...': 'Describe your content, what you learned, or any details you\'d like to share...',
+    'Upload File': 'Upload File',
+    'Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.': 'Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.',
+    'File too large. Maximum size is 100MB': 'File too large. Maximum size is 100MB',
+    'Title is required': 'Title is required',
+    'Network error. Please try again.': 'Network error. Please try again.',
+    'Updating...': 'Updating...',
+    'Uploading...': 'Uploading...',
+    'Update Content': 'Update Content',
+    'Share Content': 'Share Content',
+    'Delete this post? This action cannot be undone.': 'Delete this post? This action cannot be undone.',
+    
     // Remaining mentor section text
     'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.',
     'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.': 'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.',
@@ -487,6 +543,62 @@ const translations = {
     'Cancel': 'إلغاء',
     'Please login to continue': 'يرجى تسجيل الدخول للمتابعة',
     
+    // Post card and actions Arabic
+    'views': 'مشاهدة',
+    'Edit Post': 'تعديل المنشور',
+    'Delete Post': 'حذف المنشور',
+    'No permissions': 'لا توجد صلاحيات',
+    'Published from': 'منشور من',
+    'file': 'ملف',
+    'files': 'ملفات',
+    'attached': 'مرفق',
+    'Download': 'تحميل',
+    'Type:': 'النوع:',
+    'Are you sure you want to delete this post? This action cannot be undone.': 'هل أنت متأكد من حذف هذا المنشور؟ لا يمكن التراجع عن هذا الإجراء.',
+    'Delete this comment? This action cannot be undone.': 'حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.',
+    'Browse by type:': 'تصفح حسب النوع',
+    'Tip:': 'نصيحة:',
+    'Questions with clear context get better responses!': 'الأسئلة ذات السياق الواضح تحصل على إجابات أفضل!',
+    'Comment posted successfully!': 'تم نشر التعليق بنجاح!',
+    'Post updated successfully!': 'تم تحديث المنشور بنجاح!',
+    'Post created successfully!': 'تم إنشاء المنشور بنجاح!',
+    'Failed to delete post. Please try again.': 'فشل في حذف المنشور. يرجى المحاولة مرة أخرى.',
+    'Failed to delete comment. Please try again.': 'فشل في حذف التعليق. يرجى المحاولة مرة أخرى.',
+    'Loading...': 'جاري التحميل...',
+    
+    // ShareZone Arabic translations
+    'Welcome to ShareZone': 'مرحباً بك في منطقة المشاركة',
+    'Share Your Work & Get Feedback': 'شارك عملك واحصل على التعليقات',
+    'Upload projects, essays, videos and connect with peers and mentors': 'ارفع المشاريع، المقالات، الفيديوهات وتواصل مع الزملاء والمرشدين',
+    'Share Projects': 'شارك المشاريع',
+    'Upload Essays': 'ارفع المقالات',
+    'Upload Videos': 'ارفع الفيديوهات',
+    'Share Images': 'شارك الصور',
+    'Upload Resume': 'ارفع السيرة الذاتية',
+    'Cover Letters': 'خطابات التغطية',
+    'Share Your Work': 'شارك عملك',
+    'Edit Your Content': 'تعديل محتواك',
+    'Share Your Content': 'شارك محتواك',
+    'Category': 'الفئة',
+    'Projects': 'المشاريع',
+    'Essays': 'المقالات',
+    'Resumes': 'السير الذاتية',
+    'Videos': 'الفيديوهات',
+    'Title *': 'العنوان *',
+    'Enter a title for your content': 'أدخل عنواناً لمحتواك',
+    'Description': 'الوصف',
+    'Describe your content, what you learned, or any details you\'d like to share...': 'صف محتواك، ما تعلمته، أو أي تفاصيل تريد مشاركتها...',
+    'Upload File': 'رفع ملف',
+    'Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.': 'الحد الأقصى لحجم الملف: 100 ميجابايت. يدعم الفيديوهات (حوالي 10 دقائق عالي الجودة)، المستندات، الصور، والمزيد.',
+    'File too large. Maximum size is 100MB': 'الملف كبير جداً. الحد الأقصى 100 ميجابايت',
+    'Title is required': 'العنوان مطلوب',
+    'Network error. Please try again.': 'خطأ في الشبكة. يرجى المحاولة مرة أخرى.',
+    'Updating...': 'جاري التحديث...',
+    'Uploading...': 'جاري الرفع...',
+    'Update Content': 'تحديث المحتوى',
+    'Share Content': 'مشاركة المحتوى',
+    'Delete this post? This action cannot be undone.': 'حذف هذا المنشور؟ لا يمكن التراجع عن هذا الإجراء.',
+    
     // Testimonial stories
     'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
     'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.': 'من خلال هير رايز هاب، وجدت فرص منح دراسية لم أعرف بوجودها. المجتمع هنا داعم ومشجع جداً. حصلت على منحة دراسية كاملة لدراساتي الجامعية والآن أرشد فتيات أصغر على المنصة. من الرائع رد الجميل للمساعدة التي تلقيتها.',
@@ -506,7 +618,12 @@ export const useLanguage = () => {
   // Create t function that uses current language
   const t = (key) => {
     const currentLang = language || 'en'
-    return translations[currentLang]?.[key] || key
+    const translation = translations[currentLang]?.[key] || key
+    // Debug log for forum translations
+    if (key.includes('Community Forum') || key.includes('Ask Questions')) {
+      console.log('🔍 Translation Debug:', { key, currentLang, translation })
+    }
+    return translation
   }
   
   // FIX: Return context WITH the t function
