@@ -7,6 +7,22 @@ import LikeButton from '../../components/LikeButton/LikeButton'
 import styles from './forum.module.css'
 import './youtube-video.css'
 
+// Generate consistent color for each user
+const getAuthorColor = (name) => {
+  const colors = [
+    '#e74c3c', '#3498db', '#9b59b6', '#e67e22', 
+    '#1abc9c', '#f39c12', '#2ecc71', '#34495e',
+    '#e91e63', '#9c27b0', '#673ab7', '#3f51b5',
+    '#2196f3', '#00bcd4', '#009688', '#4caf50',
+    '#8bc34a', '#cddc39', '#ffc107', '#ff9800'
+  ]
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return colors[Math.abs(hash) % colors.length]
+}
+
 export default function Forum() {
   const { t } = useTranslation()
   const API = import.meta.env.VITE_API_URL || ''
@@ -383,25 +399,40 @@ export default function Forum() {
         </div>
       </div>
 
-      {/* Category Navigation - Hidden when form is shown */}
+      {/* Main Forum - Categories Grid */}
       {!showCreateForm && !editingPost && (
         <CategorySelector
+          showAsGrid={true}
           selectedCategory={selectedCategory}
-          selectedSubcategory={selectedSubcategory}
-          onCategoryChange={setSelectedCategory}
-          onSubcategoryChange={setSelectedSubcategory}
-          onCategoryClick={(categoryId, subcategoryId) => {
+          onCategoryChange={(categoryId) => {
             setSelectedCategory(categoryId)
-            if (subcategoryId) {
-              setSelectedSubcategory(subcategoryId)
-            }
-            setShowCreateForm(true)
           }}
         />
       )}
 
-      {/* Enhanced Filter Bar - Hidden when form is shown */}
-      {!showCreateForm && !editingPost && (
+      {/* Category Header - Show when category selected */}
+      {!showCreateForm && !editingPost && selectedCategory && (
+        <div className={styles.categoryHeader}>
+          <button 
+            onClick={() => setSelectedCategory(null)}
+            className={styles.backBtn}
+          >
+            ← All Categories
+          </button>
+          <h2 className={styles.categoryTitle}>
+            {FORUM_CATEGORIES[selectedCategory]?.name || selectedCategory}
+          </h2>
+          <button 
+            onClick={() => setShowCreateForm(true)}
+            className={styles.createPostBtn}
+          >
+            + New Post
+          </button>
+        </div>
+      )}
+
+      {/* Filter Bar - Show when category selected */}
+      {!showCreateForm && !editingPost && selectedCategory && (
         <div className={styles.filterBar}>
           <div className={styles.filterSection}>
             <label className={styles.filterLabel}>Browse by type:</label>
@@ -465,48 +496,11 @@ export default function Forum() {
         </div>
       )}
 
-      {/* Quick Create Buttons - Hidden when form is shown */}
-      {!showCreateForm && !editingPost && (
-        <div className={styles.quickCreateSection}>
-          <div className={styles.createButtons}>
-            <button 
-              onClick={() => {
-                setSelectedType('question')
-                setSelectedCategory(null)
-                setSelectedSubcategory(null)
-                setShowCreateForm(true)
-              }}
-              className={styles.createBtn}
-            >
-              <div className={styles.btnIcon}></div>
-              <div className={styles.btnText}>Ask Question</div>
-              <div className={styles.btnCount}>{posts.filter(p => p.type === 'question').length} asked</div>
-            </button>
-            <button 
-              onClick={() => {
-                setSelectedType('discussion')
-                setSelectedCategory(null)
-                setSelectedSubcategory(null)
-                setShowCreateForm(true)
-              }}
-              className={styles.createBtn}
-            >
-              <div className={styles.btnIcon}></div>
-              <div className={styles.btnText}>Start Discussion</div>
-              <div className={styles.btnCount}>{posts.filter(p => p.type === 'discussion').length} started</div>
-            </button>
-          </div>
-        </div>
-      )}
 
-      {/* Posts List */}
-      {!showCreateForm && !editingPost && (
-        (() => {
-          console.log('🎯 Rendering posts section. Posts length:', posts.length)
-          console.log('🎯 Show create form:', showCreateForm)
-          console.log('🎯 Editing post:', editingPost)
-          return posts.length === 0
-        })() ? (
+
+      {/* Posts List - Show when category selected */}
+      {!showCreateForm && !editingPost && selectedCategory && (
+        posts.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}></div>
             <h4 className={styles.emptyTitle}>Start the conversation!</h4>
@@ -525,16 +519,35 @@ export default function Forum() {
           </div>
         ) : (
           <div className={styles.postsList}>
-            {posts.map(post => (
-              <article key={post.id} className={styles.postCard} data-type={post.type}>
+            {posts.map(post => {
+              const cardColor = post.cardColor || getAuthorColor(post.author?.name || 'User')
+              return (
+                <article 
+                  key={post.id} 
+                  className={styles.postCard} 
+                  data-type={post.type}
+                  style={{
+                    borderLeft: `4px solid ${cardColor}`,
+                    background: `linear-gradient(135deg, ${cardColor}15, transparent)`
+                  }}
+                >
                 <div className={styles.postContent}>
                   <div className={styles.postHeader}>
                     <div className={styles.authorInfo}>
-                      <img 
-                        src={post.author?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name || 'User')}&background=8B5CF6&color=fff`}
-                        alt={post.author?.name}
-                        className={styles.authorAvatar}
-                      />
+                      {post.author?.profilePicture ? (
+                        <img 
+                          src={post.author.profilePicture}
+                          alt={post.author?.name}
+                          className={styles.authorAvatar}
+                        />
+                      ) : (
+                        <div 
+                          className={styles.authorAvatarText}
+                          style={{ backgroundColor: post.cardColor || getAuthorColor(post.author?.name || 'User') }}
+                        >
+                          {(post.author?.name || 'U').charAt(0).toUpperCase()}
+                        </div>
+                      )}
                       <div className={styles.authorDetails}>
                         <h6 className={styles.authorName}>{post.author?.name}</h6>
                         <div className={styles.postMeta}>
@@ -939,8 +952,9 @@ export default function Forum() {
                     </div>
                   )}
                 </div>
-              </article>
-            ))}
+                </article>
+              )
+            })}
           </div>
         )
       )}
