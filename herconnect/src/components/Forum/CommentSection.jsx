@@ -1,0 +1,139 @@
+import { useState } from 'react'
+import styles from './CommentSection.module.css'
+
+export default function CommentSection({ postId, comments, onUpdate, currentUser }) {
+  const [newComment, setNewComment] = useState('')
+  const [replyTo, setReplyTo] = useState(null)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!newComment.trim()) return
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/forum/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          content: newComment,
+          parentCommentId: replyTo
+        })
+      })
+      if (response.ok) {
+        setNewComment('')
+        setReplyTo(null)
+        onUpdate()
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error)
+    }
+  }
+
+  const handleLikeComment = async (commentId) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/forum/comments/${commentId}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      onUpdate()
+    } catch (error) {
+      console.error('Error liking comment:', error)
+    }
+  }
+
+  return (
+    <div className={styles.commentSection}>
+      <form onSubmit={handleSubmit} className={styles.commentForm}>
+        <div className={styles.commentInputWrapper}>
+          <img 
+            src={currentUser?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.name || 'User')}&background=8B5CF6&color=fff`}
+            alt={currentUser?.name}
+            className={styles.commentAvatar}
+          />
+          <textarea
+            placeholder={replyTo ? "Write a reply..." : "Add a comment..."}
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            required
+            rows="3"
+            className={styles.commentTextarea}
+          />
+        </div>
+        <div className={styles.commentActions}>
+          {replyTo && (
+            <button type="button" onClick={() => setReplyTo(null)} className={styles.cancelBtn}>
+              Cancel Reply
+            </button>
+          )}
+          <button type="submit" className={styles.submitBtn}>
+            {replyTo ? 'Reply' : 'Comment'}
+          </button>
+        </div>
+      </form>
+
+      <div className={styles.commentsList}>
+        {comments.filter(c => !c.parentCommentId).map(comment => (
+          <div key={comment.id} className={styles.comment}>
+            <div className={styles.commentHeader}>
+              <img 
+                src={comment.author?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author?.name || 'User')}&background=8B5CF6&color=fff`}
+                alt={comment.author?.name}
+                className={styles.commentAvatar}
+              />
+              <div className={styles.commentAuthorInfo}>
+                <span className={styles.commentAuthor}>{comment.author?.name}</span>
+                <span className={styles.commentDate}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
+            <p className={styles.commentContent}>{comment.content}</p>
+            <div className={styles.commentFooter}>
+              <button 
+                onClick={() => handleLikeComment(comment.id)}
+                className={styles.likeBtn}
+              >
+                ❤️ {comment.likes?.length || 0}
+              </button>
+              <button 
+                onClick={() => setReplyTo(comment.id)}
+                className={styles.replyBtn}
+              >
+                Reply
+              </button>
+            </div>
+            
+            {/* Replies */}
+            {comments.filter(c => c.parentCommentId === comment.id).map(reply => (
+              <div key={reply.id} className={styles.reply}>
+                <div className={styles.commentHeader}>
+                  <img 
+                    src={reply.author?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(reply.author?.name || 'User')}&background=8B5CF6&color=fff`}
+                    alt={reply.author?.name}
+                    className={styles.commentAvatar}
+                  />
+                  <div className={styles.commentAuthorInfo}>
+                    <span className={styles.commentAuthor}>{reply.author?.name}</span>
+                    <span className={styles.commentDate}>{new Date(reply.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <p className={styles.commentContent}>{reply.content}</p>
+                <div className={styles.commentFooter}>
+                  <button 
+                    onClick={() => handleLikeComment(reply.id)}
+                    className={styles.likeBtn}
+                  >
+                    ❤️ {reply.likes?.length || 0}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

@@ -12,6 +12,7 @@ import ResetPassword from './pages/Auth/ResetPassword'
 import Verify from './pages/Verify/Verify.jsx'
 import Profile from './pages/Profile/Profile.jsx'
 import Forum from './pages/forum/forum.jsx'
+import CategoryPage from './pages/forum/CategoryPage.jsx'
 import Dashboard from './pages/dashboard/dashboard.jsx'
 import Opportunities from './pages/Opportunities/Opportunities.jsx'
 import Content from './pages/Sharezone/sharezone.jsx'
@@ -214,6 +215,7 @@ export default function App() {
               <Route path="/verify" element={<Verify />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/forum" element={<Forum />} />
+              <Route path="/forum/category/:categoryId" element={<CategoryPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/opportunities" element={<Opportunities />} />
               <Route path="/sharezone" element={<Content />} />

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styles from '../../styles/Pages.module.css'
 
-// image assets from src/images
+// image assets within src/images
 const heroImg = new URL('../../images/girl2.jpg', import.meta.url).href
 const alumniImg1 = new URL('../../images/adich-pic.jpg', import.meta.url).href
 const alumniImg2 = new URL('../../images/adich-pic.jpg', import.meta.url).href

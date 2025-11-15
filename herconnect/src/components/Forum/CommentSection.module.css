@@ -1,0 +1,169 @@
+.commentSection {
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem 1.5rem;
+  background: #fafafa;
+}
+
+.commentForm {
+  margin-bottom: 1.5rem;
+}
+
+.commentInputWrapper {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.commentAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.commentTextarea {
+  flex: 1;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.commentTextarea:focus {
+  outline: none;
+  border-color: #e84393;
+  box-shadow: 0 0 0 3px rgba(232, 67, 147, 0.1);
+}
+
+.commentActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.cancelBtn {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background: #e5e7eb;
+}
+
+.submitBtn {
+  background: #e84393;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitBtn:hover {
+  background: #d63384;
+}
+
+.commentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.comment {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.commentAuthorInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.commentAuthor {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.9rem;
+}
+
+.commentDate {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.commentContent {
+  color: #4b5563;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.commentFooter {
+  display: flex;
+  gap: 1rem;
+}
+
+.likeBtn, .replyBtn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.likeBtn:hover, .replyBtn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.reply {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-left: 2rem;
+  margin-top: 0.75rem;
+  border-left: 3px solid #e84393;
+}
+
+@media (max-width: 768px) {
+  .commentSection {
+    padding: 1rem;
+  }
+  
+  .commentInputWrapper {
+    gap: 0.5rem;
+  }
+  
+  .commentAvatar {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .reply {
+    margin-left: 1rem;
+  }
+}
