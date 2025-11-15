@@ -30,6 +30,7 @@ const translations = {
     log_out: 'Log Out',
     login: 'Login',
     register: 'Register',
+    sharezone: 'ShareZone',
     
     // About page translations
     hero_title: 'Every Girl Deserves Education & A Bright Future',
@@ -155,7 +156,12 @@ const translations = {
     'step_1': '1️⃣',
     'step_2': '2️⃣',
     'step_3': '3️⃣',
-    'step_4': '4️⃣'
+    'step_4': '4️⃣',
+    
+    // Remaining mentor section text
+    'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.',
+    'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.': 'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.',
+    'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.': 'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.'
   },
   
   // Swahili translations
@@ -216,6 +222,7 @@ const translations = {
     log_out: 'تسجيل الخروج',
     login: 'تسجيل الدخول',
     register: 'التسجيل',
+    sharezone: 'منطقة المشاركة',
     
     // About page translations
     hero_title: 'كل فتاة تستحق التعليم ومستقبل مشرق',
@@ -341,7 +348,12 @@ const translations = {
     'step_1': '١️⃣',
     'step_2': '٢️⃣',
     'step_3': '٣️⃣',
-    'step_4': '٤️⃣'
+    'step_4': '٤️⃣',
+    
+    // Remaining mentor section Arabic text
+    'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'تواصل مع مرشدين ملهمين يوجهونك في التعليم والمهنة والنمو الشخصي. لست تسير في هذه الرحلة وحدك.',
+    'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.': 'استكشف مواد التعلم حول الثقة والقيادة وبناء المهنة والتطوير الشخصي المصممة خصيصاً للشابات.',
+    'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.': 'تعلم عن المنح الدراسية والتدريبات والفرص العالمية التي يمكن أن تساعدك في تحقيق أحلامك.'
   }
 }
 

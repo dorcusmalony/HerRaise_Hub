@@ -54,8 +54,7 @@ export default function Home() {
             </div>
             <h3 className="fw-bold mb-3 text-center">{t('Become a Mentee to Advance Your Future')}</h3>
             <p className="lead mb-4">
-              {t('At HerRaise Hub, we believe that mentorship opens doors to growth and confidence. Whether you\'re exploring your education path, developing leadership and life skills, or preparing for career opportunities, this program connects you with inspiring women mentors who guide and empower you to reach higher.')} growth and confidence. Whether you’re exploring your education path, 
-
+              {t('At HerRaise Hub, we believe that mentorship opens doors to growth and confidence. Whether you\'re exploring your education path, developing leadership and life skills, or preparing for career opportunities, this program connects you with inspiring women mentors who guide and empower you to reach higher.')}
             </p>
             <ul className="list-unstyled mb-4">
               <li className="mb-2">• <strong>{t('Access scholarships')}</strong> - {t('Find and apply for educational funding opportunities')}</li>
@@ -168,7 +167,7 @@ export default function Home() {
           <div className={styles.featureIcon}>🤝</div>
           <h3 className={styles.featureTitle}>{t('Find Mentorship')}</h3>
           <p className={styles.featureDescription}>
-            Connect with inspiring mentors who guide you in education, career, and personal growth. You don’t walk this journey alone.
+            {t('Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.')}
           </p>
           <Link to="/register" className={styles.ctaButton}>{t('Get Started')}</Link>
         </div>
@@ -177,7 +176,7 @@ export default function Home() {
           <div className={styles.featureIcon}>📚</div>
           <h3 className={styles.featureTitle}>{t('Access Resources')}</h3>
           <p className={styles.featureDescription}>
-            Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.
+            {t('Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.')}
           </p>
           <Link to="/resources" className={styles.ctaButton}>{t('Browse Resources')}</Link>
         </div>
@@ -186,7 +185,7 @@ export default function Home() {
           <div className={styles.featureIcon}>🌍</div>
           <h3 className={styles.featureTitle}>{t('Discover Opportunities')}</h3>
           <p className={styles.featureDescription}>
-            Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.
+            {t('Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.')}
           </p>
           <Link to="/opportunities" className={styles.ctaButton}>{t('View Opportunities')}</Link>
         </div>
