@@ -361,7 +361,7 @@ export default function Forum() {
       <div className={styles.forumHeader}>
         <div className={styles.headerContent}>
           <div className={styles.headerText}>
-            <h1 className={styles.forumTitle}>💬 Community Forum</h1>
+            <h1 className={styles.forumTitle}>Community Forum</h1>
             <p className={styles.forumSubtitle}>Connect with peers, ask questions, and join discussions</p>
             <div className={styles.contributionHighlight}>
               <div className={styles.highlightItem}>
@@ -381,20 +381,13 @@ export default function Forum() {
                 <span>Share Ideas</span>
               </div>
             </div>
-            <div className={styles.forumStats}>
-              <span className={styles.statItem}>
-                 {posts.length} Posts
-              </span>
-              <span className={styles.statItem}>
-                 {new Set(posts.map(p => p.author?.id)).size} Contributors
-              </span>
-            </div>
+
           </div>
           <button 
             onClick={() => setShowCreateForm(true)}
             className={styles.createPostBtn}
           >
-            💬 Start Discussion
+            Start Discussion
           </button>
         </div>
       </div>
