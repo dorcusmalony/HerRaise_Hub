@@ -6,6 +6,95 @@
   margin-bottom: 2rem;
 }
 
+.forumMain {
+  margin-bottom: 2rem;
+}
+
+.forumIntro {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.forumMainTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+}
+
+.forumMainDesc {
+  font-size: 1.1rem;
+  color: #718096;
+  margin: 0;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.categoryCard {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.categoryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(232, 67, 147, 0.15);
+  border-color: #e84393;
+}
+
+.categoryCard.selected {
+  border-color: #e84393;
+  background: linear-gradient(135deg, #e84393 0%, #f093fb 100%);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.categoryCard.selected .categoryName,
+.categoryCard.selected .categoryDesc,
+.categoryCard.selected .categoryStats {
+  color: white;
+}
+
+.categoryCard .categoryIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.categoryCard .categoryName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 0.75rem;
+}
+
+.categoryCard .categoryDesc {
+  color: #718096;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.categoryStats {
+  color: #e84393;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
 .categoryHeader {
   margin-bottom: 1.5rem;
   text-align: center;
