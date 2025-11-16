@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useLanguage } from '../../hooks/useLanguage'
 import styles from './CategorySelector.module.css'
 
 const FORUM_CATEGORIES = {
@@ -42,6 +43,7 @@ const FORUM_CATEGORIES = {
 
 export default function CategorySelector({ selectedCategory, onCategoryChange, showAsGrid = false }) {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   
   const handleCategoryClick = (categoryId) => {
     // Navigate to dedicated category page
@@ -52,8 +54,8 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
     return (
       <div className={styles.forumMain}>
         <div className={styles.forumIntro}>
-          <h2 className={styles.forumMainTitle}>Forum Categories</h2>
-          <p className={styles.forumMainDesc}>Choose a category to explore discussions and connect with the community</p>
+          <h2 className={styles.forumMainTitle}>{t('Forum Categories')}</h2>
+          <p className={styles.forumMainDesc}>{t('Choose a category to explore discussions and connect with the community')}</p>
         </div>
         
         <div className={styles.categoryGrid}>
@@ -64,10 +66,10 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
               onClick={() => handleCategoryClick(category.id)}
               style={{ cursor: 'pointer' }}
             >
-              <h4 className={styles.categoryName}>{category.name}</h4>
-              <p className={styles.categoryDesc}>{category.description}</p>
+              <h4 className={styles.categoryName}>{t(category.name)}</h4>
+              <p className={styles.categoryDesc}>{t(category.description)}</p>
               <div className={styles.categoryStats}>
-                <span>Explore →</span>
+                <span>{t('Explore →')}</span>
               </div>
             </div>
           ))}

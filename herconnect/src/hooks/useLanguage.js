@@ -304,7 +304,24 @@ const translations = {
     // Remaining mentor section text
     'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.',
     'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.': 'Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.',
-    'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.': 'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.'
+    'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.': 'Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.',
+    
+    // Forum category translations
+    'Forum Categories': 'Forum Categories',
+    'Choose a category to explore discussions and connect with the community': 'Choose a category to explore discussions and connect with the community',
+    'Mental Health & Wellbeing': 'Mental Health & Wellbeing',
+    'Building confidence, stress management, and self-care support': 'Building confidence, stress management, and self-care support',
+    'Leadership & Empowerment': 'Leadership & Empowerment',
+    'Leadership skills, empowerment, and personal development': 'Leadership skills, empowerment, and personal development',
+    'Education & Learning': 'Education & Learning',
+    'Academic challenges, scholarships, and learning strategies': 'Academic challenges, scholarships, and learning strategies',
+    'Equality, Equity & Rights': 'Equality, Equity & Rights',
+    'Gender equality, equity, rights advocacy, and social justice': 'Gender equality, equity, rights advocacy, and social justice',
+    'Career & Skills': 'Career & Skills',
+    'Career development, professional skills, and opportunities': 'Career development, professional skills, and opportunities',
+    "Women's Health": "Women's Health",
+    'Health, wellness, and reproductive health discussions': 'Health, wellness, and reproductive health discussions',
+    'Explore →': 'Explore →'
   },
   
   // Swahili translations
@@ -661,6 +678,23 @@ const translations = {
     'Video': 'فيديو',
     'Document': 'مستند',
     'Other': 'أخرى',
+    
+    // Forum category translations
+    'Forum Categories': 'فئات المنتدى',
+    'Choose a category to explore discussions and connect with the community': 'اختر فئة لاستكشاف النقاشات والتواصل مع المجتمع',
+    'Mental Health & Wellbeing': 'الصحة النفسية والعافية',
+    'Building confidence, stress management, and self-care support': 'بناء الثقة، إدارة التوتر، ودعم العناية بالذات',
+    'Leadership & Empowerment': 'القيادة والتمكين',
+    'Leadership skills, empowerment, and personal development': 'مهارات القيادة، التمكين، والتطوير الشخصي',
+    'Education & Learning': 'التعليم والتعلم',
+    'Academic challenges, scholarships, and learning strategies': 'التحديات الأكاديمية، المنح الدراسية، واستراتيجيات التعلم',
+    'Equality, Equity & Rights': 'المساواة، العدالة والحقوق',
+    'Gender equality, equity, rights advocacy, and social justice': 'المساواة بين الجنسين، العدالة، الدفاع عن الحقوق، والعدالة الاجتماعية',
+    'Career & Skills': 'المهنة والمهارات',
+    'Career development, professional skills, and opportunities': 'تطوير المهنة، المهارات المهنية، والفرص',
+    "Women's Health": 'صحة المرأة',
+    'Health, wellness, and reproductive health discussions': 'مناقشات الصحة، العافية، والصحة الإنجابية',
+    'Explore →': 'استكشف ←',
     
     // Testimonial stories
     'testimonial_1': 'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.',
