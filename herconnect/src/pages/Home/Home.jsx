@@ -41,7 +41,7 @@ export default function Home() {
       {/* Mentorship Program Section */}
       <section className="mb-5 mt-5">
         <h2 className="display-5 fw-bold mb-5 text-center">{t('HerRaise Mentorship Program')}</h2>
-        <div className="row g-5 align-items-center">
+        <div className="row g-5 align-items-start">
           {/* Become a Mentee */}
           <div className="col-lg-6">
             <div className="text-center mb-4">
@@ -49,7 +49,7 @@ export default function Home() {
                 src="https://files.globalgiving.org/pfil/44921/pict_grid7.jpg" 
                 alt="Mentee learning" 
                 className="img-fluid rounded-3 shadow"
-                style={{ maxHeight: '300px', objectFit: 'cover' }}
+                style={{ height: '300px', width: '100%', objectFit: 'cover' }}
               />
             </div>
             <h3 className="fw-bold mb-3 text-center">{t('Become a Mentee to Advance Your Future')}</h3>
@@ -79,7 +79,7 @@ export default function Home() {
                 src="https://www.norway.no/contentassets/262345ea071e441b95f954c8e5b0f592/image4vif.jpg?preset=mainimagetop&v=-1852770130" 
                 alt="Mentor guiding" 
                 className="img-fluid rounded-3 shadow"
-                style={{ maxHeight: '300px', objectFit: 'cover' }}
+                style={{ height: '300px', width: '100%', objectFit: 'cover' }}
               />
             </div>
             <h3 className="fw-bold mb-3 text-center">{t('Become a Mentor to Bridge the Gap and Make an Impact')}</h3>

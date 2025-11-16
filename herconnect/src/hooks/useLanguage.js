@@ -323,7 +323,11 @@ const translations = {
     'Career development, professional skills, and opportunities': 'Career development, professional skills, and opportunities',
     "Women's Health": "Women's Health",
     'Health, wellness, and reproductive health discussions': 'Health, wellness, and reproductive health discussions',
-    'Explore →': 'Explore →'
+    'Explore →': 'Explore →',
+    
+    // User mentions
+    'Mention users': 'Mention users',
+    'Type @ to mention someone': 'Type @ to mention someone'
   },
   
   // Swahili translations
@@ -700,10 +704,9 @@ const translations = {
     'Health, wellness, and reproductive health discussions': 'مناقشات الصحة، العافية، والصحة الإنجابية',
     'Explore →': 'استكشف ←',
     
-    // Testimonial stories
-    'testimonial_1': 'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.',
-    'testimonial_2': 'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.',
-    'testimonial_3': 'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!',
+    // User mentions
+    'Mention users': 'ذكر المستخدمين',
+    'Type @ to mention someone': 'اكتب @ لذكر شخص ما',
     'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
     'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.': 'من خلال هير رايز هاب، وجدت فرص منح دراسية لم أعرف بوجودها. المجتمع هنا داعم ومشجع جداً. حصلت على منحة دراسية كاملة لدراساتي الجامعية والآن أرشد فتيات أصغر على المنصة. من الرائع رد الجميل للمساعدة التي تلقيتها.',
     'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!': 'قبل الانضمام إلى هير رايز هاب، شعرت بالوحدة في رحلتي. الآن لدي شبكة من الزميلات والمرشدين الذين يفهمون تحدياتي. قسم الموارد ساعدني في الاستعداد للاختبارات المعيارية، وقد تم قبولي في برنامج التدريب الذي أحلم به. أنا ممتنة جداً لهذه المنصة!'

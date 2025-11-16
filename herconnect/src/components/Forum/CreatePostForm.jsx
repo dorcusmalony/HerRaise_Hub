@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../hooks/useLanguage'
 import { FORUM_CATEGORIES } from './CategorySelector'
+import UserMentions from './UserMentions'
 import styles from './CreatePostForm.module.css'
 
 export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project', initialCategory = '', initialSubcategory = '', isShareZone = false }) {
@@ -18,6 +19,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
     tags: editPost?.tags?.join(', ') || '',
     attachments: editPost?.attachments || []
   })
+  const [mentions, setMentions] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
@@ -52,7 +54,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
           subcategory: formData.subcategory,
           publishedFrom: formData.category ? FORUM_CATEGORIES[formData.category]?.name : null,
           tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-          attachments: formData.attachments
+          attachments: formData.attachments,
+          mentions: mentions
         })
       })
 
@@ -163,19 +166,20 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
           />
         </div>
 
-        {/* Enhanced Content */}
+        {/* Enhanced Content with User Mentions */}
         <div className={styles.formGroup}>
           <label className={styles.formLabel} style={{color: 'white'}}>{t('Description *')}</label>
-          <textarea
+          <UserMentions
             value={formData.content}
-            onChange={(e) => setFormData({...formData, content: e.target.value})}
-            required
-            rows="8"
+            onChange={(content) => setFormData({...formData, content})}
+            onMentionsChange={setMentions}
+            categoryId={formData.category || initialCategory}
             placeholder={getContentPlaceholder()}
             className={styles.formTextarea}
+            rows={8}
           />
           <div className={styles.characterCount} style={{color: 'white'}}>
-            {formData.content.length} {t('characters')}
+            {formData.content.length} {t('characters')} • {t('Type @ to mention someone')}
           </div>
         </div>
 

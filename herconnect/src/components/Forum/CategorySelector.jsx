@@ -6,37 +6,31 @@ const FORUM_CATEGORIES = {
   'mental-health': {
     id: 'mental-health',
     name: 'Mental Health & Wellbeing',
-    icon: '🧠',
     description: 'Building confidence, stress management, and self-care support'
   },
   'leadership': {
     id: 'leadership',
     name: 'Leadership & Empowerment',
-    icon: '👑',
     description: 'Leadership skills, empowerment, and personal development'
   },
   'education-study': {
     id: 'education-study',
     name: 'Education & Learning',
-    icon: '📚',
     description: 'Academic challenges, scholarships, and learning strategies'
   },
   'equality-rights': {
     id: 'equality-rights',
     name: 'Equality, Equity & Rights',
-    icon: '⚖️',
     description: 'Gender equality, equity, rights advocacy, and social justice'
   },
   'career-skills': {
     id: 'career-skills',
     name: 'Career & Skills',
-    icon: '💼',
     description: 'Career development, professional skills, and opportunities'
   },
   'womens-health': {
     id: 'womens-health',
     name: "Women's Health",
-    icon: '🌸',
     description: 'Health, wellness, and reproductive health discussions'
   }
 }
@@ -105,7 +99,6 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
           onClick={() => onCategoryChange(category.id)}
         >
           <div className={styles.categoryMain}>
-            <span className={styles.categoryIcon}>{category.icon}</span>
             <div className={styles.categoryInfo}>
               <h4 className={styles.categoryName}>{category.name}</h4>
               <p className={styles.categoryDesc}>{category.description}</p>
