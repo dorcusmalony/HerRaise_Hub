@@ -1,103 +1,222 @@
-# HerConnect (HerRaise Hub) — React + Vite Auth Demo
+# HerRaise Hub - Empowering Young Women Through Education & Mentorship
 
-HerConnect is a lightweight React + Vite frontend demonstrating common authentication flows (register, login, forgot/reset password, logout). It includes a development-only mock API to simplify local testing without a backend and is intended as a starting point for integrating a real authentication backend.
+HerRaise Hub is a comprehensive web platform dedicated to empowering young women and girls in South Sudan through education, mentorship, and community support. Our mission is to help them rise beyond societal limitations and build independent, confident lives.
 
-Key goals:
-- Minimal, production-approachable React + Vite setup
-- Clear examples for auth flows and client-side token handling
-- Built-in mock backend for fast local iteration
 
-Features
-- Registration, login, forgot-password, reset-password, logout flows
-- Mock API for local development (intercepts `/api/*` when no VITE_API_URL is set)
-- Token management using localStorage (dev-friendly)
-- Simple, composable UI components ready to be adapted
 
-## Link to video
--https://drive.google.com/file/d/1O0W1Qh7WrgFVeE3qEiZB22gGLgpSJ4pR/view?usp=sharing
+- **Demo Video**: [Video](https://drive.google.com/file/d/1ROINI9SjfMhSCjbGzl_SbEgTljj9ka_C/view?usp=sharing)
 
-## Getting started
+##  Links
+
+
+- **Live Platform**: [Add deployment URL when available]
+
+
+##  About HerRaise Hub
+
+HerRaise Hub is a women-led initiative that provides a safe, supportive, and inspiring digital space where young women can:
+- Connect with inspiring mentors and role models
+- Access educational resources and opportunities
+- Share their work and get feedback from the community
+- Participate in meaningful discussions about their challenges and aspirations
+- Find scholarships, internships, and career opportunities
+
+### Our Vision
+A South Sudan where every girl grows with courage, education, and purpose, free to dream, lead, and transform her community.
+
+### Our Mission
+To empower and mentor young women and girls in South Sudan to rise beyond societal limitations through education, storytelling, and mentorship, helping them realize their worth and build independent, confident lives.
+
+##  Key Features
+
+###  **Home Page**
+- Inspiring hero section with call-to-action
+- Featured mentors showcase
+- Step-by-step guide on how the platform works
+- Community impact statistics and goals
+
+###  **About Page**
+- Detailed mission and vision statements
+- Core values and community guidelines
+- Success stories and testimonials from community members
+- 2030 goal: Reach 10,000 girls with educational opportunities
+
+###  **Community Forum**
+- Category-based discussions (Mental Health, Leadership, Education, Career, etc.)
+- User tagging system with @ mentions
+- Like and comment functionality
+- Multi-language support (English/Arabic)
+
+###  **ShareZone**
+- Upload and share projects, essays, videos, and resumes
+- Get feedback from mentors and peers
+- Showcase academic and creative work
+- File management with categorization
+
+###  **Multi-Language Support**
+- Full English and Arabic translations
+- Right-to-left (RTL) layout support for Arabic
+- Professional language switcher with flags
+- Cultural adaptation including Arabic-Indic numerals
+
+###  **User Features**
+- User authentication (register, login, password reset)
+- Profile management
+- Mentorship connections
+- Notification system
+
+## 🛠 Technical Stack
+
+### Frontend
+- **React 18** with Vite for fast development
+- **Bootstrap 5** for responsive design
+- **React Router** for navigation
+- **Custom hooks** for language management
+- **CSS Modules** for component styling
+
+### Backend Integration
+- RESTful API integration
+- JWT token authentication
+- File upload capabilities
+- Real-time notifications
+
+### Key Technologies
+- Modern ES6+ JavaScript
+- Responsive web design
+- Progressive Web App features
+- Cross-browser compatibility
+
+##  Getting Started
 
 ### Prerequisites
 - Node.js 18+ recommended
 - npm (or yarn/pnpm)
 
-### Install dependencies
-- From repository root (if this repo contains multiple apps):
-  ```bash
-  npm run install-sub
-  ```
-  (This runs `cd herconnect && npm install`)
-- Or from the project folder:
-  ```bash
-  cd herconnect
-  npm install
-  ```
+### Installation
 
-### Development
-Start the dev server with Vite:
-```bash
-npm run dev
-```
-Open http://localhost:5173 in your browser. The server supports HMR for rapid development.
+1. **Clone the repository**
+   ```bash
+   git clone [repository-url]
+   cd HerRaise_Hub/herconnect
+   ```
 
-### Mock API behavior (development only)
-When `VITE_API_URL` is not set (or equals `/api`), the app uses a local mock that intercepts requests to `/api/*`. The mock behavior:
-- `POST /api/register` — registers a user and stores it in sessionStorage for that browser session.
-- `POST /api/login` — logs in a registered user. If the email isn't found, the mock may return a demo login for convenience.
-- `POST /api/forgot-password` — returns a neutral success (avoids revealing account existence).
-- `POST /api/reset-password` — accepts a new password and returns success.
-- `POST /api/logout` — returns success; frontend also clears tokens from localStorage.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### Environment variables
-Create a `.env` file in the project root (same folder as package.json) to configure:
-- `VITE_API_URL` — Base URL for your real backend (e.g. http://localhost:4000). When set, the mock is disabled and requests go to this backend.
-- `VITE_LOGOUT_DELAY` — Optional. Logout redirect delay in milliseconds (default used by the app is 600 ms).
+3. **Environment Setup**
+   Create a `.env` file in the project root:
+   ```env
+   VITE_API_URL=http://localhost:10000
+   
 
-### Vercel deployment checklist
-- Build command: `npm run build`
-- Output directory: (Vite defaults to `dist`) — leave blank or set to `dist`.
-- Set environment variables in Vercel dashboard:
-  - VITE_API_URL = https://api.yourdomain.com (or leave unset to use the built-in mock during dev)
-- Set Node version to 18+ in Vercel project settings (match `engines.node`).
-- If you rely on the mock API for local testing, remember the mock is disabled when you set VITE_API_URL.
-- Recommendation: avoid spaces in image filenames (e.g. rename `adich pic.jpg` to `adich-pic.jpg`) — spaces can cause subtle asset resolution issues on some hosting/CDN setups. If you rename images, update their imports in the source code accordingly.
-- Check Vercel logs if the build fails — common causes: incompatible package versions, missing env vars, or Node version mismatch.
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
+   Open http://localhost:5173 in your browser
 
-### Local testing tips
-- Use the browser DevTools → Application/Storage to inspect sessionStorage and localStorage keys used by the mock (e.g. `__mock_users__`, `token`, `authToken`).
-- Reset the mock state by removing `__mock_users__` from sessionStorage.
-- If using a local backend, ensure CORS is enabled or use a proxy to avoid CORS issues.
-
-## Build & Preview
-Build production assets:
+### Build for Production
 ```bash
 npm run build
-```
-
-Preview the production build locally:
-```bash
 npm run preview
 ```
 
-## Deployment
-- Serve the contents of the `dist` folder with a static host (Netlify, Vercel, GitHub Pages) or integrate into your backend hosting strategy.
-- Ensure `VITE_API_URL` points to your production backend when building for production.
+##  Internationalization
 
-## Project structure (excerpt)
-- `src/` — React source files
-  - `pages/Auth` — Authentication pages and components (login, register, logout, forgot/reset)
-  - `components` — Reusable UI components
-  - `api/mock` — Development mock API (only active when VITE_API_URL is unset)
-- `public/` — Static assets
-- `index.html`, `package.json`, `vite.config.js` — build/dev configuration
+The platform supports multiple languages with complete translations:
 
-## Contributing
-- Bug reports and PRs welcome. Keep changes focused and include a short description of intent.
-- If adding features, update README and include simple usage notes.
+- **English**: Default language with full feature coverage
+- **Arabic**: Complete translation with RTL layout support
 
-## License
-- This project is provided as-is. Add a LICENSE file with your preferred license if publishing publicly.
 
-## Contact
-- For questions about this template or usage, open an issue or submit a PR with suggested improvements.
+### Language Features
+- Dynamic language switching
+- Cultural number formatting (Arabic-Indic numerals)
+- RTL layout automatic adjustment
+- Professional language selector with country flags
+
+##  Responsive Design
+
+HerRaise Hub is fully responsive and works seamlessly across:
+- Desktop computers (1200px+)
+- Tablets (768px - 1199px)
+- Mobile phones (320px - 767px)
+- All modern browsers (Chrome, Firefox, Safari, Edge)
+
+##  Design System
+
+### Color Palette
+- **Primary**: #E84393 (Brand Magenta)
+- **Secondary**: #667eea (Blue)
+- **Accent Colors**: Gold, Purple, Orange for categories
+- **Neutral**: Grays for text and backgrounds
+
+### Typography
+- Clean, readable fonts optimized for both English and Arabic
+- Proper font weights and sizes for accessibility
+- Consistent spacing and hierarchy
+
+##  Security Features
+
+- JWT token-based authentication
+- Secure password handling
+- Input validation and sanitization
+- CORS protection
+- Safe file upload with type validation
+
+##  Community Impact
+
+### Current Goals
+- **2030 Target**: Reach 10,000 girls with educational opportunities
+- **Focus Areas**: 
+  - Gender inequality
+  - Gender-based violence prevention
+  - Early marriage prevention
+  - Educational opportunity access
+
+### Success Metrics
+- User engagement and retention
+- Mentorship connections made
+- Educational opportunities accessed
+- Community discussions and support
+
+##  Contributing
+
+We welcome contributions to improve HerRaise Hub:
+
+1. **Bug Reports**: Open issues with detailed descriptions
+2. **Feature Requests**: Suggest new features that align with our mission
+3. **Code Contributions**: Submit PRs with clear descriptions
+4. **Translations**: Help expand language support
+5. **Documentation**: Improve guides and documentation
+
+### Development Guidelines
+- Follow existing code style and patterns
+- Write clear, descriptive commit messages
+- Test changes thoroughly before submitting
+- Update documentation for new features
+
+##  Support & Contact
+
+For questions, support, or collaboration opportunities:
+- **Issues**: Use GitHub issues for bug reports and feature requests
+- **Email**: [Contact information]
+- **Community**: Join our platform discussions
+
+##  License
+
+This project is developed to empower young women in South Sudan. Please respect the mission and values when using or contributing to this codebase.
+
+##  Acknowledgments
+
+- **Mentors and Community Members**: For sharing their stories and expertise
+- **Contributors**: Developers, designers, and translators who made this possible
+- **Partners**: Organizations supporting women's education in South Sudan
+- **Users**: Young women who inspire us with their courage and determination
+
+---
+
+**HerRaise Hub** - Because when you rise, your community rises with you. 
+
