@@ -110,7 +110,7 @@ export default function Home() {
         <div className="row g-4 justify-content-center">
           {[
             {
-              name: 'Dr. Sarah Johnson',
+              name: 'Eng. Abuk Mayen',
               profession: 'Education Director & Women Rights Advocate',
               image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face',
               expertise: 'Educational Leadership, Scholarship Guidance'
@@ -164,7 +164,7 @@ export default function Home() {
       {/* What We Do Section */}
       <section className={styles.features}>
         <div className={styles.featureCard}>
-          <div className={styles.featureIcon}>🤝</div>
+          <div className={styles.featureIcon}></div>
           <h3 className={styles.featureTitle}>{t('Find Mentorship')}</h3>
           <p className={styles.featureDescription}>
             {t('Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.')}
@@ -173,7 +173,7 @@ export default function Home() {
         </div>
 
         <div className={styles.featureCard}>
-          <div className={styles.featureIcon}>📚</div>
+          <div className={styles.featureIcon}></div>
           <h3 className={styles.featureTitle}>{t('Access Resources')}</h3>
           <p className={styles.featureDescription}>
             {t('Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.')}
@@ -182,7 +182,7 @@ export default function Home() {
         </div>
 
         <div className={styles.featureCard}>
-          <div className={styles.featureIcon}>🌍</div>
+          <div className={styles.featureIcon}></div>
           <h3 className={styles.featureTitle}>{t('Discover Opportunities')}</h3>
           <p className={styles.featureDescription}>
             {t('Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.')}
