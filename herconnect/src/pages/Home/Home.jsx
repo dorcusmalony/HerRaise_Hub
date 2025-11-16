@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../../hooks/useLanguage'
 import styles from './Home.module.css'
 
+// Import mentor images
+const abukImg = new URL('../../images/Abuk.jpeg', import.meta.url).href
+const professionalImg = new URL('../../images/profile-proffessional.jpg', import.meta.url).href
+const akuolImg = new URL('../../images/akuol.jpg', import.meta.url).href
+const alakiirImg = new URL('../../images/alakiir.png', import.meta.url).href
+
 export default function Home() {
   const { t } = useLanguage()
 
@@ -111,31 +117,26 @@ export default function Home() {
           {[
             {
               name: 'Eng. Abuk Mayen',
-              profession: 'Education Director & Women Rights Advocate',
-              image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face',
+              profession: 'Software engineer & Women Rights Advocate',
+              image: abukImg,
               expertise: 'Educational Leadership, Scholarship Guidance'
             },
             {
-              name: 'Grace Akello',
+              name: 'Eng Dorcus Malony',
               profession: 'Tech Entrepreneur & Startup Founder',
-              image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face',
+              image: professionalImg,
               expertise: 'Technology, Business Development'
             },
             {
-              name: 'Mary Nyandeng',
+              name: 'Akuol Philip',
               profession: 'Healthcare Professional & Community Leader',
-              image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face',
+              image: akuolImg,
               expertise: 'Healthcare, Community Development'
             },
             {
-              name: 'Rebecca Garang',
-              profession: 'Legal Advisor & Human Rights Lawyer',
-              image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face'
-            },
-            {
-              name: 'Amina Hassan',
-              profession: 'Financial Advisor & Business Consultant',
-              image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=300&h=300&fit=crop&crop=face'
+              name: 'Monica Alakiir',
+              profession: 'Digital Marketing Specialist & Content Creator',
+              image: alakiirImg
             }
           ].map((mentor, index) => (
             <div key={index} className="col-lg-2 col-md-4 col-6">
@@ -163,26 +164,23 @@ export default function Home() {
 
       {/* What We Do Section */}
       <section className={styles.features}>
-        <div className={styles.featureCard}>
-          <div className={styles.featureIcon}></div>
-          <h3 className={styles.featureTitle}>{t('Find Mentorship')}</h3>
-          <p className={styles.featureDescription}>
+        <div className={styles.featureCard} style={{ background: '#8B5CF6', color: 'white' }}>
+          <h3 className={styles.featureTitle} style={{ color: 'white' }}>{t('Find Mentorship')}</h3>
+          <p className={styles.featureDescription} style={{ color: 'white' }}>
             {t('Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.')}
           </p>
-          <Link to="/register" className={styles.ctaButton}>{t('Get Started')}</Link>
+          <Link to="/register" className={styles.ctaButton} style={{ background: 'white', color: '#8B5CF6' }}>{t('Get Started')}</Link>
         </div>
 
-        <div className={styles.featureCard}>
-          <div className={styles.featureIcon}></div>
-          <h3 className={styles.featureTitle}>{t('Access Resources')}</h3>
-          <p className={styles.featureDescription}>
+        <div className={styles.featureCard} style={{ background: '#E84393', color: 'white' }}>
+          <h3 className={styles.featureTitle} style={{ color: 'white' }}>{t('Access Resources')}</h3>
+          <p className={styles.featureDescription} style={{ color: 'white' }}>
             {t('Explore learning materials on confidence, leadership, career building, and personal development designed just for young women.')}
           </p>
-          <Link to="/resources" className={styles.ctaButton}>{t('Browse Resources')}</Link>
+          <Link to="/resources" className={styles.ctaButton} style={{ background: 'white', color: '#E84393' }}>{t('Browse Resources')}</Link>
         </div>
 
-        <div className={styles.featureCard}>
-          <div className={styles.featureIcon}></div>
+        <div className={styles.featureCard} style={{ background: 'white', border: '1px solid #e5e7eb' }}>
           <h3 className={styles.featureTitle}>{t('Discover Opportunities')}</h3>
           <p className={styles.featureDescription}>
             {t('Learn about scholarships, internships, and global opportunities that can help you take charge of your dreams.')}
