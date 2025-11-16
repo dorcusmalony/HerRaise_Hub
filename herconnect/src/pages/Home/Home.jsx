@@ -22,10 +22,10 @@ export default function Home() {
       </section>
 
       {/* Welcome Video Section */}
-      <section className={styles.videoSection}>
+      <section className="mb-5 py-5">
         <div className="container text-center">
-          <h2 className="display-5 fw-bold mb-4 text-white">{t('Welcome to HerRaise Hub')}</h2>
-          <p className="lead mb-4 text-white">{t('Watch our founder share the vision behind HerRaise Hub')}</p>
+          <h2 className="display-5 fw-bold mb-4">{t('Welcome to HerRaise Hub')}</h2>
+          <p className="lead mb-4">{t('Watch our founder share the vision behind HerRaise Hub')}</p>
           <div className={styles.videoContainer}>
             <iframe 
               className={styles.welcomeVideo}
