@@ -300,6 +300,8 @@ const translations = {
     'Video': 'Video',
     'Document': 'Document',
     'Other': 'Other',
+    'Cover Letters': 'Cover Letters',
+    'Comments': 'Comments',
     
     // Remaining mentor section text
     'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.',
@@ -678,6 +680,8 @@ const translations = {
     'Video': 'فيديو',
     'Document': 'مستند',
     'Other': 'أخرى',
+    'Cover Letters': 'خطابات التغطية',
+    'Comments': 'التعليقات',
     
     // Forum category translations
     'Forum Categories': 'فئات المنتدى',
