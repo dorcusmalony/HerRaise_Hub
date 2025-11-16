@@ -5,7 +5,7 @@ import CommentItem from '../../components/Forum/CommentItem'
 import CategorySelector, { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
 import LikeButton from '../../components/LikeButton/LikeButton'
 import styles from './forum.module.css'
-import './youtube-video.css'
+
 
 // Generate consistent color for each user
 const getAuthorColor = (name) => {
