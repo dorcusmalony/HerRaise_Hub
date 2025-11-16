@@ -57,7 +57,7 @@ export default function App() {
           // Show toast reminder
           toast.info(
             <div>
-              <strong>📝 Reminder: {titleText}</strong>
+              <strong> Reminder: {titleText}</strong>
               <div>You have {data.count} pending {opportunityText} to complete!</div>
             </div>, 
             {

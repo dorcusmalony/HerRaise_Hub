@@ -241,10 +241,10 @@ export default function CategoryPage() {
 
   const getPostTypeIcon = (type) => {
     const icons = {
-      question: '❓',
-      discussion: '🗣️'
+      question: '',
+      discussion: ''
     }
-    return icons[type] || '💬'
+    return icons[type] || ''
   }
 
   if (loading) {
