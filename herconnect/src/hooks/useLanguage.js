@@ -327,7 +327,43 @@ const translations = {
     
     // User mentions
     'Mention users': 'Mention users',
-    'Type @ to mention someone': 'Type @ to mention someone'
+    'Type @ to mention someone': 'Type @ to mention someone',
+    
+    // Common forum post translations
+    'How to apply for scholarships?': 'How to apply for scholarships?',
+    'Looking for study abroad opportunities': 'Looking for study abroad opportunities',
+    'Need advice on career choices': 'Need advice on career choices',
+    'Dealing with academic stress': 'Dealing with academic stress',
+    'Building confidence as a young woman': 'Building confidence as a young woman',
+    'Balancing work and studies': 'Balancing work and studies',
+    'Leadership opportunities for women': 'Leadership opportunities for women',
+    'Networking tips for students': 'Networking tips for students',
+    'Time management strategies': 'Time management strategies',
+    'Preparing for job interviews': 'Preparing for job interviews',
+    
+    // Forum category names and descriptions
+    'Mental Health & Wellbeing': 'Mental Health & Wellbeing',
+    'Building confidence, stress management, and self-care support': 'Building confidence, stress management, and self-care support',
+    'Leadership & Empowerment': 'Leadership & Empowerment',
+    'Leadership skills, empowerment, and personal development': 'Leadership skills, empowerment, and personal development',
+    'Education & Learning': 'Education & Learning',
+    'Academic challenges, scholarships, and learning strategies': 'Academic challenges, scholarships, and learning strategies',
+    'Equality, Equity & Rights': 'Equality, Equity & Rights',
+    'Gender equality, equity, rights advocacy, and social justice': 'Gender equality, equity, rights advocacy, and social justice',
+    'Career & Skills': 'Career & Skills',
+    'Career development, professional skills, and opportunities': 'Career development, professional skills, and opportunities',
+    "Women's Health": "Women's Health",
+    'Health, wellness, and reproductive health discussions': 'Health, wellness, and reproductive health discussions',
+    
+    // Footer translations
+    'footer_description': 'We support girls through resource opportunities, mentorship and track of goals setting to help them achieve their careers.',
+    'quick_links': 'Quick Links',
+    'reports': 'Reports',
+    'contact_newsletter': 'Contact & Newsletter',
+    'join_mailing_list': 'Join our mailing list for updates.',
+    'email_address': 'Email address',
+    'subscribe': 'Subscribe',
+    'all_rights_reserved': 'All rights reserved'
   },
   
   // Swahili translations
@@ -707,9 +743,45 @@ const translations = {
     // User mentions
     'Mention users': 'ذكر المستخدمين',
     'Type @ to mention someone': 'اكتب @ لذكر شخص ما',
+    
+    // Common forum post translations
+    'How to apply for scholarships?': 'كيفية التقدم للمنح الدراسية؟',
+    'Looking for study abroad opportunities': 'البحث عن فرص الدراسة في الخارج',
+    'Need advice on career choices': 'أحتاج نصيحة حول الخيارات المهنية',
+    'Dealing with academic stress': 'التعامل مع الضغط الأكاديمي',
+    'Building confidence as a young woman': 'بناء الثقة كشابة',
+    'Balancing work and studies': 'الموازنة بين العمل والدراسة',
+    'Leadership opportunities for women': 'فرص القيادة للنساء',
+    'Networking tips for students': 'نصائح التواصل للطلاب',
+    'Time management strategies': 'استراتيجيات إدارة الوقت',
+    'Preparing for job interviews': 'الاستعداد لمقابلات العمل',
+    
+    // Forum category names and descriptions in Arabic
+    'Mental Health & Wellbeing': 'الصحة النفسية والعافية',
+    'Building confidence, stress management, and self-care support': 'بناء الثقة، إدارة التوتر، ودعم العناية بالذات',
+    'Leadership & Empowerment': 'القيادة والتمكين',
+    'Leadership skills, empowerment, and personal development': 'مهارات القيادة، التمكين، والتطوير الشخصي',
+    'Education & Learning': 'التعليم والتعلم',
+    'Academic challenges, scholarships, and learning strategies': 'التحديات الأكاديمية، المنح الدراسية، واستراتيجيات التعلم',
+    'Equality, Equity & Rights': 'المساواة، العدالة والحقوق',
+    'Gender equality, equity, rights advocacy, and social justice': 'المساواة بين الجنسين، العدالة، الدفاع عن الحقوق، والعدالة الاجتماعية',
+    'Career & Skills': 'المهنة والمهارات',
+    'Career development, professional skills, and opportunities': 'تطوير المهنة، المهارات المهنية، والفرص',
+    "Women's Health": 'صحة المرأة',
+    'Health, wellness, and reproductive health discussions': 'مناقشات الصحة، العافية، والصحة الإنجابية',
     'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
     'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.': 'من خلال هير رايز هاب، وجدت فرص منح دراسية لم أعرف بوجودها. المجتمع هنا داعم ومشجع جداً. حصلت على منحة دراسية كاملة لدراساتي الجامعية والآن أرشد فتيات أصغر على المنصة. من الرائع رد الجميل للمساعدة التي تلقيتها.',
-    'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!': 'قبل الانضمام إلى هير رايز هاب، شعرت بالوحدة في رحلتي. الآن لدي شبكة من الزميلات والمرشدين الذين يفهمون تحدياتي. قسم الموارد ساعدني في الاستعداد للاختبارات المعيارية، وقد تم قبولي في برنامج التدريب الذي أحلم به. أنا ممتنة جداً لهذه المنصة!'
+    'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!': 'قبل الانضمام إلى هير رايز هاب، شعرت بالوحدة في رحلتي. الآن لدي شبكة من الزميلات والمرشدين الذين يفهمون تحدياتي. قسم الموارد ساعدني في الاستعداد للاختبارات المعيارية، وقد تم قبولي في برنامج التدريب الذي أحلم به. أنا ممتنة جداً لهذه المنصة!',
+    
+    // Footer translations in Arabic
+    'footer_description': 'ندعم الفتيات من خلال فرص الموارد والإرشاد وتتبع وضع الأهداف لمساعدتهن على تحقيق مهنهن.',
+    'quick_links': 'روابط سريعة',
+    'reports': 'التقارير',
+    'contact_newsletter': 'التواصل والنشرة الإخبارية',
+    'join_mailing_list': 'انضم إلى قائمتنا البريدية للحصول على التحديثات.',
+    'email_address': 'عنوان البريد الإلكتروني',
+    'subscribe': 'اشترك',
+    'all_rights_reserved': 'جميع الحقوق محفوظة'
   }
 }
 

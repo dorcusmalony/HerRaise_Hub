@@ -164,12 +164,12 @@ export default function Home() {
 
       {/* What We Do Section */}
       <section className={styles.features}>
-        <div className={styles.featureCard} style={{ background: '#8B5CF6', color: 'white' }}>
-          <h3 className={styles.featureTitle} style={{ color: 'white' }}>{t('Find Mentorship')}</h3>
-          <p className={styles.featureDescription} style={{ color: 'white' }}>
+        <div className={styles.featureCard} style={{ background: '#8B5CF6', color: 'white', textAlign: 'center !important' }}>
+          <h3 className={styles.featureTitle} style={{ color: 'white', textAlign: 'center !important' }}>{t('Find Mentorship')}</h3>
+          <p className={styles.featureDescription} style={{ color: 'white', textAlign: 'center !important' }}>
             {t('Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.')}
           </p>
-          <Link to="/register" className={styles.ctaButton} style={{ background: 'white', color: '#8B5CF6' }}>{t('Get Started')}</Link>
+          <Link to="/register" className={styles.ctaButton} style={{ background: 'white', color: '#8B5CF6', textAlign: 'center !important', display: 'block', margin: '0 auto' }}>{t('Get Started')}</Link>
         </div>
 
         <div className={styles.featureCard} style={{ background: '#E84393', color: 'white' }}>
