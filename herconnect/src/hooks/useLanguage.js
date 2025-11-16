@@ -184,7 +184,7 @@ const translations = {
     'edited': 'edited',
     'view comments': 'View comments',
     'Comments': 'Comments',
-    'comment': 'Add a comment...',
+    'comment': 'Comment',
     'post comment': 'Post Comment',
     'comments': 'Comments',
     'no comments ': 'No comments yet. Be the first to comment!',
@@ -363,7 +363,39 @@ const translations = {
     'join_mailing_list': 'Join our mailing list for updates.',
     'email_address': 'Email address',
     'subscribe': 'Subscribe',
-    'all_rights_reserved': 'All rights reserved'
+    'all_rights_reserved': 'All rights reserved',
+    'copyright': '©',
+    'reports': 'Reports',
+    
+    // About page testimonials
+    'Success Stories from Our Community': 'Success Stories from Our Community',
+    'Hear from young women whose lives have been transformed by HerRaise Hub': 'Hear from young women whose lives have been transformed by HerRaise Hub',
+    'Secondary School Student': 'Secondary School Student',
+    'University Student': 'University Student',
+    'High School Graduate': 'High School Graduate',
+    'testimonial_1': 'Before joining HerRaise, I struggled with confidence and didn\'t know how to navigate opportunities. The mentorship discussions and leadership resources helped me believe in myself again. Now I speak up in class, apply for opportunities boldly, and feel proud of the woman I\'m becoming. HerRaise truly changed my mindset.',
+    'testimonial_2': 'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.',
+    'testimonial_3': 'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!',
+    
+    // Community Guidelines translations
+    'Our Community Guidelines': 'Our Community Guidelines',
+    'Creating a safe, supportive, and empowering space for all members': 'Creating a safe, supportive, and empowering space for all members',
+    'Be Respectful': 'Be Respectful',
+    'Treat everyone with kindness and dignity': 'Treat everyone with kindness and dignity',
+    'Embrace Inclusivity': 'Embrace Inclusivity',
+    'Celebrate diversity and welcome all voices': 'Celebrate diversity and welcome all voices',
+    'Communicate Positively': 'Communicate Positively',
+    'Use encouraging and constructive language': 'Use encouraging and constructive language',
+    'Stay Safe': 'Stay Safe',
+    'Protect your privacy and report concerns': 'Protect your privacy and report concerns',
+    'Support Each Other': 'Support Each Other',
+    'Lift others up and share knowledge': 'Lift others up and share knowledge',
+    'Be Authentic': 'Be Authentic',
+    'Share genuine experiences and advice': 'Share genuine experiences and advice',
+    'Ready to Make a Difference?': 'Ready to Make a Difference?',
+    'Join thousands of young women and mentors creating positive change together': 'Join thousands of young women and mentors creating positive change together',
+    'Create Account': 'Create Account',
+    'Explore Opportunities': 'Explore Opportunities'
   },
   
   // Swahili translations
@@ -560,7 +592,7 @@ const translations = {
     'Secondary School Student': 'طالبة مدرسة ثانوية',
     'University Student': 'طالبة جامعية',
     'High School Graduate': 'خريجة مدرسة ثانوية',
-    'testimonial_1': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
+    'testimonial_1': 'قبل الانضمام إلى هير رايز، كنت أعاني من الثقة ولم أكن أعرف كيفية التعامل مع الفرص. ساعدتني مناقشات الإرشاد وموارد القيادة على الإيمان بنفسي مرة أخرى. الآن أتحدث في الفصل، وأتقدم للفرص بجرأة، وأشعر بالفخر بالمرأة التي أصبحت عليها. هير رايز غيرت طريقة تفكيري حقاً.',
     'testimonial_2': 'من خلال هير رايز هاب، وجدت فرص منح دراسية لم أعرف بوجودها. المجتمع هنا داعم ومشجع جداً. حصلت على منحة دراسية كاملة لدراساتي الجامعية والآن أرشد فتيات أصغر على المنصة. من الرائع رد الجميل للمساعدة التي تلقيتها.',
     'testimonial_3': 'قبل الانضمام إلى هير رايز هاب، شعرت بالوحدة في رحلتي. الآن لدي شبكة من الزميلات والمرشدين الذين يفهمون تحدياتي. قسم الموارد ساعدني في الاستعداد للاختبارات المعيارية، وقد تم قبولي في برنامج التدريب الذي أحلم به. أنا ممتنة جداً لهذه المنصة!',
     'Our Community Guidelines': 'إرشادات مجتمعنا',
@@ -604,7 +636,7 @@ const translations = {
     'edited': 'مُعدّل',
     'view comments': 'عرض التعليقات',
     'Comments': 'التعليقات',
-    'comment': 'أضف تعليقاً...',
+    'comment': 'تعليق',
     'post comment': 'نشر التعليق',
     'comments': 'التعليقات',
     'no comments ': 'لا توجد تعليقات بعد. كن أول من يعلق!',
@@ -769,7 +801,7 @@ const translations = {
     'Career development, professional skills, and opportunities': 'تطوير المهنة، المهارات المهنية، والفرص',
     "Women's Health": 'صحة المرأة',
     'Health, wellness, and reproductive health discussions': 'مناقشات الصحة، العافية، والصحة الإنجابية',
-    'HerRaise Hub connected me with an amazing mentor who guided me through my college application process. I never thought I could apply to universities abroad, but now I have acceptance letters from three universities! This platform changed my life and showed me that my dreams are valid and achievable.': 'ربطتني هير رايز هاب بمرشدة رائعة وجهتني خلال عملية التقديم للجامعة. لم أعتقد أبداً أنني يمكنني التقديم لجامعات في الخارج، لكن الآن لدي خطابات قبول من ثلاث جامعات! غيرت هذه المنصة حياتي وأظهرت لي أن أحلامي صحيحة وقابلة للتحقيق.',
+    'Before joining HerRaise, I struggled with confidence and didn\'t know how to navigate opportunities. The mentorship discussions and leadership resources helped me believe in myself again. Now I speak up in class, apply for opportunities boldly, and feel proud of the woman I\'m becoming. HerRaise truly changed my mindset.': 'قبل الانضمام إلى هير رايز، كنت أعاني من الثقة ولم أكن أعرف كيفية التعامل مع الفرص. ساعدتني مناقشات الإرشاد وموارد القيادة على الإيمان بنفسي مرة أخرى. الآن أتحدث في الفصل، وأتقدم للفرص بجرأة، وأشعر بالفخر بالمرأة التي أصبحت عليها. هير رايز غيرت طريقة تفكيري حقاً.',
     'Through HerRaise Hub, I found scholarship opportunities I never knew existed. The community here is so supportive and encouraging. I secured a full scholarship for my undergraduate studies and now I mentor younger girls on the platform. It\'s incredible to pay forward the help I received.': 'من خلال هير رايز هاب، وجدت فرص منح دراسية لم أعرف بوجودها. المجتمع هنا داعم ومشجع جداً. حصلت على منحة دراسية كاملة لدراساتي الجامعية والآن أرشد فتيات أصغر على المنصة. من الرائع رد الجميل للمساعدة التي تلقيتها.',
     'Before joining HerRaise Hub, I felt alone in my journey. Now I have a network of peers and mentors who understand my challenges. The resources section helped me prepare for standardized tests, and I just got accepted into my dream internship program. I\'m so grateful for this platform!': 'قبل الانضمام إلى هير رايز هاب، شعرت بالوحدة في رحلتي. الآن لدي شبكة من الزميلات والمرشدين الذين يفهمون تحدياتي. قسم الموارد ساعدني في الاستعداد للاختبارات المعيارية، وقد تم قبولي في برنامج التدريب الذي أحلم به. أنا ممتنة جداً لهذه المنصة!',
     
@@ -781,7 +813,29 @@ const translations = {
     'join_mailing_list': 'انضم إلى قائمتنا البريدية للحصول على التحديثات.',
     'email_address': 'عنوان البريد الإلكتروني',
     'subscribe': 'اشترك',
-    'all_rights_reserved': 'جميع الحقوق محفوظة'
+    'all_rights_reserved': 'جميع الحقوق محفوظة',
+    'copyright': '©',
+    'reports': 'التقارير',
+    
+    // Community Guidelines translations
+    'Our Community Guidelines': 'إرشادات مجتمعنا',
+    'Creating a safe, supportive, and empowering space for all members': 'إنشاء مساحة آمنة وداعمة ومُمكِّنة لجميع الأعضاء',
+    'Be Respectful': 'كن محترماً',
+    'Treat everyone with kindness and dignity': 'تعامل مع الجميع بلطف وكرامة',
+    'Embrace Inclusivity': 'احتضن الشمولية',
+    'Celebrate diversity and welcome all voices': 'احتفل بالتنوع ورحب بجميع الأصوات',
+    'Communicate Positively': 'تواصل بإيجابية',
+    'Use encouraging and constructive language': 'استخدم لغة مشجعة وبناءة',
+    'Stay Safe': 'ابق آمناً',
+    'Protect your privacy and report concerns': 'احم خصوصيتك وأبلغ عن المخاوف',
+    'Support Each Other': 'ادعموا بعضكم البعض',
+    'Lift others up and share knowledge': 'ارفعوا الآخرين وشاركوا المعرفة',
+    'Be Authentic': 'كن أصيلاً',
+    'Share genuine experiences and advice': 'شارك التجارب والنصائح الحقيقية',
+    'Ready to Make a Difference?': 'مستعد لإحداث فرق؟',
+    'Join thousands of young women and mentors creating positive change together': 'انضم إلى آلاف الشابات والمرشدين الذين يخلقون تغييراً إيجابياً معاً',
+    'Create Account': 'إنشاء حساب',
+    'Explore Opportunities': 'استكشف الفرص'
   }
 }
 

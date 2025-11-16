@@ -103,9 +103,8 @@ export default function PostCard({ post, onUpdate, currentUser }) {
           onClick={() => setShowComments(!showComments)}
           className={styles.actionBtn}
         >
-          💬 {post.commentsCount || 0}
+          💬 {t('comment')} ({post.commentsCount || 0})
         </button>
-        <span className={styles.viewsCount}>👁️ {post.viewsCount || 0}</span>
       </div>
 
       {showComments && (

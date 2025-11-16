@@ -135,25 +135,21 @@ export default function About() {
                     <div className="row g-2">
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
                           <span>{t('gender_inequality')}</span>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
                           <span>{t('gender_violence')}</span>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
                           <span>{t('early_marriage')}</span>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded p-2">
-                          
                           <span>{t('lack_opportunities')}</span>
                         </div>
                       </div>
@@ -168,9 +164,9 @@ export default function About() {
                   </ul>
                 </div>
                 <div className="col-lg-4 text-center">
-                  <div className="bg-white text-dark rounded-circle mx-auto mb-3" style={{ width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div className="bg-white text-dark rounded-circle mx-auto mb-3" style={{ width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                     <div>
-                      <div className="display-4 fw-bold" style={{ color: 'var(--brand-magenta)' }}>{t('10K')}</div>
+                      <div className="display-4 fw-bold" style={{ color: '#E84393' }}>{t('10K')}</div>
                       <div className="small fw-bold">{t('BY 2030')}</div>
                     </div>
                   </div>
