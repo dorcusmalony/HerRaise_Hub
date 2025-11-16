@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useLanguage } from '../../hooks/useLanguage'
 import { FORUM_CATEGORIES } from './CategorySelector'
+import UserMentions from './UserMentions'
 import styles from './CreatePostForm.module.css'
 
 export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project', initialCategory = '', initialSubcategory = '', isShareZone = false }) {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const API_URL = import.meta.env.VITE_API_URL || ''
   
   const [formData, setFormData] = useState({
@@ -16,6 +19,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
     tags: editPost?.tags?.join(', ') || '',
     attachments: editPost?.attachments || []
   })
+  const [mentions, setMentions] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
@@ -26,7 +30,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
 
     const token = localStorage.getItem('token')
     if (!token) {
-      setError('Please login to continue')
+      setError(t('Please login to continue'))
       setSubmitting(false)
       return
     }
@@ -50,7 +54,8 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
           subcategory: formData.subcategory,
           publishedFrom: formData.category ? FORUM_CATEGORIES[formData.category]?.name : null,
           tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-          attachments: formData.attachments
+          attachments: formData.attachments,
+          mentions: mentions
         })
       })
 
@@ -76,7 +81,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
 
 
   const getContentPlaceholder = () => {
-    return 'Share your thoughts, start a discussion, or ask for advice from the community...'
+    return t('Share your thoughts, start a discussion, or ask for advice from the community...')
   }
 
   return (
@@ -84,10 +89,10 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
       <div className={styles.formBody}>
 
         <h3 className={styles.formTitle} style={{color: 'white'}}>
-          {editPost ? 'Edit Post' : 'Start a Discussion'}
+          {editPost ? t('Edit Post') : t('Start a Discussion')}
         </h3>
         <p className={styles.formSubtitle} style={{color: 'white'}}>
-          Share your thoughts, ask questions, or start conversations with the community
+          {t('Share your thoughts, ask questions, or start conversations with the community')}
         </p>
 
         {error && (
@@ -99,7 +104,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         {/* Category Selection - Hidden when pre-selected */}
         {!initialCategory && (
           <div className={styles.formGroup}>
-            <label className={styles.formLabel} style={{color: 'white'}}>Category *</label>
+            <label className={styles.formLabel} style={{color: 'white'}}>{t('Category *')}</label>
             <select
               value={formData.category}
               onChange={(e) => {
@@ -108,7 +113,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
               required
               className={styles.formSelect}
             >
-              <option value="">Select a category...</option>
+              <option value="">{t('Select a category...')}</option>
               {Object.values(FORUM_CATEGORIES).map(category => (
                 <option key={category.id} value={category.id}>
                   {category.icon} {category.name}
@@ -121,14 +126,14 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         {/* Subcategory Selection - Hidden when pre-selected */}
         {formData.category && !initialCategory && !initialSubcategory && (
           <div className={styles.formGroup}>
-            <label className={styles.formLabel} style={{color: 'white'}}>Subcategory *</label>
+            <label className={styles.formLabel} style={{color: 'white'}}>{t('Subcategory *')}</label>
             <select
               value={formData.subcategory}
               onChange={(e) => setFormData({...formData, subcategory: e.target.value})}
               required
               className={styles.formSelect}
             >
-              <option value="">Select a subcategory...</option>
+              <option value="">{t('Select a subcategory...')}</option>
               {Object.values(FORUM_CATEGORIES[formData.category]?.subcategories || {}).map(subcategory => (
                 <option key={subcategory.id} value={subcategory.id}>
                   {subcategory.icon} {subcategory.name}
@@ -137,7 +142,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
             </select>
             {formData.subcategory && (
               <div className={styles.topicsHint} style={{color: 'white'}}>
-                Suggested topics: {FORUM_CATEGORIES[formData.category]?.subcategories[formData.subcategory]?.topics.slice(0, 3).join(', ')}
+                {t('Suggested topics:')}: {FORUM_CATEGORIES[formData.category]?.subcategories[formData.subcategory]?.topics.slice(0, 3).join(', ')}
               </div>
             )}
           </div>
@@ -147,7 +152,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
 
         {/* Title */}
         <div className={styles.formGroup}>
-          <label htmlFor="post-title" className={styles.formLabel} style={{color: 'white'}}>Title *</label>
+          <label htmlFor="post-title" className={styles.formLabel} style={{color: 'white'}}>{t('Title *')}</label>
           <input
             type="text"
             id="post-title"
@@ -156,39 +161,40 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
             onChange={(e) => setFormData({...formData, title: e.target.value})}
             required
             maxLength={200}
-            placeholder="Enter a descriptive title..."
+            placeholder={t('Enter a descriptive title...')}
             className={styles.formInput}
           />
         </div>
 
-        {/* Enhanced Content */}
+        {/* Enhanced Content with User Mentions */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel} style={{color: 'white'}}>Description *</label>
-          <textarea
+          <label className={styles.formLabel} style={{color: 'white'}}>{t('Description *')}</label>
+          <UserMentions
             value={formData.content}
-            onChange={(e) => setFormData({...formData, content: e.target.value})}
-            required
-            rows="8"
+            onChange={(content) => setFormData({...formData, content})}
+            onMentionsChange={setMentions}
+            categoryId={formData.category || initialCategory}
             placeholder={getContentPlaceholder()}
             className={styles.formTextarea}
+            rows={8}
           />
           <div className={styles.characterCount} style={{color: 'white'}}>
-            {formData.content.length} characters
+            {formData.content.length} {t('characters')} • {t('Type @ to mention someone')}
           </div>
         </div>
 
         {/* Tags */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel} style={{color: 'white'}}>Tags (comma separated)</label>
+          <label className={styles.formLabel} style={{color: 'white'}}>{t('Tags (comma separated)')}</label>
           <input
             type="text"
             value={formData.tags}
             onChange={(e) => setFormData({...formData, tags: e.target.value})}
-            placeholder="e.g., technology, education, leadership"
+            placeholder={t('e.g., technology, education, leadership')}
             className={styles.formInput}
           />
           <div className={styles.formHint} style={{color: 'white'}}>
-            Add relevant tags to help others find your post
+            {t('Add relevant tags to help others find your post')}
           </div>
         </div>
 
@@ -201,14 +207,14 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
             disabled={submitting}
             className={styles.submitBtn}
           >
-            {submitting ? 'Saving...' : editPost ? 'Update Post' : 'Submit Post'}
+            {submitting ? t('Saving...') : editPost ? t('Update Post') : t('Submit Post')}
           </button>
           <button
             type="button"
             onClick={onCancel || (() => navigate('/forum'))}
             className={styles.cancelBtn}
           >
-            Cancel
+            {t('Cancel')}
           </button>
         </div>
       </div>

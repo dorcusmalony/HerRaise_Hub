@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useLanguage } from '../../hooks/useLanguage'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
 import CategorySelector, { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
@@ -24,7 +24,7 @@ const getAuthorColor = (name) => {
 }
 
 export default function Forum() {
-  const { t } = useTranslation()
+  const { t } = useLanguage()
   const API = import.meta.env.VITE_API_URL || ''
   
   // Debug: Check API URL on Vercel
@@ -181,7 +181,7 @@ export default function Forum() {
   }
 
   const handleDeletePost = async (postId) => {
-    if (!window.confirm('Are you sure you want to delete this post? This action cannot be undone.')) return
+    if (!window.confirm(t('Are you sure you want to delete this post? This action cannot be undone.'))) return
 
     const token = localStorage.getItem('token')
     
@@ -198,7 +198,7 @@ export default function Forum() {
       }
     } catch (error) {
       console.error('Error deleting post:', error)
-      alert('Failed to delete post. Please try again.')
+      alert(t('Failed to delete post. Please try again.'))
     }
   }
 
@@ -220,7 +220,7 @@ export default function Forum() {
 
       if (response.ok) {
         setCommentText(prev => ({ ...prev, [postId]: '' }))
-        setSuccessMessage('Comment posted successfully!')
+        setSuccessMessage(t('Comment posted successfully!'))
         setTimeout(() => setSuccessMessage(''), 3000)
         fetchPosts()
       }
@@ -303,7 +303,7 @@ export default function Forum() {
   }
 
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm('Delete this comment? This action cannot be undone.')) return
+    if (!window.confirm(t('Delete this comment? This action cannot be undone.'))) return
 
     const token = localStorage.getItem('token')
     console.log('🗑️ Deleting comment:', { commentId, API })
@@ -323,7 +323,7 @@ export default function Forum() {
       } else {
         const errorData = await response.text()
         console.error('❌ Delete failed:', errorData)
-        alert('Failed to delete comment. Please try again.')
+        alert(t('Failed to delete comment. Please try again.'))
       }
     } catch (error) {
       console.error('Error deleting comment:', error)
@@ -343,7 +343,7 @@ export default function Forum() {
     return (
       <div className="text-center py-5">
         <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
+          <span className="visually-hidden">{t('Loading...')}</span>
         </div>
       </div>
     )
@@ -361,24 +361,24 @@ export default function Forum() {
       <div className={styles.forumHeader}>
         <div className={styles.headerContent}>
           <div className={styles.headerText}>
-            <h1 className={styles.forumTitle}>Community Forum</h1>
-            <p className={styles.forumSubtitle}>Connect with peers, ask questions, and join discussions</p>
+            <h1 className={styles.forumTitle}>{t('Community Forum')}</h1>
+            <p className={styles.forumSubtitle}>{t('Connect with peers, ask questions, and join discussions')}</p>
             <div className={styles.contributionHighlight}>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Ask Questions</span>
+                <span>{t('Ask Questions')}</span>
               </div>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Join Discussions</span>
+                <span>{t('Join Discussions')}</span>
               </div>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Get Support</span>
+                <span>{t('Get Support')}</span>
               </div>
               <div className={styles.highlightItem}>
                 <span className={styles.highlightIcon}></span>
-                <span>Share Ideas</span>
+                <span>{t('Share Ideas')}</span>
               </div>
             </div>
 
@@ -405,7 +405,7 @@ export default function Forum() {
             onClick={() => setSelectedCategory(null)}
             className={styles.backBtn}
           >
-            ← All Categories
+            ← {t('All Categories')}
           </button>
           <h2 className={styles.categoryTitle}>
             {FORUM_CATEGORIES[selectedCategory]?.name || selectedCategory}
@@ -414,7 +414,7 @@ export default function Forum() {
             onClick={() => setShowCreateForm(true)}
             className={styles.createPostBtn}
           >
-            + New Post
+            + {t('New Post')}
           </button>
         </div>
       )}
@@ -423,12 +423,12 @@ export default function Forum() {
       {!showCreateForm && !editingPost && selectedCategory && (
         <div className={styles.filterBar}>
           <div className={styles.filterSection}>
-            <label className={styles.filterLabel}>Browse by type:</label>
+            <label className={styles.filterLabel}>{t('Browse by type:')}:</label>
             <div className={styles.filterButtons}>
               {[
-                { key: 'all', label: 'All', desc: 'All posts' },
-                { key: 'question', label: 'Questions', desc: 'Need help' },
-                { key: 'discussion', label: 'Discussions', desc: 'General topics' }
+                { key: 'all', label: t('All'), desc: 'All posts' },
+                { key: 'question', label: t('Questions'), desc: 'Need help' },
+                { key: 'discussion', label: t('Discussions'), desc: 'General topics' }
               ].map(f => (
                 <button
                   key={f.key}
@@ -466,10 +466,10 @@ export default function Forum() {
             onSuccess={(post) => {
               if (editingPost) {
                 handleUpdatePost(post)
-                setSuccessMessage('Post updated successfully!')
+                setSuccessMessage(t('Post updated successfully!'))
               } else {
                 setShowCreateForm(false)
-                setSuccessMessage('Post created successfully!')
+                setSuccessMessage(t('Post created successfully!'))
                 // Force immediate refresh of posts
                 setTimeout(() => {
                   fetchPosts()
@@ -492,18 +492,18 @@ export default function Forum() {
         posts.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}></div>
-            <h4 className={styles.emptyTitle}>Start the conversation!</h4>
-            <p className={styles.emptySubtitle}>Ask questions, share ideas, or start discussions with the community</p>
+            <h4 className={styles.emptyTitle}>{t('Start the conversation!')}</h4>
+            <p className={styles.emptySubtitle}>{t('Ask questions, share ideas, or start discussions with the community')}</p>
             <div className={styles.emptyActions}>
               <button 
                 onClick={() => setShowCreateForm(true)}
                 className={styles.createPostBtn}
               >
-                Start Your First Discussion
+                {t('Start Your First Discussion')}
               </button>
             </div>
             <div className={styles.emptyTips}>
-              <p><strong>Tip:</strong> Questions with clear context get better responses!</p>
+              <p><strong>{t('Tip:')}</strong> {t('Questions with clear context get better responses!')}</p>
             </div>
           </div>
         ) : (
@@ -549,7 +549,7 @@ export default function Forum() {
                           </span>
                           {post.category && (
                             <span className={styles.categoryBadge}>
-                              Published from {FORUM_CATEGORIES[post.category]?.name || post.category}
+                              {t('Published from')} {FORUM_CATEGORIES[post.category]?.name || post.category}
                             </span>
                           )}
                         </div>
@@ -610,7 +610,7 @@ export default function Forum() {
                                     cursor: 'pointer'
                                   }}
                                 >
-                                  Edit Post
+                                  {t('Edit Post')}
                                 </button>
                               </li>
                               <li><hr className="dropdown-divider" style={{ margin: '0.25rem 0', border: 'none', borderTop: '1px solid #e5e7eb' }} /></li>
@@ -632,13 +632,13 @@ export default function Forum() {
                                     color: '#dc2626'
                                   }}
                                 >
-                                  Delete Post
+                                  {t('Delete Post')}
                                 </button>
                               </li>
                             </>
                           ) : (
                             <li style={{ padding: '0.5rem 1rem', color: '#6b7280', fontSize: '0.875rem' }}>
-                              No permissions
+                              {t('No permissions')}
                             </li>
                           )}
                         </ul>
@@ -817,14 +817,14 @@ export default function Forum() {
                                 <div className={styles.documentContainer}>
                                   <div className={styles.documentIcon}></div>
                                   <div className={styles.documentInfo}>
-                                    <span className={styles.fileName}>{fileName} (Type: {fileType})</span>
+                                    <span className={styles.fileName}>{fileName} ({t('Type:')}: {fileType})</span>
                                     <a 
                                       href={fileUrl} 
                                       target="_blank" 
                                       rel="noopener noreferrer"
                                       className={styles.downloadBtn}
                                     >
-                                      Download
+                                      {t('Download')}
                                     </a>
                                   </div>
                                 </div>
@@ -838,7 +838,7 @@ export default function Forum() {
                       {/* File Count Info */}
                     {post.attachments && post.attachments.length > 0 && (
                       <div className={styles.fileInfo}>
-                        {post.attachments.length} file{post.attachments.length > 1 ? 's' : ''} attached
+                        {post.attachments.length} {post.attachments.length > 1 ? t('files') : t('file')} {t('attached')}
                       </div>
                     )}
 
@@ -871,11 +871,11 @@ export default function Forum() {
                       title={t('view comments')}
                     >
                        <span className={styles.count}>{post.ForumComments?.length || 0}</span>
-                      <span className={styles.label}>Comments</span>
+                      <span className={styles.label}>{t('Comments')}</span>
                     </button>
 
                     <div className={styles.viewsCount}>
-                       <span>{post.views || 0} views</span>
+                       <span>{post.views || 0} {t('views')}</span>
                     </div>
                   </div>
 

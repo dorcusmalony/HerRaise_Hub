@@ -1,20 +1,25 @@
-import { useTranslation } from 'react-i18next'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function LanguageSwitcher() {
-  const { i18n, t } = useTranslation()
+  const { language, switchLanguage, t } = useLanguage()
+  
   const changeLang = (lng) => {
-    i18n.changeLanguage(lng)
-    localStorage.setItem('lang', lng)
-    window.location.reload()
+    switchLanguage(lng)
   }
   return (
     <div className="d-flex gap-2 align-items-center">
-      <span>{t('language')}:</span>
-      <button className="btn btn-sm btn-outline-primary" onClick={() => changeLang('en')}>
-        {t('english')}
+      <span>Language:</span>
+      <button 
+        className={`btn btn-sm ${language === 'en' ? 'btn-primary' : 'btn-outline-primary'}`} 
+        onClick={() => changeLang('en')}
+      >
+        English
       </button>
-      <button className="btn btn-sm btn-outline-primary" onClick={() => changeLang('ar')}>
-        {t('juba_arabic')}
+      <button 
+        className={`btn btn-sm ${language === 'ar' ? 'btn-primary' : 'btn-outline-primary'}`} 
+        onClick={() => changeLang('ar')}
+      >
+        العربية
       </button>
     </div>
   )

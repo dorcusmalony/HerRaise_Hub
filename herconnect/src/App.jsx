@@ -23,6 +23,7 @@ import { NotificationProvider } from './contexts/NotificationContext'
 import { initializeSocket, disconnectSocket } from './services/socketService'
 import { pushNotificationService } from './services/pushNotificationService'
 import { notificationService } from './services/notificationService'
+import './i18n' // Initialize i18next
 import './App.css'
 import './styles/colors.css'
 import './styles/rtl.css'

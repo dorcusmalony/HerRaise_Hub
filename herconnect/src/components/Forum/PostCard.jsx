@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import LikeButton from '../LikeButton/LikeButton'
 import CommentSection from './CommentSection'
 import { notificationAPI } from '../../utils/notificationAPI'
+import { useLanguage } from '../../hooks/useLanguage'
 import styles from './PostCard.module.css'
 
 const getAuthorColor = (name) => {
@@ -19,6 +20,7 @@ const getAuthorColor = (name) => {
 }
 
 export default function PostCard({ post, onUpdate, currentUser }) {
+  const { t } = useLanguage()
   const [showComments, setShowComments] = useState(false)
   const cardColor = getAuthorColor(post.author?.name || 'User')
 
@@ -44,11 +46,11 @@ export default function PostCard({ post, onUpdate, currentUser }) {
       })
       if (response.ok) {
         const data = await response.json()
-        setIsLiked(data.liked)
+        setIsLiked(data.isLikedByUser)
         setLikeCount(data.likesCount)
         
         // Create notification if user liked the post (not their own)
-        if (data.liked && currentUser?.id !== post.author?.id) {
+        if (data.isLikedByUser && currentUser?.id !== post.author?.id) {
           notificationAPI.createPostLikeNotification(post.id, post.author?.id)
         }
         
@@ -80,7 +82,7 @@ export default function PostCard({ post, onUpdate, currentUser }) {
 
       <Link to={`/forum/posts/${post.id}`} className={styles.postLink}>
         <div className={styles.postContent}>
-          <h3 className={styles.postTitle}>{post.title}</h3>
+          <h3 className={styles.postTitle}>{t(post.title) || post.title}</h3>
           <p className={styles.postText}>
             {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
           </p>
@@ -101,9 +103,8 @@ export default function PostCard({ post, onUpdate, currentUser }) {
           onClick={() => setShowComments(!showComments)}
           className={styles.actionBtn}
         >
-          💬 {post.commentsCount || 0}
+          💬 {t('comment')} ({post.commentsCount || 0})
         </button>
-        <span className={styles.viewsCount}>👁️ {post.viewsCount || 0}</span>
       </div>
 
       {showComments && (

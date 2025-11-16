@@ -1,47 +1,43 @@
 import { useNavigate } from 'react-router-dom'
+import { useLanguage } from '../../hooks/useLanguage'
 import styles from './CategorySelector.module.css'
 
 const FORUM_CATEGORIES = {
   'mental-health': {
     id: 'mental-health',
     name: 'Mental Health & Wellbeing',
-    icon: '🧠',
     description: 'Building confidence, stress management, and self-care support'
   },
   'leadership': {
     id: 'leadership',
     name: 'Leadership & Empowerment',
-    icon: '👑',
     description: 'Leadership skills, empowerment, and personal development'
   },
   'education-study': {
     id: 'education-study',
     name: 'Education & Learning',
-    icon: '📚',
     description: 'Academic challenges, scholarships, and learning strategies'
   },
   'equality-rights': {
     id: 'equality-rights',
     name: 'Equality, Equity & Rights',
-    icon: '⚖️',
     description: 'Gender equality, equity, rights advocacy, and social justice'
   },
   'career-skills': {
     id: 'career-skills',
     name: 'Career & Skills',
-    icon: '💼',
     description: 'Career development, professional skills, and opportunities'
   },
   'womens-health': {
     id: 'womens-health',
     name: "Women's Health",
-    icon: '🌸',
     description: 'Health, wellness, and reproductive health discussions'
   }
 }
 
 export default function CategorySelector({ selectedCategory, onCategoryChange, showAsGrid = false }) {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   
   const handleCategoryClick = (categoryId) => {
     // Navigate to dedicated category page
@@ -52,8 +48,8 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
     return (
       <div className={styles.forumMain}>
         <div className={styles.forumIntro}>
-          <h2 className={styles.forumMainTitle}>Forum Categories</h2>
-          <p className={styles.forumMainDesc}>Choose a category to explore discussions and connect with the community</p>
+          <h2 className={styles.forumMainTitle}>{t('Forum Categories')}</h2>
+          <p className={styles.forumMainDesc}>{t('Choose a category to explore discussions and connect with the community')}</p>
         </div>
         
         <div className={styles.categoryGrid}>
@@ -64,10 +60,10 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
               onClick={() => handleCategoryClick(category.id)}
               style={{ cursor: 'pointer' }}
             >
-              <h4 className={styles.categoryName}>{category.name}</h4>
-              <p className={styles.categoryDesc}>{category.description}</p>
+              <h4 className={styles.categoryName}>{t(category.name)}</h4>
+              <p className={styles.categoryDesc}>{t(category.description)}</p>
               <div className={styles.categoryStats}>
-                <span>Explore →</span>
+                <span>{t('Explore →')}</span>
               </div>
             </div>
           ))}
@@ -103,7 +99,6 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
           onClick={() => onCategoryChange(category.id)}
         >
           <div className={styles.categoryMain}>
-            <span className={styles.categoryIcon}>{category.icon}</span>
             <div className={styles.categoryInfo}>
               <h4 className={styles.categoryName}>{category.name}</h4>
               <p className={styles.categoryDesc}>{category.description}</p>

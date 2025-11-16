@@ -1,9 +1,11 @@
 import React from 'react'
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import { useLanguage } from '../../hooks/useLanguage'
 import styles from './Footer.module.css'
 
 export default function Footer(){
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const API = import.meta.env.VITE_API_URL || '/api'
   const isLoggedIn = !!localStorage.getItem('token') || !!localStorage.getItem('authToken')
@@ -51,29 +53,29 @@ export default function Footer(){
         <div className="row">
           <div className="col-12 col-md-4 mb-4">
             <h5 className={styles.heading}>HerRaise Hub</h5>
-            <p className={`small ${styles.text}`}>We support girls through resource opportunities, mentorship and track of goals setting to help them achive their careers.</p>
+            <p className={`small ${styles.text}`}>{t('footer_description')}</p>
           </div>
 
           <div className="col-6 col-md-4 mb-4">
-            <h5 className={styles.heading}>Quick Links</h5>
+            <h5 className={styles.heading}>{t('quick_links')}</h5>
             <ul className="list-unstyled small">
-              <li><a href="/resources" className={styles.link}>Resources</a></li>
-              <li><a href="/reports" className={styles.link}>Reports</a></li>
-              <li><a href="/about" className={styles.link}>About</a></li>
+              <li><a href="/resources" className={styles.link}>{t('resources')}</a></li>
+              <li><a href="/reports" className={styles.link}>{t('reports')}</a></li>
+              <li><a href="/about" className={styles.link}>{t('about')}</a></li>
               {isLoggedIn ? (
-                <li><button type="button" onClick={handleLogout} className={styles.logoutButton}>Logout</button></li>
+                <li><button type="button" onClick={handleLogout} className={styles.logoutButton}>{t('log_out')}</button></li>
               ) : (
-                <li><a href="/login" className={styles.link}>Login</a></li>
+                <li><a href="/login" className={styles.link}>{t('login')}</a></li>
               )}
             </ul>
           </div>
 
           <div className="col-6 col-md-4 mb-4">
-            <h5 className={styles.heading}>Contact & Newsletter</h5>
-            <p className={`small mb-2 ${styles.text}`}>Join our mailing list for updates.</p>
+            <h5 className={styles.heading}>{t('contact_newsletter')}</h5>
+            <p className={`small mb-2 ${styles.text}`}>{t('join_mailing_list')}</p>
             <form className={styles.newsletter} onSubmit={e => e.preventDefault()}>
-              <input className={`form-control form-control-sm me-2 ${styles.newsletterInput}`} placeholder="Email address" aria-label="Email address" />
-              <button className="btn btn-sm btn-light">Subscribe</button>
+              <input className={`form-control form-control-sm me-2 ${styles.newsletterInput}`} placeholder={t('email_address')} aria-label={t('email_address')} />
+              <button className="btn btn-sm btn-light">{t('subscribe')}</button>
             </form>
             <div className={styles.social}>
               <a href="#" className={styles.socialLink} aria-label="Facebook"><FaFacebook /></a>
@@ -84,7 +86,7 @@ export default function Footer(){
           </div>
         </div>
 
-        <div className={styles.copyright}>© {new Date().getFullYear()} HerRaise Hub All rights reserved</div>
+        <div className={styles.copyright}>{t('copyright')} {new Date().getFullYear()} HerRaise Hub {t('all_rights_reserved')}</div>
       </div>
     </footer>
   )
