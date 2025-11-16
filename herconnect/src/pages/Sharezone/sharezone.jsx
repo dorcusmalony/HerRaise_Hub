@@ -15,8 +15,10 @@ export default function Content() {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category: 'projects'
+    category: 'projects',
+    externalLink: ''
   })
+  const [shareType, setShareType] = useState('file') // 'file' or 'link'
   const [selectedFile, setSelectedFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState('')
@@ -123,57 +125,109 @@ export default function Content() {
       return
     }
 
+    if (shareType === 'link' && !formData.externalLink.trim()) {
+      setError(t('External link is required'))
+      return
+    }
+
+    if (shareType === 'file' && !selectedFile && !isEditing) {
+      setError(t('Please select a file to upload'))
+      return
+    }
+
     setUploading(true)
     setError('')
 
     try {
       const token = localStorage.getItem('token')
-      const submitData = new FormData()
       
-      submitData.append('title', formData.title)
-      submitData.append('content', formData.content)
-      submitData.append('category', formData.category)
-      
-      if (selectedFile) {
-        submitData.append('file', selectedFile)
-      }
-
-      const url = isEditing ? `${API_URL}/api/sharezone/${editingPostId}` : `${API_URL}/api/sharezone`
-      const method = isEditing ? 'PUT' : 'POST'
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: submitData
-      })
-
-      if (response.ok) {
-        const updatedPost = await response.json()
+      if (shareType === 'link') {
+        // Send JSON for external links
+        const response = await fetch(isEditing ? `${API_URL}/api/sharezone/${editingPostId}` : `${API_URL}/api/sharezone`, {
+          method: isEditing ? 'PUT' : 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            content: formData.content,
+            category: formData.category,
+            externalLink: formData.externalLink
+          })
+        })
         
-        if (isEditing) {
-          setContents(prev => prev.map(post => 
-            post._id === editingPostId ? updatedPost : post
-          ))
+        if (response.ok) {
+          const updatedPost = await response.json()
+          
+          if (isEditing) {
+            setContents(prev => prev.map(post => 
+              post._id === editingPostId ? updatedPost : post
+            ))
+          } else {
+            setContents(prev => [updatedPost, ...prev])
+          }
+          
+          // Reset form
+          setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
+          setShareType('file')
+          setShowForm(false)
+          setIsEditing(false)
+          setEditingPostId(null)
         } else {
-          setContents(prev => [updatedPost, ...prev])
+          const errorData = await response.json().catch(() => ({ error: isEditing ? t('Update failed') : t('Upload failed') }))
+          setError(errorData.error || errorData.message || (isEditing ? t('Update failed') : t('Upload failed')))
         }
-        
-        // Reset form
-        setFormData({ title: '', content: '', category: 'projects' })
-        setSelectedFile(null)
-        setPreview(null)
-        setShowForm(false)
-        setIsEditing(false)
-        setEditingPostId(null)
-        
-        // Reset file input
-        const fileInput = document.querySelector('input[type="file"]')
-        if (fileInput) fileInput.value = ''
       } else {
-        const errorData = await response.json().catch(() => ({ error: isEditing ? t('Update failed') : t('Upload failed') }))
-        setError(errorData.error || errorData.message || (isEditing ? t('Update failed') : t('Upload failed')))
+        // Send FormData for file uploads
+        const submitData = new FormData()
+        
+        submitData.append('title', formData.title)
+        submitData.append('content', formData.content)
+        submitData.append('category', formData.category)
+        
+        if (selectedFile) {
+          submitData.append('file', selectedFile)
+        }
+
+        const url = isEditing ? `${API_URL}/api/sharezone/${editingPostId}` : `${API_URL}/api/sharezone`
+        const method = isEditing ? 'PUT' : 'POST'
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: submitData
+        })
+
+        if (response.ok) {
+          const updatedPost = await response.json()
+          
+          if (isEditing) {
+            setContents(prev => prev.map(post => 
+              post._id === editingPostId ? updatedPost : post
+            ))
+          } else {
+            setContents(prev => [updatedPost, ...prev])
+          }
+          
+          // Reset form
+          setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
+          setSelectedFile(null)
+          setPreview(null)
+          setShareType('file')
+          setShowForm(false)
+          setIsEditing(false)
+          setEditingPostId(null)
+          
+          // Reset file input
+          const fileInput = document.querySelector('input[type="file"]')
+          if (fileInput) fileInput.value = ''
+        } else {
+          const errorData = await response.json().catch(() => ({ error: isEditing ? t('Update failed') : t('Upload failed') }))
+          setError(errorData.error || errorData.message || (isEditing ? t('Update failed') : t('Upload failed')))
+        }
       }
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'creating'} post:`, error)
@@ -317,15 +371,22 @@ export default function Content() {
       setFormData({
         title: content.title,
         content: content.content || '',
-        category: content.category
+        category: content.category,
+        externalLink: content.externalLink || ''
       })
       setEditingPostId(postId)
       setIsEditing(true)
       setShowForm(true)
       
-      // Show existing file info if available
-      if (content.fileUrl) {
-        setPreview(content.fileUrl.includes('image') ? content.fileUrl : null)
+      // Set share type based on existing content
+      if (content.externalLink) {
+        setShareType('link')
+      } else {
+        setShareType('file')
+        // Show existing file info if available
+        if (content.fileUrl) {
+          setPreview(content.fileUrl.includes('image') ? content.fileUrl : null)
+        }
       }
     }
   }
@@ -426,9 +487,10 @@ export default function Content() {
           setShowForm(false)
           setIsEditing(false)
           setEditingPostId(null)
-          setFormData({ title: '', content: '', category: 'projects' })
+          setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
           setSelectedFile(null)
           setPreview(null)
+          setShareType('file')
         }}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
@@ -440,9 +502,10 @@ export default function Content() {
                   setShowForm(false)
                   setIsEditing(false)
                   setEditingPostId(null)
-                  setFormData({ title: '', content: '', category: 'projects' })
+                  setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
                   setSelectedFile(null)
                   setPreview(null)
+                  setShareType('file')
                 }}
               >
                 ×
@@ -492,34 +555,83 @@ export default function Content() {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">{t('Upload File')}</label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    onChange={handleFileChange}
-                    accept="*/*"
-                  />
-                  <small className="text-muted">{t('Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.')}</small>
-                  
-                  {preview && (
-                    <div className="mt-2">
-                      <img 
-                        src={preview} 
-                        alt="Preview" 
-                        className="img-thumbnail"
-                        style={{ maxWidth: '200px', maxHeight: '200px' }}
+                  <label className="form-label">{t('Share Type')}</label>
+                  <div className="d-flex gap-3 mb-3">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="shareType"
+                        id="shareFile"
+                        checked={shareType === 'file'}
+                        onChange={() => setShareType('file')}
                       />
+                      <label className="form-check-label" htmlFor="shareFile">
+                        {t('Upload File')}
+                      </label>
                     </div>
-                  )}
-                  
-                  {selectedFile && !preview && (
-                    <div className="mt-2">
-                      <div className="alert alert-info py-2">
-                        <small>{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
-                      </div>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="shareType"
+                        id="shareLink"
+                        checked={shareType === 'link'}
+                        onChange={() => setShareType('link')}
+                      />
+                      <label className="form-check-label" htmlFor="shareLink">
+                        {t('External Link')}
+                      </label>
                     </div>
-                  )}
+                  </div>
                 </div>
+
+                {shareType === 'link' ? (
+                  <div className="mb-3">
+                    <label className="form-label">{t('External Link *')}</label>
+                    <input
+                      type="url"
+                      className="form-control"
+                      name="externalLink"
+                      value={formData.externalLink}
+                      onChange={handleInputChange}
+                      placeholder="https://docs.google.com/document/d/..."
+                      required={shareType === 'link'}
+                    />
+                    <small className="text-muted">{t('Share links from Google Docs, Drive, OneDrive, Dropbox, etc.')}</small>
+                  </div>
+                ) : (
+                  <div className="mb-3">
+                    <label className="form-label">{t('Upload File')}</label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      onChange={handleFileChange}
+                      accept="*/*"
+                      required={shareType === 'file' && !isEditing}
+                    />
+                    <small className="text-muted">{t('Max file size: 100MB. Supports videos (~10 min HD), documents, images, and more.')}</small>
+                    
+                    {preview && (
+                      <div className="mt-2">
+                        <img 
+                          src={preview} 
+                          alt="Preview" 
+                          className="img-thumbnail"
+                          style={{ maxWidth: '200px', maxHeight: '200px' }}
+                        />
+                      </div>
+                    )}
+                    
+                    {selectedFile && !preview && (
+                      <div className="mt-2">
+                        <div className="alert alert-info py-2">
+                          <small>{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</small>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {error && (
                   <div className="alert alert-danger">
@@ -535,9 +647,10 @@ export default function Content() {
                       setShowForm(false)
                       setIsEditing(false)
                       setEditingPostId(null)
-                      setFormData({ title: '', content: '', category: 'projects' })
+                      setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
                       setSelectedFile(null)
                       setPreview(null)
+                      setShareType('file')
                     }}
                   >
                     {t('Cancel')}

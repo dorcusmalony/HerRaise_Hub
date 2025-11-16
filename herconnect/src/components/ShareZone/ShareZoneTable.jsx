@@ -169,6 +169,15 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                       >
                         {t('View File')}
                       </a>
+                    ) : content.externalLink ? (
+                      <a 
+                        href={content.externalLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="file-link external-link"
+                      >
+                        {t('View Link')}
+                      </a>
                     ) : (
                       <span className="no-file">{t('No file')}</span>
                     )}

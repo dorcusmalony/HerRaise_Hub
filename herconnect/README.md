@@ -86,6 +86,32 @@ To empower and mentor young women and girls in South Sudan to rise beyond societ
 - Progressive Web App features
 - Cross-browser compatibility
 
+### ShareZone External Links Support
+ShareZone now supports sharing external links alongside file uploads:
+
+**Supported Platforms:**
+- Google Docs and Google Drive links
+- Microsoft OneDrive shares
+- Dropbox file shares
+- Any external URL
+
+**API Usage Example:**
+```json
+POST /api/sharezone
+{
+  "title": "My Research Paper",
+  "content": "Check out my latest research",
+  "category": "essays",
+  "externalLink": "https://docs.google.com/document/d/abc123"
+}
+```
+
+**Features:**
+- Users can choose between file upload OR external link
+- Update support - modify links after posting
+- Proper display of both uploaded files and external links
+- Link validation and security checks
+
 ##  Getting Started
 
 ### Prerequisites
