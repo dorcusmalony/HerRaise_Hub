@@ -106,16 +106,20 @@
   color: white !important;
   border: none !important;
   background: transparent !important;
-  padding: 0.5rem !important;
+  padding: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .hamburger {
   display: flex;
   flex-direction: column;
-  width: 24px;
-  height: 18px;
+  width: 28px;
+  height: 20px;
   justify-content: space-between;
   cursor: pointer;
+  position: relative;
 }
 
 .hamburger span {
@@ -125,6 +129,19 @@
   background-color: white;
   border-radius: 2px;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.hamburger span:nth-child(1) {
+  top: 0;
+}
+
+.hamburger span:nth-child(2) {
+  top: 0;
+}
+
+.hamburger span:nth-child(3) {
+  top: 0;
 }
 
 .mobileMenu {
@@ -168,6 +185,16 @@
   }
   
   .nav {
+    display: none !important;
+  }
+  
+  .mobileMenuBtn {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobileMenuBtn {
     display: none !important;
   }
 }
