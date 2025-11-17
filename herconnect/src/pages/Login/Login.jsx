@@ -236,113 +236,107 @@ export default function Login() {
 
 
   return (
-    <div className={`mx-auto ${styles.container}`}>
-      
-
-      <form onSubmit={handleLogin}>
-        <div className="mb-2">
-          <label className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            autoComplete="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="mb-2">
-          <label className="form-label">Password</label>
-          <div className="position-relative">
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Welcome Back</h1>
+        <p className={styles.subtitle}>Sign in to your account</p>
+        
+        <form onSubmit={handleLogin} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Email</label>
             <input
-              type={showPassword ? 'text' : 'password'}
-              className="form-control"
-              autoComplete="current-password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              style={{ paddingRight: '40px' }}
+              type="email"
+              className={styles.input}
+              autoComplete="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               required
             />
-            <button
-              type="button"
-              className="position-absolute"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{
-                right: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                border: 'none',
-                background: 'transparent',
-                cursor: 'pointer',
-                color: '#6c757d',
-                fontSize: '16px'
-              }}
-            >
-              {showPassword ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                </svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
-                </svg>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Password</label>
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className={styles.input}
+                autoComplete="current-password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                style={{ paddingRight: '40px' }}
+                required
+              />
+              <button
+                type="button"
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  border: 'none',
+                  background: 'transparent',
+                  cursor: 'pointer',
+                  color: '#6c757d',
+                  fontSize: '16px'
+                }}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                  </svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {error && <div className={styles.error}>{error}</div>}
+        
+          {showResendVerification && (
+            <div style={{ background: '#e3f2fd', color: '#1976d2', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>
+              <p style={{ marginBottom: '0.5rem' }}>Need a new verification email?</p>
+              <button 
+                type="button" 
+                style={{ background: 'transparent', color: '#1976d2', border: '1px solid #1976d2', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }}
+                onClick={handleResendVerification}
+                disabled={resendLoading}
+              >
+                {resendLoading ? 'Sending...' : 'Resend Verification Email'}
+              </button>
+              {resendMessage && (
+                <div style={{ marginTop: '0.5rem', fontSize: '0.8rem' }}>{resendMessage}</div>
               )}
-            </button>
-          </div>
-        </div>
-
-        {error && <div className="alert alert-danger small mb-2">{error}</div>}
-        
-        {showResendVerification && (
-          <div className="alert alert-info small mb-2">
-            <p className="mb-2">Need a new verification email?</p>
-            <button 
-              type="button" 
-              className="btn btn-sm btn-outline-primary"
-              onClick={handleResendVerification}
-              disabled={resendLoading}
-            >
-              {resendLoading ? 'Sending...' : 'Resend Verification Email'}
-            </button>
-            {resendMessage && (
-              <div className="mt-2 small">{resendMessage}</div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
         
 
 
-        <div className="d-flex gap-2 mb-3">
           <button 
-            className="btn" 
+            className={styles.submitButton}
             type="submit" 
             disabled={loading}
-            style={{
-              backgroundColor: '#e84393',
-              color: 'white',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '8px',
-              fontWeight: '600'
-            }}
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
+          
           <button
             type="button"
-            className="btn btn-link"
+            style={{ background: 'none', border: 'none', color: '#667eea', textDecoration: 'underline', cursor: 'pointer', marginTop: '0.5rem' }}
             onClick={() => setForgotOpen(true)}
           >
             Forgot password?
           </button>
-        </div>
-      </form>
+        </form>
 
-      <div className="small">
-        Don&apos;t have an account? <Link to="/register">Register</Link>
-        <br />
-        Have a reset token? <Link to="/reset-password">Reset password</Link>
+        <div className={styles.links}>
+          Don&apos;t have an account? <Link to="/register">Register</Link>
+          <br />
+          Have a reset token? <Link to="/reset-password">Reset password</Link>
+        </div>
       </div>
 
       {/* Show response like Register page */}
