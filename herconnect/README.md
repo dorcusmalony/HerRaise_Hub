@@ -9,7 +9,7 @@ HerRaise Hub is a comprehensive web platform dedicated to empowering young women
 ##  Links
 
 
-- **Live Platform**: [Live website](https://her-raise-hub.vercel.app/sharezone)
+- **Live Platform**: [Live website](https://her-raise-hub.vercel.app)
 
 
 ##  About HerRaise Hub

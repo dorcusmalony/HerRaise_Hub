@@ -118,13 +118,12 @@ export default function ResourcePage() {
     ]
   }
 
-  // Generate consistent color for each resource like Zoom profiles
+  // Generate consistent color for each resource matching home page theme
   const getResourceColor = (title) => {
     const colors = [
-      '#e84393', '#00b894', '#6c5ce7', '#fd79a8', 
-      '#fdcb6e', '#e17055', '#74b9ff', '#a29bfe',
-      '#fd79a8', '#55a3ff', '#26de81', '#fc5c65',
-      '#fed330', '#45aaf2', '#a55eea', '#778ca3'
+      '#8B5CF6', '#E84393', '#667eea', '#8B5CF6', 
+      '#E84393', '#667eea', '#8B5CF6', '#E84393',
+      '#667eea', '#8B5CF6', '#E84393', '#667eea'
     ]
     let hash = 0
     for (let i = 0; i < title.length; i++) {
@@ -151,7 +150,8 @@ export default function ResourcePage() {
     Object.entries(resources).forEach(([category, items]) => {
       const categoryItems = items.filter(item => {
         const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                             item.desc.toLowerCase().includes(searchTerm.toLowerCase())
+                             item.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             category.toLowerCase().includes(searchTerm.toLowerCase())
         return matchesSearch
       })
       
@@ -302,14 +302,13 @@ export default function ResourcePage() {
       )}
 
       {/* Empty State */}
-      {getFilteredResources().documentResources.length === 0 && getFilteredResources().videoResources.length === 0 && (
+      {getFilteredResources().documentResources.length === 0 && getFilteredResources().videoResources.length === 0 && searchTerm && (
         <div className="text-center py-5">
           <div className="mb-4">
             <i className="fas fa-search fa-3x text-muted mb-3"></i>
             <h4 className="text-muted">No resources found</h4>
-            <p className="text-muted">Try adjusting your search or filter criteria</p>
+            <p className="text-muted">Try adjusting your search criteria</p>
           </div>
-
         </div>
       )}
 
