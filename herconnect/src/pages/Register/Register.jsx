@@ -290,17 +290,9 @@ export default function Register(){
 
 				<button 
 					type="submit" 
-					className="btn w-100" 
+					className={styles.brandButton}
 					onClick={(e) => { e.preventDefault(); submitToServer(form.role); }} 
 					disabled={loading}
-					style={{
-						backgroundColor: '#e84393',
-						color: 'white',
-						border: 'none',
-						padding: '0.75rem 1.5rem',
-						borderRadius: '8px',
-						fontWeight: '600'
-					}}
 				>
 					{loading ? 'creating account' : 'Create Account'}
 				</button>
