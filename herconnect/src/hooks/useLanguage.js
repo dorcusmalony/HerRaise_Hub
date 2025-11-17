@@ -302,6 +302,13 @@ const translations = {
     'Other': 'Other',
     'Cover Letters': 'Cover Letters',
     'Comments': 'Comments',
+    'Share Type': 'Share Type',
+    'External Link': 'External Link',
+    'External Link *': 'External Link *',
+    'Share links from Google Docs, Drive, OneDrive, Dropbox, etc.': 'Share links from Google Docs, Drive, OneDrive, Dropbox, etc.',
+    'External link is required': 'External link is required',
+    'Please select a file to upload': 'Please select a file to upload',
+    'View Link': 'View Link',
     
     // Remaining mentor section text
     'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.': 'Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.',
@@ -754,6 +761,13 @@ const translations = {
     'Other': 'أخرى',
     'Cover Letters': 'خطابات التغطية',
     'Comments': 'التعليقات',
+    'Share Type': 'نوع المشاركة',
+    'External Link': 'رابط خارجي',
+    'External Link *': 'رابط خارجي *',
+    'Share links from Google Docs, Drive, OneDrive, Dropbox, etc.': 'شارك روابط من Google Docs، Drive، OneDrive، Dropbox، إلخ.',
+    'External link is required': 'الرابط الخارجي مطلوب',
+    'Please select a file to upload': 'يرجى اختيار ملف للرفع',
+    'View Link': 'عرض الرابط',
     
     // Forum category translations
     'Forum Categories': 'فئات المنتدى',

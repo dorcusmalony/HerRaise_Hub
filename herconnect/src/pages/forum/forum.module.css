@@ -244,11 +244,12 @@
 
 /* Post Form Container */
 .postFormContainer {
-  background: white;
+  background: white !important;
+  border: 2px solid #E84393;
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 15px rgba(232, 67, 147, 0.15);
 }
 
 /* Empty State */

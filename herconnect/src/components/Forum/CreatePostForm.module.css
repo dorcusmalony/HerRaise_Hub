@@ -1,25 +1,27 @@
 /* Create Post Form */
 .formContainer {
-  background: white;
+  background: white !important;
+  border: 2px solid #E84393 !important;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 15px rgba(232, 67, 147, 0.15);
   overflow: hidden;
 }
 
 .formBody {
   padding: 2rem;
+  background: white !important;
 }
 
 .formTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white !important;
+  color: #E84393 !important;
   margin: 0 0 0.5rem 0;
 }
 
 .formSubtitle {
   font-size: 0.95rem;
-  color: white !important;
+  color: #6b7280 !important;
   margin: 0 0 1.5rem 0;
   line-height: 1.5;
 }
@@ -40,7 +42,7 @@
 .formLabel {
   display: block;
   font-weight: 600;
-  color: white !important;
+  color: #374151 !important;
   margin-bottom: 0.5rem;
 }
 
@@ -51,32 +53,43 @@
 .formTextarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #8B5CF6;
+  border: 2px solid #E84393;
   border-radius: 8px;
   font-family: inherit;
   transition: border-color 0.2s ease;
-  background: white;
-  color: black;
+  background: white !important;
+  background-color: white !important;
+  color: #374151 !important;
   cursor: pointer;
+}
+
+/* Force white background on all input types */
+input[type="text"],
+input[type="url"],
+textarea,
+select {
+  background: white !important;
+  background-color: white !important;
+  color: #374151 !important;
 }
 
 .topicsHint {
   margin-top: 0.5rem;
   font-size: 0.85rem;
-  opacity: 0.9;
+  color: #6b7280 !important;
   font-style: italic;
   padding: 0.5rem;
-  background: rgba(255,255,255,0.1);
+  background: #fdf2f8;
   border-radius: 4px;
-  border-left: 3px solid rgba(255,255,255,0.3);
+  border-left: 3px solid #E84393;
 }
 
 .formSelect:focus,
 .formInput:focus,
 .formTextarea:focus {
   outline: none;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: #be185d;
+  box-shadow: 0 0 0 3px rgba(232, 67, 147, 0.1);
 }
 
 .formTextarea {
@@ -86,13 +99,13 @@
 
 .characterCount {
   font-size: 0.875rem;
-  color: white !important;
+  color: #6b7280 !important;
   margin-top: 0.25rem;
 }
 
 .formHint {
   font-size: 0.875rem;
-  color: white !important;
+  color: #6b7280 !important;
   margin-top: 0.25rem;
 }
 
@@ -118,7 +131,7 @@
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
-  border: 2px solid #8B5CF6;
+  border: 2px solid #E84393;
 }
 
 .typeIcon {
@@ -160,12 +173,12 @@
 
 .uploadHint {
   font-size: 0.875rem;
-  color: #7c3aed;
+  color: #E84393;
   margin-bottom: 0.75rem;
   padding: 0.5rem;
-  background: #faf5ff;
+  background: #fdf2f8;
   border-radius: 6px;
-  border-left: 3px solid #7c3aed;
+  border-left: 3px solid #E84393;
 }
 
 .formActions {
@@ -174,7 +187,7 @@
 }
 
 .submitBtn {
-  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #E84393 0%, #be185d 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -182,13 +195,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 2px 8px rgba(232, 67, 147, 0.3);
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #be185d 0%, #9d174d 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 4px 12px rgba(232, 67, 147, 0.4);
 }
 
 .submitBtn:disabled {
@@ -198,8 +211,8 @@
 }
 
 .cancelBtn {
-  background: #E84393;
-  color: white;
+  background: transparent;
+  color: #E84393;
   border: 2px solid #E84393;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -209,18 +222,29 @@
 }
 
 .cancelBtn:hover {
-  background: #8B5CF6;
+  background: #E84393;
   color: white;
-  border-color: #8B5CF6;
+  border-color: #E84393;
 }
 
-/* Force all text to be white */
-.formContainer * {
-  color: white !important;
-}
-
+/* Force white backgrounds on all form elements */
 .formContainer input,
 .formContainer textarea,
-.formContainer select {
-  color: black !important;
+.formContainer select,
+.formContainer input[type="text"],
+.formContainer input[type="url"],
+.formContainer .formInput,
+.formContainer .formTextarea,
+.formContainer .formSelect {
+  background: white !important;
+  background-color: white !important;
+  color: #374151 !important;
+}
+
+/* Additional override for any dark theme */
+.formContainer input:-webkit-autofill,
+.formContainer input:-webkit-autofill:hover,
+.formContainer input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #374151 !important;
 }

@@ -59,7 +59,7 @@ export default function Verify() {
 
 				{status === 'success' && (
 					<div className={styles.success}>
-						<div className={styles.successIcon}>✅</div>
+						<div className={styles.successIcon}></div>
 						<h2>Email Verified!</h2>
 						<p>{message}</p>
 						<Link to="/login" className={styles.loginButton}>
@@ -70,7 +70,7 @@ export default function Verify() {
 
 				{status === 'error' && (
 					<div className={styles.error}>
-						<div className={styles.errorIcon}>❌</div>
+						<div className={styles.errorIcon}></div>
 						<h2>Verification Failed</h2>
 						<p>{message}</p>
 						<div className={styles.actions}>
