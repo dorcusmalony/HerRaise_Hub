@@ -59,6 +59,10 @@
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s;
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+  color: black;
 }
 
 .input:focus {
