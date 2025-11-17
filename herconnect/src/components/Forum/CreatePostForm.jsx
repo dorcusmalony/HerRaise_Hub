@@ -40,35 +40,50 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         ? `${API_URL}/${isShareZone ? 'api/sharezone' : 'api/forum'}/posts/${editPost.id}`
         : `${API_URL}/${isShareZone ? 'api/sharezone' : 'api/forum'}/posts`
       
+      console.log('📤 Submitting post to:', endpoint)
+      
+      const postData = {
+        title: formData.title,
+        content: formData.content,
+        type: formData.type,
+        category: formData.category || initialCategory,
+        subcategory: formData.subcategory || initialSubcategory,
+        publishedFrom: (formData.category || initialCategory) ? FORUM_CATEGORIES[formData.category || initialCategory]?.name : null,
+        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+        attachments: formData.attachments
+        // mentions: mentions // Temporarily disabled until backend supports it
+      }
+      
+      console.log('📤 Post data:', postData)
+      
       const response = await fetch(endpoint, {
         method: editPost ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          title: formData.title,
-          content: formData.content,
-          type: formData.type,
-          category: formData.category,
-          subcategory: formData.subcategory,
-          publishedFrom: formData.category ? FORUM_CATEGORIES[formData.category]?.name : null,
-          tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-          attachments: formData.attachments,
-          mentions: mentions
-        })
+        body: JSON.stringify(postData)
       })
 
-      const data = await response.json()
-
-      if (data.success) {
+      console.log('📤 Response status:', response.status)
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('📤 Response data:', data)
+        
+        // Handle different response formats
+        const post = data.post || data.data || data
+        
         if (onSuccess) {
-          onSuccess(data.post)
+          onSuccess(post)
         } else {
           navigate('/forum')
         }
       } else {
-        throw new Error(data.message || 'Failed to save post')
+        const errorData = await response.text()
+        console.error('❌ Post submission failed:', errorData)
+        throw new Error(`Failed to save post (${response.status})`)
       }
     } catch (error) {
       console.error('Post submission error:', error)

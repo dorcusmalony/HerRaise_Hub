@@ -53,12 +53,24 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
         </div>
         
         <div className={styles.categoryGrid}>
-          {Object.values(FORUM_CATEGORIES).map(category => (
+          {Object.values(FORUM_CATEGORIES).map((category, index) => {
+            const backgrounds = [
+              'linear-gradient(135deg, #10b981 0%, #059669 100%)', // Green (like edit button)
+              'linear-gradient(135deg, #e84393 0%, #d63384 100%)', // Pink (brand pink)
+              'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', // Blue (like home cards)
+              '#4b0f77', // Purple (exact footer color)
+              'linear-gradient(135deg, #e84393 0%, #d63384 100%)', // Pink (brand pink)
+              '#4b0f77', // Purple (exact footer color)
+            ]
+            return (
             <div 
               key={category.id} 
               className={`${styles.categoryCard} ${selectedCategory === category.id ? styles.selected : ''}`}
               onClick={() => handleCategoryClick(category.id)}
-              style={{ cursor: 'pointer' }}
+              style={{ 
+                cursor: 'pointer',
+                background: backgrounds[index]
+              }}
             >
               <h4 className={styles.categoryName}>{t(category.name)}</h4>
               <p className={styles.categoryDesc}>{t(category.description)}</p>
@@ -66,7 +78,8 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
                 <span>{t('Explore →')}</span>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     )

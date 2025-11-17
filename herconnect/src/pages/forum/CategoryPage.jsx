@@ -7,7 +7,7 @@ import PostCard from '../../components/Forum/PostCard'
 import Pagination from '../../components/common/Pagination'
 import CommentItem from '../../components/Forum/CommentItem'
 import { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
-import { forumAPI } from '../../utils/forumAPI'
+// import { forumAPI } from '../../utils/forumAPI' // Temporarily disabled
 import LikeButton from '../../components/LikeButton/LikeButton'
 import styles from './forum.module.css'
 
@@ -78,12 +78,20 @@ export default function CategoryPage() {
     }
     
     try {
-      const data = await forumAPI.getCategoryPosts(categoryId, { page, sort, limit: 20 })
+      const response = await fetch(`${API}/api/forum/posts?category=${categoryId}&page=${page}&sort=${sort}&limit=20`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
       
-      if (data.success) {
-        setPosts(data.posts || [])
+      if (response.ok) {
+        const data = await response.json()
+        const posts = data.posts || data.data?.posts || data || []
+        setPosts(Array.isArray(posts) ? posts : [])
         setTotalPages(data.pagination?.totalPages || 1)
       } else {
+        console.error('Failed to fetch posts:', response.status)
         setPosts([])
       }
     } catch (error) {
@@ -92,7 +100,7 @@ export default function CategoryPage() {
     } finally {
       setLoading(false)
     }
-  }, [categoryId, page, sort])
+  }, [categoryId, page, sort, API])
 
   useEffect(() => {
     if (categoryId && category) {

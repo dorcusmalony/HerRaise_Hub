@@ -4,6 +4,7 @@ import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
 import CategorySelector, { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
 import LikeButton from '../../components/LikeButton/LikeButton'
+import UserMentions from '../../components/Forum/UserMentions'
 import styles from './forum.module.css'
 
 
@@ -39,6 +40,7 @@ export default function Forum() {
   const [editingPost, setEditingPost] = useState(null)
   const [expandedPost, setExpandedPost] = useState(null)
   const [commentText, setCommentText] = useState({})
+  const [commentMentions, setCommentMentions] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
   const [showPostDropdown, setShowPostDropdown] = useState(null)
@@ -207,6 +209,7 @@ export default function Forum() {
     if (!text?.trim()) return
 
     const token = localStorage.getItem('token')
+    const mentions = commentMentions[postId] || []
     
     try {
       const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
@@ -215,11 +218,15 @@ export default function Forum() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ content: text })
+        body: JSON.stringify({ 
+          content: text
+          // mentions: mentions // Temporarily disabled until backend supports it
+        })
       })
 
       if (response.ok) {
         setCommentText(prev => ({ ...prev, [postId]: '' }))
+        setCommentMentions(prev => ({ ...prev, [postId]: [] }))
         setSuccessMessage(t('Comment posted successfully!'))
         setTimeout(() => setSuccessMessage(''), 3000)
         fetchPosts()
@@ -245,6 +252,7 @@ export default function Forum() {
         body: JSON.stringify({
           content: replyText,
           parentCommentId
+          // mentions removed temporarily until backend supports it
         })
       })
 
@@ -890,11 +898,13 @@ export default function Forum() {
                             alt={currentUser?.name}
                             className={styles.commentAvatar}
                           />
-                          <textarea
+                          <UserMentions
                             value={commentText[post.id] || ''}
-                            onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
-                            placeholder={t('comment')}
-                            rows="3"
+                            onChange={(text) => setCommentText(prev => ({ ...prev, [post.id]: text }))}
+                            onMentionsChange={(mentions) => setCommentMentions(prev => ({ ...prev, [post.id]: mentions }))}
+                            categoryId={selectedCategory}
+                            placeholder={t('Write a comment... Use @ to mention users')}
+                            rows={3}
                             className={styles.commentTextarea}
                           />
                         </div>
