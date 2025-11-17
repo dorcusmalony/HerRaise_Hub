@@ -73,7 +73,7 @@
 .submitButton {
   background: #e84393 !important;
   color: white !important;
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   border: none !important;
   border-radius: 8px;
   font-weight: 600;
@@ -81,6 +81,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   margin-top: 1rem;
+  width: 100%;
 }
 
 .submitButton:hover:not(:disabled) {

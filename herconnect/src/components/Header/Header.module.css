@@ -100,3 +100,74 @@
   color: white !important;
   text-decoration: none !important;
 }
+
+/* Mobile Menu Styles */
+.mobileMenuBtn {
+  color: white !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0.5rem !important;
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  width: 24px;
+  height: 18px;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.mobileMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--footer-bg);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.mobileNavLink {
+  color: white;
+  padding: 0.75rem 1.5rem;
+  text-transform: capitalize;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.mobileNavLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.mobileNavLink:last-child {
+  border-bottom: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .siteHeader {
+    position: relative;
+  }
+  
+  .nav {
+    display: none !important;
+  }
+}

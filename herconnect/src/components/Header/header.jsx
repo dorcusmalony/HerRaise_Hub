@@ -15,7 +15,9 @@ export default function Header() {
 	
 	const [user, setUser] = useState(null)
 	const [showDropdown, setShowDropdown] = useState(false)
+	const [showMobileMenu, setShowMobileMenu] = useState(false)
 	const dropdownRef = useRef(null)
+	const mobileMenuRef = useRef(null)
 
 	// Load user data on mount AND when storage changes
 	useEffect(() => {
@@ -56,6 +58,9 @@ export default function Header() {
 		const handleClickOutside = (event) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 				setShowDropdown(false)
+			}
+			if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+				setShowMobileMenu(false)
 			}
 		}
 		document.addEventListener('mousedown', handleClickOutside)
@@ -129,7 +134,7 @@ export default function Header() {
 					</div>
 				</Link>
 
-				{/* Navigation */}
+				{/* Desktop Navigation */}
 				<nav className={`d-none d-md-flex align-items-center ${styles.nav}`}>
 					<Link to="/" className={`text-decoration-none ${styles.navLink}`}>{t('home')}</Link>
 					<Link to="/about" className={`text-decoration-none ${styles.navLink}`}>{t('about')}</Link>
@@ -138,6 +143,18 @@ export default function Header() {
 					<Link to="/opportunities" className={`text-decoration-none ${styles.navLink}`}>{t('opportunities')}</Link>
 					<Link to="/resources" className={`text-decoration-none ${styles.navLink}`}>{t('resources')}</Link>
 				</nav>
+
+				{/* Mobile Menu Button */}
+				<button 
+					className={`d-md-none btn btn-link p-0 ${styles.mobileMenuBtn}`}
+					onClick={() => setShowMobileMenu(!showMobileMenu)}
+				>
+					<div className={styles.hamburger}>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</button>
 
 				{/* Right Side: Language + Notification + Avatar */}
 				<div className="d-flex align-items-center gap-3">
@@ -283,7 +300,55 @@ export default function Header() {
 				</div>
 			</div>
 
-
+			{/* Mobile Navigation Menu */}
+			{showMobileMenu && (
+				<div className={`d-md-none ${styles.mobileMenu}`} ref={mobileMenuRef}>
+					<nav className={styles.mobileNav}>
+						<Link 
+							to="/" 
+							className={`text-decoration-none ${styles.mobileNavLink}`}
+							onClick={() => setShowMobileMenu(false)}
+						>
+							{t('home')}
+						</Link>
+						<Link 
+							to="/about" 
+							className={`text-decoration-none ${styles.mobileNavLink}`}
+							onClick={() => setShowMobileMenu(false)}
+						>
+							{t('about')}
+						</Link>
+						<Link 
+							to="/forum" 
+							className={`text-decoration-none ${styles.mobileNavLink}`}
+							onClick={() => setShowMobileMenu(false)}
+						>
+							{t('forum')}
+						</Link>
+						<Link 
+							to="/sharezone" 
+							className={`text-decoration-none ${styles.mobileNavLink}`}
+							onClick={() => setShowMobileMenu(false)}
+						>
+							{t('sharezone')}
+						</Link>
+						<Link 
+							to="/opportunities" 
+							className={`text-decoration-none ${styles.mobileNavLink}`}
+							onClick={() => setShowMobileMenu(false)}
+						>
+							{t('opportunities')}
+						</Link>
+						<Link 
+							to="/resources" 
+							className={`text-decoration-none ${styles.mobileNavLink}`}
+							onClick={() => setShowMobileMenu(false)}
+						>
+							{t('resources')}
+						</Link>
+					</nav>
+				</div>
+			)}
 		</header>
 	)
 }
