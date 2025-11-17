@@ -3,6 +3,25 @@
   background: white;
 }
 
+.container-fluid.px-3 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+@media (max-width: 768px) {
+  .container-fluid.px-3 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-fluid.px-3 {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+}
+
 /* Modern Purple Animations */
 @keyframes purpleWave {
   0% { background-position: 0% 50%; }
@@ -682,7 +701,68 @@ body.modal-open {
   box-shadow: 0 0 0 3px rgba(232, 67, 147, 0.1);
 }
 
+/* Responsive Modal Design */
+@media (max-width: 992px) {
+  .modal-content {
+    max-width: 90%;
+  }
+}
+
 @media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0.5rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+  
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: 8px;
+  }
+  
+  .modal-header {
+    padding: 1rem;
+  }
+  
+  .modal-title {
+    font-size: 1.1rem;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .modal-body .form-control,
+  .modal-body .form-select {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+  
+  .d-flex.gap-3 {
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+  
+  .d-flex.gap-2.justify-content-end {
+    flex-direction: column;
+    gap: 0.75rem !important;
+  }
+  
+  .d-flex.gap-2.justify-content-end .btn {
+    width: 100%;
+    padding: 0.75rem;
+  }
+  
+  .container.mt-4 .btn.btn-lg {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
   .modal-overlay {
     padding: 0;
   }
@@ -694,18 +774,30 @@ body.modal-open {
   }
   
   .modal-header {
-    padding: 1rem 1.5rem;
+    padding: 0.75rem 1rem;
   }
   
   .modal-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .modal-body {
-    padding: 1.5rem;
+    padding: 0.75rem;
   }
   
-  .modal-footer {
-    padding: 1rem 1.5rem;
+  .modal-body .form-control,
+  .modal-body .form-select {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .img-thumbnail {
+    max-width: 150px !important;
+    max-height: 150px !important;
+  }
+  
+  .container.mt-4 .btn.btn-lg {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
   }
 }
