@@ -228,7 +228,7 @@ We welcome contributions to improve HerRaise Hub:
 
 For questions, support, or collaboration opportunities:
 - **Issues**: Use GitHub issues for bug reports and feature requests
-- **Email**: [Contact information]
+- **Email**: herraisehub@gmail.com
 - **Community**: Join our platform discussions
 
 ##  License
@@ -245,4 +245,3 @@ This project is developed to empower young women in South Sudan. Please respect 
 ---
 
 **HerRaise Hub** - Because when you rise, your community rises with you. 
-
