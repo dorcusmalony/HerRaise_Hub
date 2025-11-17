@@ -191,8 +191,9 @@ export default function Register(){
 
 	return (
 		<div className={styles.container}>
-			<h3 className={styles.title}>{t('Create Account')}</h3>
-			<form className={styles.form} onSubmit={e => e.preventDefault()}>
+			<div className={styles.card}>
+				<h3 className={styles.title}>{t('Create Account')}</h3>
+				<form className={styles.form} onSubmit={e => e.preventDefault()}>
 				{/* Profile Picture Upload */}
 				<ImageUpload 
 					onImageUpload={handleImageUpload}
@@ -323,11 +324,12 @@ export default function Register(){
 				</div>
 			)}
 
-			{success && (
-				<div className="mt-4 alert alert-success">
-					{success}
-				</div>
-			)}
+				{success && (
+					<div className="mt-4 alert alert-success">
+						{success}
+					</div>
+				)}
+			</div>
 		</div>
 	)
 }
