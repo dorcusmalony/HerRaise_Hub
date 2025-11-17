@@ -55,12 +55,12 @@ export default function CategorySelector({ selectedCategory, onCategoryChange, s
         <div className={styles.categoryGrid}>
           {Object.values(FORUM_CATEGORIES).map((category, index) => {
             const backgrounds = [
-              'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)', // Green
-              'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)', // Pink
-              'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)', // Blue
-              'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)', // Purple
-              'linear-gradient(135deg, #fb7185 0%, #f43f5e 100%)', // Pink
-              'linear-gradient(135deg, #c084fc 0%, #a855f7 100%)', // Purple
+              'linear-gradient(135deg, #10b981 0%, #059669 100%)', // Green (like edit button)
+              'linear-gradient(135deg, #e84393 0%, #d63384 100%)', // Pink (brand pink)
+              'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', // Blue (like home cards)
+              '#4b0f77', // Purple (exact footer color)
+              'linear-gradient(135deg, #e84393 0%, #d63384 100%)', // Pink (brand pink)
+              '#4b0f77', // Purple (exact footer color)
             ]
             return (
             <div 
