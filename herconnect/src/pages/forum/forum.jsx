@@ -422,13 +422,13 @@ export default function Forum() {
           <CreatePostForm
             editPost={editingPost}
             initialCategory={selectedCategory}
-            onSuccess={(post) => {
+            onSuccess={(post, message) => {
               if (editingPost) {
                 handleUpdatePost(post)
-                setSuccessMessage(t('Post updated successfully!'))
+                setSuccessMessage(message || t('Post updated successfully!'))
               } else {
                 setShowCreateForm(false)
-                setSuccessMessage(t('Post created successfully!'))
+                setSuccessMessage(message || t('Post created successfully!'))
                 // Force immediate refresh of posts
                 setTimeout(() => {
                   fetchPosts()

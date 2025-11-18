@@ -87,7 +87,9 @@ export default function CategoryPage() {
       
       if (response.ok) {
         const data = await response.json()
+        console.log('📊 Full response data:', data)
         const posts = data.posts || data.data?.posts || data || []
+        console.log('📊 First post with comments:', posts[0]?.ForumComments)
         setPosts(Array.isArray(posts) ? posts : [])
         setTotalPages(data.pagination?.totalPages || 1)
       } else {
@@ -138,18 +140,18 @@ export default function CategoryPage() {
   const handleAddComment = async (postId) => {
     const text = commentText[postId]
     if (!text?.trim()) {
-      console.log('❌ No comment text provided')
+      console.log(' No comment text provided')
       return
     }
 
     const token = localStorage.getItem('token')
     if (!token) {
-      console.log('❌ No token found')
+      console.log(' No token found')
       alert('Please login to comment')
       return
     }
     
-    console.log('💬 Adding comment:', { postId, text, API })
+    console.log(' Adding comment:', { postId, text, API })
     
     try {
       const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
@@ -161,22 +163,37 @@ export default function CategoryPage() {
         body: JSON.stringify({ content: text })
       })
 
-      console.log('💬 Comment response:', response.status, response.statusText)
+      console.log(' Comment response:', response.status, response.statusText)
 
       if (response.ok) {
         const result = await response.json()
-        console.log('✅ Comment posted:', result)
+        console.log(' Comment posted:', result)
+        
+        // Clear comment text immediately
         setCommentText(prev => ({ ...prev, [postId]: '' }))
-        setSuccessMessage('Comment posted successfully!')
+        
+        // Add comment to local state immediately
+        if (result.comment) {
+          setPosts(prev => prev.map(post => 
+            post.id === postId 
+              ? { ...post, ForumComments: [...(post.ForumComments || []), result.comment] }
+              : post
+          ))
+        }
+        
+        // Show success message
+        setSuccessMessage(result.message || 'Reply added successfully')
         setTimeout(() => setSuccessMessage(''), 3000)
+        
+        // Also refetch to ensure consistency
         fetchPosts()
       } else {
         const errorText = await response.text()
-        console.error('❌ Comment failed:', response.status, errorText)
+        console.error(' Comment failed:', response.status, errorText)
         alert(`Failed to post comment: ${response.status}`)
       }
     } catch (error) {
-      console.error('❌ Comment error:', error)
+      console.error(' Comment error:', error)
       alert('Network error posting comment')
     }
   }
@@ -201,6 +218,19 @@ export default function CategoryPage() {
       })
 
       if (response.ok) {
+        const result = await response.json()
+        
+        // Add reply to local state immediately
+        if (result.comment) {
+          setPosts(prev => prev.map(p => 
+            p.id === post.id 
+              ? { ...p, ForumComments: [...(p.ForumComments || []), result.comment] }
+              : p
+          ))
+        }
+        
+        setSuccessMessage(result.message || 'Reply added successfully')
+        setTimeout(() => setSuccessMessage(''), 3000)
         fetchPosts()
       }
     } catch (error) {
