@@ -27,12 +27,42 @@
 }
 
 .notificationButton {
+  all: unset !important;
   color: white !important;
-  padding: 0.5rem;
+  cursor: pointer !important;
+  position: relative !important;
+  font-size: 24px !important;
+  display: inline-block !important;
+}
+
+.notificationButton:hover,
+.notificationButton:focus,
+.notificationButton:active,
+.notificationButton:visited {
+  all: unset !important;
+  color: white !important;
+  cursor: pointer !important;
+  position: relative !important;
+  font-size: 24px !important;
+  display: inline-block !important;
+  opacity: 0.8 !important;
 }
 
 .notificationBadge {
-  font-size: 0.6rem;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--brand-pink);
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 
 .avatar {
@@ -197,4 +227,21 @@
   .mobileMenuBtn {
     display: none !important;
   }
+}
+
+/* Notification Bell Container - Remove all box styling */
+.notificationContainer {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.notificationContainer * {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
