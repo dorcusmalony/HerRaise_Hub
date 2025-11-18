@@ -46,7 +46,10 @@ const NotificationBell = () => {
       })
       if (response.ok) {
         const data = await response.json()
-        setNotifications(data.notifications || [])
+        const notifs = data.notifications || []
+        setNotifications(notifs)
+        const unreadCount = notifs.filter(n => !n.readStatus).length
+        setUnreadCount(unreadCount)
       }
     } catch (error) {
       console.error('Failed to fetch notifications:', error)
@@ -62,8 +65,7 @@ const NotificationBell = () => {
       })
       if (response.ok) {
         const data = await response.json()
-        const count = notifications.filter(n => !n.readStatus).length
-        setUnreadCount(count)
+        setUnreadCount(data.count || 0)
       }
     } catch (error) {
       console.error('Failed to fetch unread count:', error)
