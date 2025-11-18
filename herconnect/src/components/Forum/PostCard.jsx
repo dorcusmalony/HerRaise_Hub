@@ -46,16 +46,14 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
         }
       })
       if (response.ok) {
-        const data = await response.json()
-        setIsLiked(data.isLikedByUser)
-        setLikeCount(data.likesCount)
+        const result = await response.json()
+        setIsLiked(result.liked)
+        setLikeCount(result.likesCount)
         
         // Create notification if user liked the post (not their own)
-        if (data.isLikedByUser && currentUser?.id !== post.author?.id) {
+        if (result.liked && currentUser?.id !== post.author?.id) {
           notificationAPI.createPostLikeNotification(post.id, post.author?.id)
         }
-        
-        onUpdate()
       }
     } catch (error) {
       console.error('Error liking post:', error)
