@@ -76,9 +76,11 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         
         // Handle different response formats
         const post = data.post || data.data || data
+        const categoryName = FORUM_CATEGORIES[formData.category || initialCategory]?.name
+        const message = data.message || `Post created successfully in ${categoryName}!`
         
         if (onSuccess) {
-          onSuccess(post)
+          onSuccess(post, message)
         } else {
           navigate('/forum')
         }
