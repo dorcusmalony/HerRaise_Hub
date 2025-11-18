@@ -186,19 +186,56 @@ export default function Forum() {
     if (!text?.trim()) return
 
     const token = localStorage.getItem('token')
-
+    if (!token) {
+      alert(t('Please login to comment'))
+      return
+    }
     
     try {
-      const result = await forumAPI.addComment(postId, { content: text })
-      
-      if (result.success) {
+      const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: text })
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        
+        // Clear comment text immediately
         setCommentText(prev => ({ ...prev, [postId]: '' }))
-        setSuccessMessage(t('Comment posted successfully!'))
+        
+        // Add comment to local state immediately with proper structure
+        if (result.comment) {
+          const newComment = {
+            ...result.comment,
+            author: result.comment.author || currentUser,
+            likes: result.comment.likes || [],
+            createdAt: result.comment.createdAt || new Date().toISOString()
+          }
+          
+          setPosts(prev => prev.map(post => 
+            post.id === postId 
+              ? { ...post, ForumComments: [...(post.ForumComments || []), newComment] }
+              : post
+          ))
+        }
+        
+        setSuccessMessage(result.message || t('Comment posted successfully!'))
         setTimeout(() => setSuccessMessage(''), 3000)
-        fetchPosts()
+        
+        // Also refresh to ensure consistency
+        setTimeout(() => fetchPosts(), 500)
+      } else {
+        const errorText = await response.text()
+        console.error('Comment failed:', response.status, errorText)
+        alert(`Failed to post comment: ${response.status}`)
       }
     } catch (error) {
       console.error('Error adding comment:', error)
+      alert('Network error posting comment')
     }
   }
 
@@ -209,13 +246,42 @@ export default function Forum() {
     if (!post) return
 
     try {
-      const result = await forumAPI.addComment(post.id, {
-        content: replyText,
-        parentCommentId
+      const response = await fetch(`${API}/api/forum/posts/${post.id}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          content: replyText,
+          parentCommentId
+        })
       })
-      
-      if (result.success) {
-        fetchPosts()
+
+      if (response.ok) {
+        const result = await response.json()
+        
+        // Add reply to local state immediately with proper structure
+        if (result.comment) {
+          const newReply = {
+            ...result.comment,
+            author: result.comment.author || currentUser,
+            likes: result.comment.likes || [],
+            createdAt: result.comment.createdAt || new Date().toISOString()
+          }
+          
+          setPosts(prev => prev.map(p => 
+            p.id === post.id 
+              ? { ...p, ForumComments: [...(p.ForumComments || []), newReply] }
+              : p
+          ))
+        }
+        
+        setSuccessMessage(result.message || t('Reply added successfully!'))
+        setTimeout(() => setSuccessMessage(''), 3000)
+        
+        // Also refresh to ensure consistency
+        setTimeout(() => fetchPosts(), 500)
       }
     } catch (error) {
       console.error('Error replying to comment:', error)
@@ -429,10 +495,35 @@ export default function Forum() {
               } else {
                 setShowCreateForm(false)
                 setSuccessMessage(message || t('Post created successfully!'))
-                // Force immediate refresh of posts
-                setTimeout(() => {
-                  fetchPosts()
-                }, 100)
+                
+                // Add new post to local state immediately with proper structure
+                if (post) {
+                  console.log('🆕 Adding new post to local state:', post)
+                  console.log('👤 Current user for post:', currentUser)
+                  
+                  const newPost = {
+                    ...post,
+                    author: post.author || currentUser,
+                    ForumComments: post.ForumComments || [],
+                    likes: post.likes || [],
+                    views: post.views || 0,
+                    createdAt: post.createdAt || new Date().toISOString(),
+                    updatedAt: post.updatedAt || new Date().toISOString()
+                  }
+                  
+                  console.log('🆕 Processed new post:', newPost)
+                  setPosts(prev => {
+                    console.log('📝 Previous posts count:', prev.length)
+                    const updated = [newPost, ...prev]
+                    console.log('📝 Updated posts count:', updated.length)
+                    return updated
+                  })
+                } else {
+                  console.warn('⚠️ No post data received from API')
+                }
+                
+                // Also refresh to ensure consistency
+                setTimeout(() => fetchPosts(), 500)
               }
               setTimeout(() => setSuccessMessage(''), 3000)
             }}

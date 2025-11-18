@@ -79,6 +79,9 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         const categoryName = FORUM_CATEGORIES[formData.category || initialCategory]?.name
         const message = data.message || `Post created successfully in ${categoryName}!`
         
+        console.log('📤 Processed post data:', post)
+        console.log('📤 Success message:', message)
+        
         if (onSuccess) {
           onSuccess(post, message)
         } else {
