@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../hooks/useLanguage'
 import { FORUM_CATEGORIES } from './CategorySelector'
-import UserMentions from './UserMentions'
+import forumAPI from '../../services/forumAPI'
 import styles from './CreatePostForm.module.css'
 
 export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project', initialCategory = '', initialSubcategory = '', isShareZone = false }) {
@@ -19,7 +19,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
     tags: editPost?.tags?.join(', ') || '',
     attachments: editPost?.attachments || []
   })
-  const [mentions, setMentions] = useState([])
+
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
@@ -41,20 +41,22 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         : `${API_URL}/${isShareZone ? 'api/sharezone' : 'api/forum'}/posts`
       
       console.log('📤 Submitting post to:', endpoint)
+      console.log('📤 Form data:', formData)
+      console.log('📤 Initial category:', initialCategory)
       
       const postData = {
         title: formData.title,
         content: formData.content,
-        type: formData.type,
+        type: formData.type || 'discussion',
         category: formData.category || initialCategory,
         subcategory: formData.subcategory || initialSubcategory,
         publishedFrom: (formData.category || initialCategory) ? FORUM_CATEGORIES[formData.category || initialCategory]?.name : null,
         tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
         attachments: formData.attachments
-        // mentions: mentions // Temporarily disabled until backend supports it
+
       }
       
-      console.log('📤 Post data:', postData)
+      console.log('📤 Final post data:', postData)
       
       const response = await fetch(endpoint, {
         method: editPost ? 'PUT' : 'POST',
@@ -184,17 +186,16 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         {/* Enhanced Content with User Mentions */}
         <div className={styles.formGroup}>
           <label className={styles.formLabel} style={{color: 'white'}}>{t('Description *')}</label>
-          <UserMentions
+          <textarea
             value={formData.content}
-            onChange={(content) => setFormData({...formData, content})}
-            onMentionsChange={setMentions}
-            categoryId={formData.category || initialCategory}
+            onChange={(e) => setFormData({...formData, content: e.target.value})}
             placeholder={getContentPlaceholder()}
             className={styles.formTextarea}
             rows={8}
+            required
           />
           <div className={styles.characterCount} style={{color: 'white'}}>
-            {formData.content.length} {t('characters')} • {t('Type @ to mention someone')}
+            {formData.content.length} {t('characters')}
           </div>
         </div>
 

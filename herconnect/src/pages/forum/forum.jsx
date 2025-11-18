@@ -3,8 +3,9 @@ import { useLanguage } from '../../hooks/useLanguage'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CommentItem from '../../components/Forum/CommentItem'
 import CategorySelector, { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
+import forumAPI from '../../services/forumAPI'
 import LikeButton from '../../components/LikeButton/LikeButton'
-import UserMentions from '../../components/Forum/UserMentions'
+
 import styles from './forum.module.css'
 
 
@@ -40,7 +41,7 @@ export default function Forum() {
   const [editingPost, setEditingPost] = useState(null)
   const [expandedPost, setExpandedPost] = useState(null)
   const [commentText, setCommentText] = useState({})
-  const [commentMentions, setCommentMentions] = useState({})
+
   const [currentUser, setCurrentUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState('')
   const [showPostDropdown, setShowPostDropdown] = useState(null)
@@ -102,59 +103,35 @@ export default function Forum() {
     try {
       console.log('📡 Fetching posts with token:', token.substring(0, 20) + '...')
       
-      let url
-      if (selectedCategory) {
-        url = `${API}/api/forum/categories/${selectedCategory}/posts?filter=${filter}&sort=${sortBy}`
-      } else {
-        url = `${API}/api/forum/posts?filter=${filter}&sort=${sortBy}`
+      const params = {
+        filter,
+        sort: sortBy
       }
-
       
-      console.log('📡 Fetching from URL:', url)
+      if (selectedCategory) {
+        params.category = selectedCategory
+      }
       
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
-      })
-
-      console.log('📡 Posts response status:', response.status)
+      const data = await forumAPI.getPosts(params)
+      console.log('📊 Raw API response:', data)
       
-      if (response.status === 401) {
+      const posts = data.posts || data.data?.posts || data || []
+      console.log('📊 Posts array:', posts)
+      setPosts(Array.isArray(posts) ? posts : [])
+      console.log('✅ Posts loaded successfully:', Array.isArray(posts) ? posts.length : 0)
+    } catch (error) {
+      console.error('❌ Error fetching posts:', error)
+      if (error.message?.includes('401')) {
         console.warn('⚠️ Unauthorized - token might be invalid')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         setCurrentUser(null)
-        return
       }
-      
-      if (response.ok) {
-        const data = await response.json()
-        console.log('📊 Raw API response:', data)
-        console.log('📊 Response keys:', Object.keys(data))
-        console.log('📊 Response type:', typeof data)
-        // Handle both old and new response formats
-        const posts = data.posts || data.data?.posts || data || []
-        console.log('📊 Posts array:', posts)
-        console.log('📊 Posts length:', posts?.length)
-        console.log('📊 First post sample:', posts?.[0])
-        setPosts(Array.isArray(posts) ? posts : [])
-        console.log('✅ Posts loaded successfully:', Array.isArray(posts) ? posts.length : 0)
-      } else {
-        console.error('❌ Failed to fetch posts:', response.status, response.statusText)
-        const errorText = await response.text()
-        console.error('❌ Error response:', errorText)
-        setPosts([])
-      }
-    } catch (error) {
-      console.error('❌ Error fetching posts:', error)
+      setPosts([])
     } finally {
       setLoading(false)
     }
-  }, [API, filter, sortBy, selectedCategory])
+  }, [filter, sortBy, selectedCategory])
 
   useEffect(() => {
     fetchPosts()
@@ -209,24 +186,13 @@ export default function Forum() {
     if (!text?.trim()) return
 
     const token = localStorage.getItem('token')
-    const mentions = commentMentions[postId] || []
+
     
     try {
-      const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          content: text
-          // mentions: mentions // Temporarily disabled until backend supports it
-        })
-      })
-
-      if (response.ok) {
+      const result = await forumAPI.addComment(postId, { content: text })
+      
+      if (result.success) {
         setCommentText(prev => ({ ...prev, [postId]: '' }))
-        setCommentMentions(prev => ({ ...prev, [postId]: [] }))
         setSuccessMessage(t('Comment posted successfully!'))
         setTimeout(() => setSuccessMessage(''), 3000)
         fetchPosts()
@@ -243,20 +209,12 @@ export default function Forum() {
     if (!post) return
 
     try {
-      const response = await fetch(`${API}/api/forum/posts/${post.id}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          content: replyText,
-          parentCommentId
-          // mentions removed temporarily until backend supports it
-        })
+      const result = await forumAPI.addComment(post.id, {
+        content: replyText,
+        parentCommentId
       })
-
-      if (response.ok) {
+      
+      if (result.success) {
         fetchPosts()
       }
     } catch (error) {
@@ -296,14 +254,7 @@ export default function Forum() {
 
   const handleLikeComment = async (commentId) => {
     try {
-      await fetch(`${API}/api/forum/comments/${commentId}/like`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      
+      await forumAPI.likeComment(commentId)
       fetchPosts()
     } catch (error) {
       console.error('Error liking comment:', error)
@@ -898,12 +849,10 @@ export default function Forum() {
                             alt={currentUser?.name}
                             className={styles.commentAvatar}
                           />
-                          <UserMentions
+                          <textarea
                             value={commentText[post.id] || ''}
-                            onChange={(text) => setCommentText(prev => ({ ...prev, [post.id]: text }))}
-                            onMentionsChange={(mentions) => setCommentMentions(prev => ({ ...prev, [post.id]: mentions }))}
-                            categoryId={selectedCategory}
-                            placeholder={t('Write a comment... Use @ to mention users')}
+                            onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
+                            placeholder={t('Write a comment...')}
                             rows={3}
                             className={styles.commentTextarea}
                           />
