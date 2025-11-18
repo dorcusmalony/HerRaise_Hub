@@ -249,9 +249,26 @@
   outline: none !important;
 }
 
-.notificationContainer * {
+.notificationContainer .bell-button {
   background: transparent !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+}
+
+.notificationContainer .badge {
+  position: absolute !important;
+  top: -10px !important;
+  right: -5px !important;
+  background: transparent !important;
+  color: #e84393 !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  z-index: 10 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  min-width: auto !important;
+  height: auto !important;
+  display: block !important;
+  padding: 0 !important;
 }

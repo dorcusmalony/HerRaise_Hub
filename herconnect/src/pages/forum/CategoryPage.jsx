@@ -206,7 +206,7 @@ export default function CategoryPage() {
                 'Authorization': `Bearer ${token}`
               },
               body: JSON.stringify({
-                type: 'post_comment',
+                type: 'forum_comment',
                 recipientId: posts.find(p => p.id === postId)?.author?.id,
                 data: { postId, commentId: result.comment.id },
                 message: 'commented on your post'
@@ -301,7 +301,7 @@ export default function CategoryPage() {
                 'Authorization': `Bearer ${token}`
               },
               body: JSON.stringify({
-                type: 'comment_reply',
+                type: 'forum_reply',
                 recipientId: parentComment?.author?.id,
                 data: { parentCommentId, replyId: result.comment.id },
                 message: 'replied to your comment'
@@ -382,7 +382,7 @@ export default function CategoryPage() {
                 'Authorization': `Bearer ${token}`
               },
               body: JSON.stringify({
-                type: 'comment_like',
+                type: 'forum_like',
                 recipientId: comment?.author?.id,
                 data: { commentId },
                 message: 'liked your comment'
