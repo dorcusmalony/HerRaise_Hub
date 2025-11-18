@@ -1,99 +1,81 @@
-const API_BASE = import.meta.env.VITE_API_URL || ''
+const API_URL = import.meta.env.VITE_API_URL
 
-export const forumAPI = {
-  // Edit post with file management
-  updatePost: async (postId, postData) => {
+const forumAPI = {
+  // Create post
+  createPost: async (postData) => {
     const token = localStorage.getItem('token')
-    
-    try {
-      const response = await fetch(`${API_BASE}/api/forum/posts/${postId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(postData)
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to update post')
-      }
-
-      return await response.json()
-    } catch (error) {
-      console.error('Error updating post:', error)
-      throw error
-    }
+    const response = await fetch(`${API_URL}/api/forum/posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(postData)
+    })
+    return response.json()
   },
 
-  // Delete post
-  deletePost: async (postId) => {
+  // Add comment/reply
+  addComment: async (postId, commentData) => {
     const token = localStorage.getItem('token')
-    
-    try {
-      const response = await fetch(`${API_BASE}/api/forum/posts/${postId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to delete post')
-      }
-
-      return true
-    } catch (error) {
-      console.error('Error deleting post:', error)
-      throw error
-    }
+    const response = await fetch(`${API_URL}/api/forum/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(commentData)
+    })
+    return response.json()
   },
 
-  // Update comment
-  updateComment: async (commentId, content) => {
+  // Like post
+  likePost: async (postId) => {
     const token = localStorage.getItem('token')
-    
-    try {
-      const response = await fetch(`${API_BASE}/api/forum/comments/${commentId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ content })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to update comment')
+    const response = await fetch(`${API_URL}/api/forum/posts/${postId}/like`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
-
-      return await response.json()
-    } catch (error) {
-      console.error('Error updating comment:', error)
-      throw error
-    }
+    })
+    return response.json()
   },
 
-  // Delete comment
-  deleteComment: async (commentId) => {
+  // Like comment
+  likeComment: async (commentId) => {
     const token = localStorage.getItem('token')
-    
-    try {
-      const response = await fetch(`${API_BASE}/api/forum/comments/${commentId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to delete comment')
+    const response = await fetch(`${API_URL}/api/forum/comments/${commentId}/like`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
+    })
+    return response.json()
+  },
 
-      return true
-    } catch (error) {
-      console.error('Error deleting comment:', error)
-      throw error
-    }
+  // Get posts
+  getPosts: async (params = {}) => {
+    const token = localStorage.getItem('token')
+    const queryString = new URLSearchParams(params).toString()
+    const response = await fetch(`${API_URL}/api/forum/posts?${queryString}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    return response.json()
+  },
+
+  // Get single post
+  getPost: async (postId) => {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${API_URL}/api/forum/posts/${postId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    return response.json()
   }
 }
+
+export { forumAPI }
+export default forumAPI

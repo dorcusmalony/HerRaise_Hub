@@ -137,9 +137,19 @@ export default function CategoryPage() {
 
   const handleAddComment = async (postId) => {
     const text = commentText[postId]
-    if (!text?.trim()) return
+    if (!text?.trim()) {
+      console.log('❌ No comment text provided')
+      return
+    }
 
     const token = localStorage.getItem('token')
+    if (!token) {
+      console.log('❌ No token found')
+      alert('Please login to comment')
+      return
+    }
+    
+    console.log('💬 Adding comment:', { postId, text, API })
     
     try {
       const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
@@ -151,14 +161,23 @@ export default function CategoryPage() {
         body: JSON.stringify({ content: text })
       })
 
+      console.log('💬 Comment response:', response.status, response.statusText)
+
       if (response.ok) {
+        const result = await response.json()
+        console.log('✅ Comment posted:', result)
         setCommentText(prev => ({ ...prev, [postId]: '' }))
         setSuccessMessage('Comment posted successfully!')
         setTimeout(() => setSuccessMessage(''), 3000)
         fetchPosts()
+      } else {
+        const errorText = await response.text()
+        console.error('❌ Comment failed:', response.status, errorText)
+        alert(`Failed to post comment: ${response.status}`)
       }
     } catch (error) {
-      console.error('Error adding comment:', error)
+      console.error('❌ Comment error:', error)
+      alert('Network error posting comment')
     }
   }
 
