@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import LikeButton from '../LikeButton/LikeButton'
 import CommentSection from './CommentSection'
 import { notificationAPI } from '../../utils/notificationAPI'
@@ -34,8 +33,11 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
     if (currentUser && post.likes) {
       setIsLiked(post.likes.some(like => like.userId === currentUser.id))
     }
-    setLikeCount(post.likesCount || post.likes?.length || 0)
-  }, [post, currentUser])
+    // Only set initial like count, don't override local state
+    if (likeCount === 0) {
+      setLikeCount(post.likesCount || post.likes?.length || 0)
+    }
+  }, [post, currentUser, likeCount])
 
   const handleLike = async () => {
     try {
@@ -47,19 +49,26 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
         }
       })
       if (response.ok) {
-        const data = await response.json()
-        setIsLiked(data.isLikedByUser)
-        setLikeCount(data.likesCount)
+        const result = await response.json()
+        setIsLiked(result.liked)
+        setLikeCount(result.likesCount)
         
-        // Create notification if user liked the post (not their own)
-        if (data.isLikedByUser && currentUser?.id !== post.author?.id) {
-          notificationAPI.createPostLikeNotification(post.id, post.author?.id)
+        // Update parent component's posts state
+        if (onUpdate) {
+          onUpdate(post.id, { likesCount: result.likesCount, isLikedByUser: result.liked })
         }
         
-        onUpdate()
+        // Create notification if user liked the post (not their own)
+        if (result.liked && currentUser?.id !== post.author?.id) {
+          notificationAPI.createPostLikeNotification(post.id, post.author?.id)
+        }
+      } else {
+        console.error('Like failed:', response.status)
+        alert('Failed to like post. Please try again.')
       }
     } catch (error) {
       console.error('Error liking post:', error)
+      alert('Network error. Please try again.')
     }
   }
 
@@ -110,17 +119,15 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
         <span className={styles.postType}>{post.type}</span>
       </div>
 
-      <Link to={`/forum/posts/${post.id}`} className={styles.postLink}>
-        <div className={styles.postContent}>
-          <h3 className={styles.postTitle}>{t(post.title) || post.title}</h3>
-          <p className={styles.postText}>
-            {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
-          </p>
-          {post.publishedFrom && (
-            <span className={styles.categoryTag}>{post.publishedFrom}</span>
-          )}
-        </div>
-      </Link>
+      <div className={styles.postContent}>
+        <h3 className={styles.postTitle}>{t(post.title) || post.title}</h3>
+        <p className={styles.postText}>
+          {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
+        </p>
+        {post.publishedFrom && (
+          <span className={styles.categoryTag}>{post.publishedFrom}</span>
+        )}
+      </div>
 
       <div className={styles.postActions}>
         <button 
@@ -133,7 +140,7 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
           onClick={() => setShowComments(!showComments)}
           className={styles.actionBtn}
         >
-          💬 {t('comment')} ({post.commentsCount || 0})
+          {t('comment')} ({post.commentsCount || 0})
         </button>
       </div>
 

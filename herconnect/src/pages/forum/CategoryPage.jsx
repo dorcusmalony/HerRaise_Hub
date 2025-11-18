@@ -137,6 +137,14 @@ export default function CategoryPage() {
     }
   }
 
+  const handlePostLike = (postId, likeData) => {
+    setPosts(prev => prev.map(post => 
+      post.id === postId 
+        ? { ...post, ...likeData }
+        : post
+    ))
+  }
+
   const handleAddComment = async (postId) => {
     const text = commentText[postId]
     if (!text?.trim()) {
@@ -188,6 +196,27 @@ export default function CategoryPage() {
           ))
         }
         
+        // Create notification for comment
+        if (currentUser?.id !== posts.find(p => p.id === postId)?.author?.id) {
+          try {
+            await fetch(`${API}/api/notifications`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                type: 'post_comment',
+                recipientId: posts.find(p => p.id === postId)?.author?.id,
+                data: { postId, commentId: result.comment.id },
+                message: 'commented on your post'
+              })
+            })
+          } catch (notifError) {
+            console.error('Notification error:', notifError)
+          }
+        }
+        
         // Show success message
         setSuccessMessage(result.message || 'Reply added successfully')
         setTimeout(() => setSuccessMessage(''), 3000)
@@ -205,11 +234,30 @@ export default function CategoryPage() {
     }
   }
 
+  const [pendingRequests, setPendingRequests] = useState(new Set())
+
   const handleReplyToComment = async (parentCommentId, replyText) => {
+    const requestKey = `reply-${parentCommentId}-${Date.now()}`
+    
+    if (pendingRequests.has(parentCommentId)) {
+      console.log('🔄 Request already pending for comment:', parentCommentId)
+      return
+    }
+
     const token = localStorage.getItem('token')
     const post = posts.find(p => p.ForumComments?.some(c => c.id === parentCommentId))
     
-    if (!post) return
+    if (!post) {
+      console.error('❌ Post not found for parent comment:', parentCommentId)
+      return
+    }
+
+    if (!token) {
+      alert('Please login to reply')
+      return
+    }
+
+    setPendingRequests(prev => new Set([...prev, parentCommentId]))
 
     try {
       const response = await fetch(`${API}/api/forum/posts/${post.id}/comments`, {
@@ -227,7 +275,6 @@ export default function CategoryPage() {
       if (response.ok) {
         const result = await response.json()
         
-        // Add reply to local state immediately with proper structure
         if (result.comment) {
           const newReply = {
             ...result.comment,
@@ -243,12 +290,46 @@ export default function CategoryPage() {
           ))
         }
         
-        setSuccessMessage(result.message || 'Reply added successfully')
+        // Create notification for reply
+        const parentComment = post.ForumComments?.find(c => c.id === parentCommentId)
+        if (currentUser?.id !== parentComment?.author?.id) {
+          try {
+            await fetch(`${API}/api/notifications`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                type: 'comment_reply',
+                recipientId: parentComment?.author?.id,
+                data: { parentCommentId, replyId: result.comment.id },
+                message: 'replied to your comment'
+              })
+            })
+          } catch (notifError) {
+            console.error('Notification error:', notifError)
+          }
+        }
+        
+        setSuccessMessage('Reply added successfully')
         setTimeout(() => setSuccessMessage(''), 3000)
-        fetchPosts()
+      } else if (response.status === 409) {
+        console.log('⚠️ Duplicate request detected, ignoring')
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }))
+        console.error('❌ Reply failed:', response.status, errorData)
+        alert(errorData.message || 'Failed to post reply')
       }
     } catch (error) {
-      console.error('Error replying to comment:', error)
+      console.error('❌ Reply error:', error)
+      alert('Network error posting reply')
+    } finally {
+      setPendingRequests(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(parentCommentId)
+        return newSet
+      })
     }
   }
 
@@ -277,14 +358,42 @@ export default function CategoryPage() {
   }
 
   const handleLikeComment = async (commentId) => {
+    const token = localStorage.getItem('token')
     try {
-      await fetch(`${API}/api/forum/comments/${commentId}/like`, {
+      const response = await fetch(`${API}/api/forum/comments/${commentId}/like`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
+      
+      if (response.ok) {
+        const result = await response.json()
+        
+        // Create notification for comment like
+        const comment = posts.flatMap(p => p.ForumComments || []).find(c => c.id === commentId)
+        if (result.liked && currentUser?.id !== comment?.author?.id) {
+          try {
+            await fetch(`${API}/api/notifications`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                type: 'comment_like',
+                recipientId: comment?.author?.id,
+                data: { commentId },
+                message: 'liked your comment'
+              })
+            })
+          } catch (notifError) {
+            console.error('Notification error:', notifError)
+          }
+        }
+      }
+      
       fetchPosts()
     } catch (error) {
       console.error('Error liking comment:', error)
@@ -451,7 +560,7 @@ export default function CategoryPage() {
                 <PostCard
                   key={post.id}
                   post={post}
-                  onUpdate={fetchPosts}
+                  onUpdate={handlePostLike}
                   currentUser={currentUser}
                   onEdit={setEditingPost}
                   onDelete={handleDeletePost}

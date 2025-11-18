@@ -46,6 +46,7 @@ export default function Forum() {
   const [successMessage, setSuccessMessage] = useState('')
   const [showPostDropdown, setShowPostDropdown] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [pendingRequests, setPendingRequests] = useState(new Set())
 
 
   // Load current user
@@ -185,11 +186,18 @@ export default function Forum() {
     const text = commentText[postId]
     if (!text?.trim()) return
 
+    if (pendingRequests.has(`comment-${postId}`)) {
+      console.log('🔄 Comment request already pending for post:', postId)
+      return
+    }
+
     const token = localStorage.getItem('token')
     if (!token) {
       alert(t('Please login to comment'))
       return
     }
+    
+    setPendingRequests(prev => new Set([...prev, `comment-${postId}`]))
     
     try {
       const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
@@ -204,10 +212,8 @@ export default function Forum() {
       if (response.ok) {
         const result = await response.json()
         
-        // Clear comment text immediately
         setCommentText(prev => ({ ...prev, [postId]: '' }))
         
-        // Add comment to local state immediately with proper structure
         if (result.comment) {
           const newComment = {
             ...result.comment,
@@ -225,17 +231,22 @@ export default function Forum() {
         
         setSuccessMessage(result.message || t('Comment posted successfully!'))
         setTimeout(() => setSuccessMessage(''), 3000)
-        
-        // Also refresh to ensure consistency
-        setTimeout(() => fetchPosts(), 500)
+      } else if (response.status === 409) {
+        console.log('⚠️ Duplicate comment request detected, ignoring')
       } else {
-        const errorText = await response.text()
-        console.error('Comment failed:', response.status, errorText)
-        alert(`Failed to post comment: ${response.status}`)
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }))
+        console.error('❌ Comment failed:', response.status, errorData)
+        alert(errorData.message || 'Failed to post comment')
       }
     } catch (error) {
-      console.error('Error adding comment:', error)
+      console.error('❌ Comment error:', error)
       alert('Network error posting comment')
+    } finally {
+      setPendingRequests(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(`comment-${postId}`)
+        return newSet
+      })
     }
   }
 
@@ -243,9 +254,22 @@ export default function Forum() {
     const token = localStorage.getItem('token')
     const post = posts.find(p => p.ForumComments?.some(c => c.id === parentCommentId))
     
-    if (!post) return
+    console.log('🔄 Reply Debug:', { parentCommentId, replyText, post: post?.id })
+    
+    if (!post) {
+      console.error('❌ Post not found for parent comment:', parentCommentId)
+      return
+    }
+
+    if (!token) {
+      console.error('❌ No token found')
+      alert('Please login to reply')
+      return
+    }
 
     try {
+      console.log('📤 Sending reply to:', `${API}/api/forum/posts/${post.id}/comments`)
+      
       const response = await fetch(`${API}/api/forum/posts/${post.id}/comments`, {
         method: 'POST',
         headers: {
@@ -258,8 +282,11 @@ export default function Forum() {
         })
       })
 
+      console.log('📥 Reply response:', response.status, response.statusText)
+
       if (response.ok) {
         const result = await response.json()
+        console.log('✅ Reply posted:', result)
         
         // Add reply to local state immediately with proper structure
         if (result.comment) {
@@ -282,9 +309,14 @@ export default function Forum() {
         
         // Also refresh to ensure consistency
         setTimeout(() => fetchPosts(), 500)
+      } else {
+        const errorText = await response.text()
+        console.error('❌ Reply failed:', response.status, errorText)
+        alert(`Failed to post reply: ${response.status}`)
       }
     } catch (error) {
-      console.error('Error replying to comment:', error)
+      console.error('❌ Reply error:', error)
+      alert('Network error posting reply')
     }
   }
 
