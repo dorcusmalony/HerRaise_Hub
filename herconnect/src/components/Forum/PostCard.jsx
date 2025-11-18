@@ -19,10 +19,12 @@ const getAuthorColor = (name) => {
   return colors[Math.abs(hash) % colors.length]
 }
 
-export default function PostCard({ post, onUpdate, currentUser }) {
+export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete }) {
   const { t } = useLanguage()
   const [showComments, setShowComments] = useState(false)
   const cardColor = getAuthorColor(post.author?.name || 'User')
+  
+  const canEdit = currentUser?.id === post.author?.id || currentUser?.role === 'admin'
 
   const [likeCount, setLikeCount] = useState(post.likesCount || 0)
   const [isLiked, setIsLiked] = useState(false)
@@ -61,8 +63,36 @@ export default function PostCard({ post, onUpdate, currentUser }) {
     }
   }
 
+  const handleEdit = () => {
+    if (onEdit) onEdit(post)
+  }
+  
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this post?')) return
+    if (onDelete) onDelete(post.id)
+  }
+
   return (
-    <div className={styles.postCard} style={{ borderLeft: `4px solid ${cardColor}` }}>
+    <div className={styles.postCard} style={{ borderLeft: `4px solid ${cardColor}`, position: 'relative' }}>
+      {/* Hover Actions */}
+      {canEdit && (
+        <div className={styles.hoverActions}>
+          <button 
+            className={`${styles.hoverBtn} ${styles.editBtn}`}
+            onClick={handleEdit}
+            title={t('Edit Post')}
+          >
+            ✏️
+          </button>
+          <button 
+            className={`${styles.hoverBtn} ${styles.deleteBtn}`}
+            onClick={handleDelete}
+            title={t('Delete Post')}
+          >
+            🗑️
+          </button>
+        </div>
+      )}
       <div className={styles.postHeader}>
         <div className={styles.authorInfo}>
           {post.author?.profilePicture ? (

@@ -379,51 +379,55 @@ export default function CategoryPage() {
         <p className="text-muted">{category.description}</p>
       </div>
 
-      {/* Create Post Form */}
+      {/* Create Post Modal */}
       {showCreateModal && (
-        <div className={styles.postFormContainer}>
-          <CreatePostForm
-            initialCategory={categoryId}
-            onSuccess={(post, message) => {
-              setShowCreateModal(false)
-              setSuccessMessage(message || 'Post created successfully!')
-              
-              // Add new post to local state immediately with proper structure
-              if (post) {
-                const newPost = {
-                  ...post,
-                  author: post.author || currentUser,
-                  ForumComments: post.ForumComments || [],
-                  likes: post.likes || [],
-                  views: post.views || 0,
-                  createdAt: post.createdAt || new Date().toISOString(),
-                  updatedAt: post.updatedAt || new Date().toISOString()
+        <div className={styles.modalOverlay} onClick={() => setShowCreateModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <CreatePostForm
+              initialCategory={categoryId}
+              onSuccess={(post, message) => {
+                setShowCreateModal(false)
+                setSuccessMessage(message || 'Post created successfully!')
+                
+                // Add new post to local state immediately with proper structure
+                if (post) {
+                  const newPost = {
+                    ...post,
+                    author: post.author || currentUser,
+                    ForumComments: post.ForumComments || [],
+                    likes: post.likes || [],
+                    views: post.views || 0,
+                    createdAt: post.createdAt || new Date().toISOString(),
+                    updatedAt: post.updatedAt || new Date().toISOString()
+                  }
+                  setPosts(prev => [newPost, ...prev])
                 }
-                setPosts(prev => [newPost, ...prev])
-              }
-              
-              // Also refresh to ensure consistency
-              setTimeout(() => fetchPosts(), 500)
-              setTimeout(() => setSuccessMessage(''), 3000)
-            }}
-            onCancel={() => setShowCreateModal(false)}
-          />
+                
+                // Also refresh to ensure consistency
+                setTimeout(() => fetchPosts(), 500)
+                setTimeout(() => setSuccessMessage(''), 3000)
+              }}
+              onCancel={() => setShowCreateModal(false)}
+            />
+          </div>
         </div>
       )}
 
-      {/* Edit Post Form */}
+      {/* Edit Post Modal */}
       {editingPost && (
-        <div className={styles.postFormContainer}>
-          <CreatePostForm
-            editPost={editingPost}
-            initialCategory={categoryId}
-            onSuccess={(post) => {
-              handleUpdatePost(post)
-              setSuccessMessage('Post updated successfully!')
-              setTimeout(() => setSuccessMessage(''), 3000)
-            }}
-            onCancel={() => setEditingPost(null)}
-          />
+        <div className={styles.modalOverlay} onClick={() => setEditingPost(null)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <CreatePostForm
+              editPost={editingPost}
+              initialCategory={categoryId}
+              onSuccess={(post) => {
+                handleUpdatePost(post)
+                setSuccessMessage('Post updated successfully!')
+                setTimeout(() => setSuccessMessage(''), 3000)
+              }}
+              onCancel={() => setEditingPost(null)}
+            />
+          </div>
         </div>
       )}
 
@@ -449,6 +453,8 @@ export default function CategoryPage() {
                   post={post}
                   onUpdate={fetchPosts}
                   currentUser={currentUser}
+                  onEdit={setEditingPost}
+                  onDelete={handleDeletePost}
                 />
               ))}
             </div>

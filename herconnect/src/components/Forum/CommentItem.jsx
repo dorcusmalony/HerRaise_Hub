@@ -1,5 +1,13 @@
 import { useState } from 'react'
 
+// Add CSS for hover effects
+const commentStyles = `
+  .commentItem:hover .commentHoverActions {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+`
+
 export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLike, currentUser, postAuthorId }) {
   const [showReplyForm, setShowReplyForm] = useState(false)
   const [replyText, setReplyText] = useState('')
@@ -41,13 +49,16 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
   }
 
   return (
-    <div 
-      className="border-start ps-3 mb-3" 
-      style={{ 
-        borderWidth: '3px',
-        borderColor: comment.parentCommentId ? '#e0e0e0' : '#6c757d' 
-      }}
-    >
+    <>
+      <style>{commentStyles}</style>
+      <div 
+        className="border-start ps-3 mb-3 commentItem" 
+        style={{ 
+          borderWidth: '3px',
+          borderColor: comment.parentCommentId ? '#e0e0e0' : '#6c757d',
+          position: 'relative'
+        }}
+      >
       <div className="d-flex gap-2">
         <img
           src={comment.author?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author?.name || 'User')}&background=E84393&color=fff`}
@@ -71,28 +82,85 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
               )}
             </div>
 
+            {/* Hover Actions for Comments */}
             {canModify && (
-              <div className="dropdown">
+              <div className="commentHoverActions" style={{
+                position: 'absolute',
+                top: '0.5rem',
+                right: '0.5rem',
+                display: 'flex',
+                gap: '0.25rem',
+                opacity: 0,
+                visibility: 'hidden',
+                transition: 'all 0.2s ease',
+                zIndex: 10
+              }}>
                 <button 
-                  className="btn btn-sm btn-link text-muted p-0" 
-                  data-bs-toggle="dropdown"
-                  style={{ fontSize: '1.2rem' }}
+                  className="commentHoverBtn commentEditBtn"
+                  onClick={() => setEditMode(true)}
+                  title="Edit comment"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #6366f1',
+                    borderRadius: '50%',
+                    width: '24px',
+                    height: '24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    fontSize: '0.75rem',
+                    color: '#6366f1'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = '#6366f1'
+                    e.target.style.color = 'white'
+                    e.target.style.transform = 'scale(1.1)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.95)'
+                    e.target.style.color = '#6366f1'
+                    e.target.style.transform = 'scale(1)'
+                  }}
                 >
-                  ⋮
+                  ✏️
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end shadow-sm">
-                  <li>
-                    <button className="dropdown-item small" onClick={() => setEditMode(true)}>
-                       Edit
-                    </button>
-                  </li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <button className="dropdown-item small text-danger" onClick={() => onDelete(comment.id)}>
-                       Delete
-                    </button>
-                  </li>
-                </ul>
+                <button 
+                  className="commentHoverBtn commentDeleteBtn"
+                  onClick={() => onDelete(comment.id)}
+                  title="Delete comment"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #ef4444',
+                    borderRadius: '50%',
+                    width: '24px',
+                    height: '24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    fontSize: '0.75rem',
+                    color: '#ef4444'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = '#ef4444'
+                    e.target.style.color = 'white'
+                    e.target.style.transform = 'scale(1.1)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.95)'
+                    e.target.style.color = '#ef4444'
+                    e.target.style.transform = 'scale(1)'
+                  }}
+                >
+                  🗑️
+                </button>
               </div>
             )}
           </div>
@@ -209,6 +277,7 @@ export default function CommentItem({ comment, onReply, onUpdate, onDelete, onLi
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
