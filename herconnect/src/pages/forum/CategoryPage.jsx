@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CreatePostModal from '../../components/Forum/CreatePostModal'
 import PostCard from '../../components/Forum/PostCard'
-import Pagination from '../../components/common/Pagination'
+import Pagination from '../../components/pagination/Pagination'
 import CommentItem from '../../components/Forum/CommentItem'
 import { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
 // import { forumAPI } from '../../utils/forumAPI' // Temporarily disabled
@@ -206,7 +206,7 @@ export default function CategoryPage() {
                 'Authorization': `Bearer ${token}`
               },
               body: JSON.stringify({
-                type: 'post_comment',
+                type: 'forum_comment',
                 recipientId: posts.find(p => p.id === postId)?.author?.id,
                 data: { postId, commentId: result.comment.id },
                 message: 'commented on your post'
@@ -301,7 +301,7 @@ export default function CategoryPage() {
                 'Authorization': `Bearer ${token}`
               },
               body: JSON.stringify({
-                type: 'comment_reply',
+                type: 'forum_reply',
                 recipientId: parentComment?.author?.id,
                 data: { parentCommentId, replyId: result.comment.id },
                 message: 'replied to your comment'
@@ -382,7 +382,7 @@ export default function CategoryPage() {
                 'Authorization': `Bearer ${token}`
               },
               body: JSON.stringify({
-                type: 'comment_like',
+                type: 'forum_like',
                 recipientId: comment?.author?.id,
                 data: { commentId },
                 message: 'liked your comment'

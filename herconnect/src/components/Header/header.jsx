@@ -162,7 +162,9 @@ export default function Header() {
 					{user ? (
 						<>
 							{/* Notification Bell */}
-							<NotificationBell />
+							<div className={styles.notificationContainer}>
+								<NotificationBell />
+							</div>
 
 							{/* Avatar Dropdown */}
 							<div className="position-relative" ref={dropdownRef}>

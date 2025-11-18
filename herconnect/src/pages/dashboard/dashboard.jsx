@@ -108,17 +108,14 @@ export default function Dashboard() {
       {/* Quick Stats */}
       <div className={styles.statsGrid}>
         <div className={`${styles.statCard} ${styles.purple}`}>
-          <span className={styles.statIcon}></span>
           <h3 className={styles.statValue}>{user?.totalPoints || 0}</h3>
           <p className={styles.statLabel}>Points Earned</p>
         </div>
         <div className={`${styles.statCard} ${styles.blue}`}>
-          <span className={styles.statIcon}>⭐</span>
           <h3 className={styles.statValue}>Level {user?.level || 1}</h3>
           <p className={styles.statLabel}>Your Level</p>
         </div>
         <div className={`${styles.statCard} ${styles.pink}`}>
-          <span className={styles.statIcon}></span>
           <h3 className={styles.statValue}>{recentPosts.length}</h3>
           <p className={styles.statLabel}>Forum Posts</p>
         </div>
@@ -130,7 +127,7 @@ export default function Dashboard() {
         {/* Forum Section */}
         <div className={`${styles.featureCard} ${styles.purple}`}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}>💬 Recent Discussions</h3>
+            <h3 className={styles.cardTitle}>Recent Discussions</h3>
             <Link to="/forum" className={styles.viewAllBtn}>View All</Link>
           </div>
           <div className={styles.cardBody}>
@@ -166,32 +163,27 @@ export default function Dashboard() {
         {/* Quick Actions Sidebar */}
         <div className={styles.quickActions}>
           <Link to="/profile" className={`${styles.actionCard} ${styles.purple}`}>
-            <span className={styles.actionIcon}></span>
             <h4 className={styles.actionTitle}>My Profile</h4>
             <p className={styles.actionDescription}>View and edit your profile</p>
           </Link>
           
           <Link to="/forum" className={`${styles.actionCard} ${styles.blue}`}>
-            <span className={styles.actionIcon}></span>
             <h4 className={styles.actionTitle}>Forum</h4>
             <p className={styles.actionDescription}>Join discussions</p>
           </Link>
           
           <Link to="/opportunities" className={`${styles.actionCard} ${styles.pink}`}>
-            <span className={styles.actionIcon}></span>
             <h4 className={styles.actionTitle}>Opportunities</h4>
             <p className={styles.actionDescription}>Find internships & scholarships</p>
           </Link>
           
           <Link to="/resources" className={`${styles.actionCard} ${styles.green}`}>
-            <span className={styles.actionIcon}>📚</span>
             <h4 className={styles.actionTitle}>Resources</h4>
             <p className={styles.actionDescription}>Access learning materials</p>
           </Link>
           
           {user?.role === 'mentor' && (
             <Link to="/mentor/dashboard" className={`${styles.actionCard} ${styles.purple}`}>
-              <span className={styles.actionIcon}>🌟</span>
               <h4 className={styles.actionTitle}>Mentor Tools</h4>
               <p className={styles.actionDescription}>Manage your mentees</p>
             </Link>
@@ -206,7 +198,7 @@ export default function Dashboard() {
         {/* Latest Opportunities Section */}
         <div className={`${styles.featureCard} ${styles.blue}`}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}> Latest Opportunities</h3>
+            <h3 className={styles.cardTitle}>Latest Opportunities</h3>
             <Link to="/opportunities" className={styles.viewAllBtn}>Browse All</Link>
           </div>
           <div className={styles.cardBody}>
@@ -243,7 +235,7 @@ export default function Dashboard() {
       <div className={styles.bottomGrid}>
         <div className={`${styles.featureCard} ${styles.pink}`}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}>📚 Recommended Resources</h3>
+            <h3 className={styles.cardTitle}>Recommended Resources</h3>
             <Link to="/resources" className={styles.viewAllBtn}>View All</Link>
           </div>
           <div className={styles.cardBody}>

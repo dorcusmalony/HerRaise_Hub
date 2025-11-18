@@ -46,7 +46,14 @@ const NotificationBell = () => {
       })
       if (response.ok) {
         const data = await response.json()
-        setNotifications(data.notifications || [])
+        console.log('🔔 Notifications API response:', data)
+        const notifs = data.notifications || []
+        setNotifications(notifs)
+        const unreadCount = notifs.filter(n => !n.readStatus).length
+        console.log('🔔 Calculated unread count from notifications:', unreadCount)
+        setUnreadCount(unreadCount)
+      } else {
+        console.error('🔔 Notifications API failed:', response.status, response.statusText)
       }
     } catch (error) {
       console.error('Failed to fetch notifications:', error)
@@ -62,8 +69,10 @@ const NotificationBell = () => {
       })
       if (response.ok) {
         const data = await response.json()
-        const count = notifications.filter(n => !n.readStatus).length
-        setUnreadCount(count)
+        console.log('🔔 Unread count API response:', data)
+        setUnreadCount(data.unreadCount || 0)
+      } else {
+        console.error('🔔 Unread count API failed:', response.status, response.statusText)
       }
     } catch (error) {
       console.error('Failed to fetch unread count:', error)
@@ -76,8 +85,8 @@ const NotificationBell = () => {
 
   const markAllAsRead = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/notifications/mark-read`, {
-        method: 'POST',
+      await fetch(`${import.meta.env.VITE_API_URL}/api/notifications/mark-all-read`, {
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -92,7 +101,7 @@ const NotificationBell = () => {
   const markAsRead = async (notificationId) => {
     try {
       await fetch(`${import.meta.env.VITE_API_URL}/api/notifications/${notificationId}/read`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -136,12 +145,12 @@ const NotificationBell = () => {
 
   return (
     <div className="notification-bell">
-      <button onClick={toggleNotifications} className="bell-button">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+      <span onClick={toggleNotifications} className="bell-button">
+        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
           <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
         </svg>
-        {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
-      </button>
+        {unreadCount > 0 && <span className="badge" style={{color: 'white', background: '#e84393', borderRadius: '50%', minWidth: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '-8px', right: '-8px', fontSize: '11px', fontWeight: 'bold', border: '2px solid white'}}>{unreadCount > 99 ? '99+' : unreadCount}</span>}
+      </span>
       
       {showDropdown && (
         <div className="notifications-dropdown">

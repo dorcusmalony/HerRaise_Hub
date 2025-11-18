@@ -1,39 +1,38 @@
 .notification-bell {
   position: relative;
-  display: inline-block;
 }
 
 .bell-button {
-  background: none;
-  border: none;
-  font-size: 24px;
   cursor: pointer;
   position: relative;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background 0.2s ease;
   color: white;
+  font-size: 24px;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
 }
 
 .bell-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  opacity: 0.8;
+}
+
+.bell-button svg {
+  display: block;
 }
 
 .badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ff4444;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  top: -10px;
+  right: -5px;
+  background: transparent;
+  color: #e84393;
   font-size: 12px;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulse 2s infinite;
+  z-index: 10;
 }
 
 @keyframes pulse {
