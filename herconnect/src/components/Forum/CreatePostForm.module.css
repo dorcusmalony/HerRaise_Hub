@@ -212,8 +212,8 @@ select {
 
 .cancelBtn {
   background: transparent;
-  color: #E84393;
-  border: 2px solid #E84393;
+  color: #4b0f77;
+  border: 2px solid #4b0f77;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -222,9 +222,9 @@ select {
 }
 
 .cancelBtn:hover {
-  background: #E84393;
+  background: #4b0f77;
   color: white;
-  border-color: #E84393;
+  border-color: #4b0f77;
 }
 
 /* Force white backgrounds on all form elements */
