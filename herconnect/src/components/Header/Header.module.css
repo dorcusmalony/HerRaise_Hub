@@ -27,15 +27,22 @@
 }
 
 .notificationButton {
-  all: unset !important;
   color: white !important;
-  cursor: pointer !important;
-  position: relative !important;
-  font-size: 24px !important;
-  display: inline-block !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.notificationButton:hover,
+.notificationButton:hover {
+  opacity: 0.8;
+  background: none !important;
+}
+
 .notificationButton:focus,
 .notificationButton:active,
 .notificationButton:visited {
@@ -50,19 +57,22 @@
 
 .notificationBadge {
   position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--brand-pink);
+  top: -6px;
+  right: -6px;
+  background: #e84393;
   color: white;
   border-radius: 50%;
-  width: 18px;
+  min-width: 18px;
   height: 18px;
   font-size: 10px;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--footer-bg);
   z-index: 1;
+  box-shadow: 0 2px 4px rgba(232, 67, 147, 0.3);
 }
 
 .avatar {

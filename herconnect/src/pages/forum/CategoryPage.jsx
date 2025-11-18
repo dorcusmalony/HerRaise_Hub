@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
 import CreatePostModal from '../../components/Forum/CreatePostModal'
 import PostCard from '../../components/Forum/PostCard'
-import Pagination from '../../components/common/Pagination'
+import Pagination from '../../components/pagination/Pagination'
 import CommentItem from '../../components/Forum/CommentItem'
 import { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
 // import { forumAPI } from '../../utils/forumAPI' // Temporarily disabled
