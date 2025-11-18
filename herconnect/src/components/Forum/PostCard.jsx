@@ -33,8 +33,11 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
     if (currentUser && post.likes) {
       setIsLiked(post.likes.some(like => like.userId === currentUser.id))
     }
-    setLikeCount(post.likesCount || post.likes?.length || 0)
-  }, [post, currentUser])
+    // Only set initial like count, don't override local state
+    if (likeCount === 0) {
+      setLikeCount(post.likesCount || post.likes?.length || 0)
+    }
+  }, [post, currentUser, likeCount])
 
   const handleLike = async () => {
     try {
@@ -50,13 +53,22 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
         setIsLiked(result.liked)
         setLikeCount(result.likesCount)
         
+        // Update parent component's posts state
+        if (onUpdate) {
+          onUpdate(post.id, { likesCount: result.likesCount, isLikedByUser: result.liked })
+        }
+        
         // Create notification if user liked the post (not their own)
         if (result.liked && currentUser?.id !== post.author?.id) {
           notificationAPI.createPostLikeNotification(post.id, post.author?.id)
         }
+      } else {
+        console.error('Like failed:', response.status)
+        alert('Failed to like post. Please try again.')
       }
     } catch (error) {
       console.error('Error liking post:', error)
+      alert('Network error. Please try again.')
     }
   }
 
@@ -128,7 +140,7 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
           onClick={() => setShowComments(!showComments)}
           className={styles.actionBtn}
         >
-          💬 {t('comment')} ({post.commentsCount || 0})
+          {t('comment')} ({post.commentsCount || 0})
         </button>
       </div>
 
