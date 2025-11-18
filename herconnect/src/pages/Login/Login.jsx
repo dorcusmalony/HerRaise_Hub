@@ -110,16 +110,27 @@ export default function Login() {
         console.warn(' No user data in login response')
       }
 
-      // Check for pending reminders (liked opportunities)
+      // Handle pending reminders from backend
       if (data?.pendingReminders && data.pendingReminders.count > 0) {
-        showPendingOpportunitiesPopup(data.pendingReminders.opportunities)
-      } else {
-        // Direct navigation if no reminders
-        if (data.user?.role === 'admin') {
-          navigate('/admin/dashboard')
-        } else {
-          navigate('/dashboard')
+        // Store reminders for DeadlineReminder component
+        localStorage.setItem('pendingReminders', JSON.stringify(data.pendingReminders))
+        
+        // Dispatch event to App component
+        window.dispatchEvent(new CustomEvent('login-success', {
+          detail: { pendingReminders: data.pendingReminders }
+        }))
+        
+        // Also show in notification popup if available
+        if (showPendingOpportunitiesPopup) {
+          showPendingOpportunitiesPopup(data.pendingReminders.opportunities)
         }
+      }
+      
+      // Navigate to appropriate dashboard
+      if (data.user?.role === 'admin') {
+        navigate('/admin/dashboard')
+      } else {
+        navigate('/dashboard')
       }
       
     } catch (err) {

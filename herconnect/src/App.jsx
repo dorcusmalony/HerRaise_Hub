@@ -32,12 +32,53 @@ import './styles/professional.css'
 import './styles/notifications.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
 import PushNotificationSetup from './components/PushNotificationSetup/PushNotificationSetup'
+import DeadlineReminder from './components/DeadlineReminder/DeadlineReminder'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useState } from 'react'
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState(null)
+  const [pendingReminders, setPendingReminders] = useState(null)
+  
+  // Load current user and check for pending reminders
+  useEffect(() => {
+    const userData = localStorage.getItem('user')
+    const token = localStorage.getItem('token')
+    const reminders = localStorage.getItem('pendingReminders')
+    
+    if (userData && token) {
+      try {
+        const user = JSON.parse(userData)
+        setCurrentUser(user)
+        
+        if (reminders) {
+          const reminderData = JSON.parse(reminders)
+          setPendingReminders(reminderData)
+          // Clear after showing once
+          localStorage.removeItem('pendingReminders')
+        }
+      } catch (e) {
+        console.error('Failed to parse user data:', e)
+        setCurrentUser(null)
+      }
+    }
+  }, [])
+  
+  // Listen for login events to update reminders
+  useEffect(() => {
+    const handleLoginSuccess = (event) => {
+      const { pendingReminders } = event.detail || {}
+      if (pendingReminders) {
+        setPendingReminders(pendingReminders)
+      }
+    }
+    
+    window.addEventListener('login-success', handleLoginSuccess)
+    return () => window.removeEventListener('login-success', handleLoginSuccess)
+  }, [])
+  
   const checkPendingOpportunities = async () => {
     try {
       const API_URL = import.meta.env.VITE_API_URL || ''
@@ -201,6 +242,7 @@ export default function App() {
           <Header />
           <NotificationToast />
           <PushNotificationSetup />
+          <DeadlineReminder pendingReminders={pendingReminders} />
           <ToastContainer />
           <SafetyButton />
 
