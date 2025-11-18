@@ -481,57 +481,61 @@ export default function Forum() {
         </div>
       )}
 
-      {/* Create/Edit Post Form */}
+      {/* Create/Edit Post Modal */}
       {(showCreateForm || editingPost) && (
-        <div className={styles.postFormContainer}>
-
-          <CreatePostForm
-            editPost={editingPost}
-            initialCategory={selectedCategory}
-            onSuccess={(post, message) => {
-              if (editingPost) {
-                handleUpdatePost(post)
-                setSuccessMessage(message || t('Post updated successfully!'))
-              } else {
-                setShowCreateForm(false)
-                setSuccessMessage(message || t('Post created successfully!'))
-                
-                // Add new post to local state immediately with proper structure
-                if (post) {
-                  console.log('🆕 Adding new post to local state:', post)
-                  console.log('👤 Current user for post:', currentUser)
+        <div className={styles.modalOverlay} onClick={() => {
+          setShowCreateForm(false)
+          setEditingPost(null)
+        }}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <CreatePostForm
+              editPost={editingPost}
+              initialCategory={selectedCategory}
+              onSuccess={(post, message) => {
+                if (editingPost) {
+                  handleUpdatePost(post)
+                  setSuccessMessage(message || t('Post updated successfully!'))
+                } else {
+                  setShowCreateForm(false)
+                  setSuccessMessage(message || t('Post created successfully!'))
                   
-                  const newPost = {
-                    ...post,
-                    author: post.author || currentUser,
-                    ForumComments: post.ForumComments || [],
-                    likes: post.likes || [],
-                    views: post.views || 0,
-                    createdAt: post.createdAt || new Date().toISOString(),
-                    updatedAt: post.updatedAt || new Date().toISOString()
+                  // Add new post to local state immediately with proper structure
+                  if (post) {
+                    console.log('🆕 Adding new post to local state:', post)
+                    console.log('👤 Current user for post:', currentUser)
+                    
+                    const newPost = {
+                      ...post,
+                      author: post.author || currentUser,
+                      ForumComments: post.ForumComments || [],
+                      likes: post.likes || [],
+                      views: post.views || 0,
+                      createdAt: post.createdAt || new Date().toISOString(),
+                      updatedAt: post.updatedAt || new Date().toISOString()
+                    }
+                    
+                    console.log('🆕 Processed new post:', newPost)
+                    setPosts(prev => {
+                      console.log('📝 Previous posts count:', prev.length)
+                      const updated = [newPost, ...prev]
+                      console.log('📝 Updated posts count:', updated.length)
+                      return updated
+                    })
+                  } else {
+                    console.warn('⚠️ No post data received from API')
                   }
                   
-                  console.log('🆕 Processed new post:', newPost)
-                  setPosts(prev => {
-                    console.log('📝 Previous posts count:', prev.length)
-                    const updated = [newPost, ...prev]
-                    console.log('📝 Updated posts count:', updated.length)
-                    return updated
-                  })
-                } else {
-                  console.warn('⚠️ No post data received from API')
+                  // Also refresh to ensure consistency
+                  setTimeout(() => fetchPosts(), 500)
                 }
-                
-                // Also refresh to ensure consistency
-                setTimeout(() => fetchPosts(), 500)
-              }
-              setTimeout(() => setSuccessMessage(''), 3000)
-            }}
-            onCancel={() => {
-              setShowCreateForm(false)
-              setEditingPost(null)
-            }}
-          />
+                setTimeout(() => setSuccessMessage(''), 3000)
+              }}
+              onCancel={() => {
+                setShowCreateForm(false)
+                setEditingPost(null)
+              }}
+            />
+          </div>
         </div>
       )}
 
@@ -606,94 +610,31 @@ export default function Forum() {
                       </div>
                     </div>
 
-                    {/* Edit/Delete for post author or admin - Debug version */}
-                    <div className="dropdown" style={{ position: 'relative' }}>
-                      <button 
-                        className="btn btn-sm btn-link text-muted p-0" 
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          console.log('🔧 Dropdown clicked for post:', post.id)
-                          console.log('🔧 Current user:', currentUser)
-                          console.log('🔧 Post author:', post.author)
-                          setShowPostDropdown(showPostDropdown === post.id ? null : post.id)
-                        }}
-                        style={{ 
-                          fontSize: '1.5rem', 
-                          background: '#f3f4f6', 
-                          border: '1px solid #d1d5db',
-                          borderRadius: '4px',
-                          padding: '4px 8px',
-                          color: '#374151'
-                        }}
-                      >
-                        ⋮
-                      </button>
-                      {showPostDropdown === post.id && (
-                        <ul className="dropdown-menu dropdown-menu-end shadow-sm show" style={{ 
-                          position: 'absolute', 
-                          right: 0, 
-                          top: '100%', 
-                          zIndex: 1000, 
-                          minWidth: '140px',
-                          background: 'white',
-                          border: '1px solid #e5e7eb',
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                          padding: '0.5rem 0'
-                        }}>
-                          {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') ? (
-                            <>
-                              <li>
-                                <button 
-                                  className="dropdown-item small" 
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    setEditingPost(post)
-                                    setShowPostDropdown(null)
-                                  }}
-                                  style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    width: '100%',
-                                    textAlign: 'left',
-                                    padding: '0.5rem 1rem',
-                                    cursor: 'pointer'
-                                  }}
-                                >
-                                  {t('Edit Post')}
-                                </button>
-                              </li>
-                              <li><hr className="dropdown-divider" style={{ margin: '0.25rem 0', border: 'none', borderTop: '1px solid #e5e7eb' }} /></li>
-                              <li>
-                                <button 
-                                  className="dropdown-item small text-danger" 
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleDeletePost(post.id)
-                                    setShowPostDropdown(null)
-                                  }}
-                                  style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    width: '100%',
-                                    textAlign: 'left',
-                                    padding: '0.5rem 1rem',
-                                    cursor: 'pointer',
-                                    color: '#dc2626'
-                                  }}
-                                >
-                                  {t('Delete Post')}
-                                </button>
-                              </li>
-                            </>
-                          ) : (
-                            <li style={{ padding: '0.5rem 1rem', color: '#6b7280', fontSize: '0.875rem' }}>
-                              {t('No permissions')}
-                            </li>
-                          )}
-                        </ul>
-                      )}
-                    </div>
+                    {/* Hover Actions - Google Chat Style */}
+                    {(currentUser?.id === post.author?.id || currentUser?.role === 'admin') && (
+                      <div className={styles.hoverActions}>
+                        <button 
+                          className={`${styles.hoverBtn} ${styles.editBtn}`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingPost(post)
+                          }}
+                          title={t('Edit Post')}
+                        >
+                          ✏️
+                        </button>
+                        <button 
+                          className={`${styles.hoverBtn} ${styles.deleteBtn}`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeletePost(post.id)
+                          }}
+                          title={t('Delete Post')}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   <div className={styles.postBody}>
