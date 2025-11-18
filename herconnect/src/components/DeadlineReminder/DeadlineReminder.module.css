@@ -1,0 +1,157 @@
+.reminderOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.reminderModal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.reminderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.reminderHeader h3 {
+  margin: 0;
+  color: #dc2626;
+  font-size: 1.25rem;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  color: #374151;
+}
+
+.reminderBody {
+  padding: 1.5rem;
+}
+
+.reminderBody p {
+  margin: 0 0 1rem 0;
+  color: #374151;
+}
+
+.opportunitiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.opportunityItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #4b0f77;
+}
+
+.oppInfo h4 {
+  margin: 0 0 0.25rem 0;
+  color: #111827;
+  font-size: 1rem;
+}
+
+.oppType {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.deadline {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.deadline.urgent {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.reminderActions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.viewBtn {
+  background: #4b0f77;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+
+.viewBtn:hover {
+  background: #3a0c5c;
+  color: white;
+  text-decoration: none;
+}
+
+.dismissBtn {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.dismissBtn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}

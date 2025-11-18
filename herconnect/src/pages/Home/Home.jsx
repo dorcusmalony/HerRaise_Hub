@@ -99,7 +99,7 @@ export default function Home() {
             </ul>
             <p className="fw-bold">{t('Together, we can empower young women to rise with confidence and purpose.')}</p>
             <div className="text-center">
-              <Link to="/register" className="btn btn-lg" style={{background: '#8B5CF6', color: 'white', border: 'none'}}>
+              <Link to="/register" className="btn btn-lg" style={{background: '#4b0f77', color: 'white', border: 'none'}}>
                 {t('Become a Mentor')}
               </Link>
             </div>
@@ -156,7 +156,7 @@ export default function Home() {
           ))}
         </div>
         <div className="text-center mt-5">
-          <Link to="/register" className="btn btn-lg" style={{background: '#8B5CF6', color: 'white', border: 'none'}}>
+          <Link to="/register" className="btn btn-lg" style={{background: '#4b0f77', color: 'white', border: 'none'}}>
             {t('Join Our Mentor Community')}
           </Link>
         </div>
@@ -164,12 +164,12 @@ export default function Home() {
 
       {/* What We Do Section */}
       <section className={styles.features}>
-        <div className={styles.featureCard} style={{ background: '#8B5CF6', color: 'white', textAlign: 'center !important' }}>
+        <div className={styles.featureCard} style={{ background: '#4b0f77', color: 'white', textAlign: 'center !important' }}>
           <h3 className={styles.featureTitle} style={{ color: 'white', textAlign: 'center !important' }}>{t('Find Mentorship')}</h3>
           <p className={styles.featureDescription} style={{ color: 'white', textAlign: 'center !important' }}>
             {t('Connect with inspiring mentors who guide you in education, career, and personal growth. You don\'t walk this journey alone.')}
           </p>
-          <Link to="/register" className={styles.ctaButton} style={{ background: 'white', color: '#8B5CF6', textAlign: 'center !important', display: 'block', margin: '0 auto' }}>{t('Get Started')}</Link>
+          <Link to="/register" className={styles.ctaButton} style={{ background: 'white', color: '#4b0f77', textAlign: 'center !important', display: 'block', margin: '0 auto' }}>{t('Get Started')}</Link>
         </div>
 
         <div className={styles.featureCard} style={{ background: '#E84393', color: 'white' }}>
