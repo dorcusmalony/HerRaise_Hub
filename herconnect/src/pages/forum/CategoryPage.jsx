@@ -205,11 +205,30 @@ export default function CategoryPage() {
     }
   }
 
+  const [pendingRequests, setPendingRequests] = useState(new Set())
+
   const handleReplyToComment = async (parentCommentId, replyText) => {
+    const requestKey = `reply-${parentCommentId}-${Date.now()}`
+    
+    if (pendingRequests.has(parentCommentId)) {
+      console.log('🔄 Request already pending for comment:', parentCommentId)
+      return
+    }
+
     const token = localStorage.getItem('token')
     const post = posts.find(p => p.ForumComments?.some(c => c.id === parentCommentId))
     
-    if (!post) return
+    if (!post) {
+      console.error('❌ Post not found for parent comment:', parentCommentId)
+      return
+    }
+
+    if (!token) {
+      alert('Please login to reply')
+      return
+    }
+
+    setPendingRequests(prev => new Set([...prev, parentCommentId]))
 
     try {
       const response = await fetch(`${API}/api/forum/posts/${post.id}/comments`, {
@@ -227,7 +246,6 @@ export default function CategoryPage() {
       if (response.ok) {
         const result = await response.json()
         
-        // Add reply to local state immediately with proper structure
         if (result.comment) {
           const newReply = {
             ...result.comment,
@@ -243,12 +261,24 @@ export default function CategoryPage() {
           ))
         }
         
-        setSuccessMessage(result.message || 'Reply added successfully')
+        setSuccessMessage('Reply added successfully')
         setTimeout(() => setSuccessMessage(''), 3000)
-        fetchPosts()
+      } else if (response.status === 409) {
+        console.log('⚠️ Duplicate request detected, ignoring')
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }))
+        console.error('❌ Reply failed:', response.status, errorData)
+        alert(errorData.message || 'Failed to post reply')
       }
     } catch (error) {
-      console.error('Error replying to comment:', error)
+      console.error('❌ Reply error:', error)
+      alert('Network error posting reply')
+    } finally {
+      setPendingRequests(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(parentCommentId)
+        return newSet
+      })
     }
   }
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import LikeButton from '../LikeButton/LikeButton'
 import CommentSection from './CommentSection'
 import { notificationAPI } from '../../utils/notificationAPI'
@@ -110,17 +109,15 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
         <span className={styles.postType}>{post.type}</span>
       </div>
 
-      <Link to={`/forum/posts/${post.id}`} className={styles.postLink}>
-        <div className={styles.postContent}>
-          <h3 className={styles.postTitle}>{t(post.title) || post.title}</h3>
-          <p className={styles.postText}>
-            {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
-          </p>
-          {post.publishedFrom && (
-            <span className={styles.categoryTag}>{post.publishedFrom}</span>
-          )}
-        </div>
-      </Link>
+      <div className={styles.postContent}>
+        <h3 className={styles.postTitle}>{t(post.title) || post.title}</h3>
+        <p className={styles.postText}>
+          {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
+        </p>
+        {post.publishedFrom && (
+          <span className={styles.categoryTag}>{post.publishedFrom}</span>
+        )}
+      </div>
 
       <div className={styles.postActions}>
         <button 
