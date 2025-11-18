@@ -120,6 +120,22 @@ export default function Login() {
           detail: { pendingReminders: data.pendingReminders }
         }))
         
+        // Add each pending deadline to notification bell
+        data.pendingReminders.opportunities.forEach(opp => {
+          window.dispatchEvent(new CustomEvent('add-notification', {
+            detail: {
+              id: `deadline-${opp.id}`,
+              type: 'deadline_reminder',
+              title: `⏰ Deadline Reminder`,
+              message: `${opp.title} - ${opp.message}`,
+              timestamp: new Date().toISOString(),
+              read: false,
+              priority: opp.priority || 'medium',
+              opportunityId: opp.id
+            }
+          }))
+        })
+        
         // Also show in notification popup if available
         if (showPendingOpportunitiesPopup) {
           showPendingOpportunitiesPopup(data.pendingReminders.opportunities)
