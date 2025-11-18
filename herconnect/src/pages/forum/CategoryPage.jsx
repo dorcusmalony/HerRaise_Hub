@@ -172,11 +172,18 @@ export default function CategoryPage() {
         // Clear comment text immediately
         setCommentText(prev => ({ ...prev, [postId]: '' }))
         
-        // Add comment to local state immediately
+        // Add comment to local state immediately with proper structure
         if (result.comment) {
+          const newComment = {
+            ...result.comment,
+            author: result.comment.author || currentUser,
+            likes: result.comment.likes || [],
+            createdAt: result.comment.createdAt || new Date().toISOString()
+          }
+          
           setPosts(prev => prev.map(post => 
             post.id === postId 
-              ? { ...post, ForumComments: [...(post.ForumComments || []), result.comment] }
+              ? { ...post, ForumComments: [...(post.ForumComments || []), newComment] }
               : post
           ))
         }
@@ -220,11 +227,18 @@ export default function CategoryPage() {
       if (response.ok) {
         const result = await response.json()
         
-        // Add reply to local state immediately
+        // Add reply to local state immediately with proper structure
         if (result.comment) {
+          const newReply = {
+            ...result.comment,
+            author: result.comment.author || currentUser,
+            likes: result.comment.likes || [],
+            createdAt: result.comment.createdAt || new Date().toISOString()
+          }
+          
           setPosts(prev => prev.map(p => 
             p.id === post.id 
-              ? { ...p, ForumComments: [...(p.ForumComments || []), result.comment] }
+              ? { ...p, ForumComments: [...(p.ForumComments || []), newReply] }
               : p
           ))
         }
@@ -365,25 +379,36 @@ export default function CategoryPage() {
         <p className="text-muted">{category.description}</p>
       </div>
 
-      {/* Create Post Modal */}
+      {/* Create Post Form */}
       {showCreateModal && (
-        <CreatePostModal
-          category={categoryId}
-          onSubmit={async (postData) => {
-            try {
-              const result = await forumAPI.createPostInCategory(categoryId, postData)
-              if (result.success) {
-                setShowCreateModal(false)
-                setSuccessMessage('Post created successfully!')
-                setTimeout(() => setSuccessMessage(''), 3000)
-                fetchPosts()
+        <div className={styles.postFormContainer}>
+          <CreatePostForm
+            initialCategory={categoryId}
+            onSuccess={(post, message) => {
+              setShowCreateModal(false)
+              setSuccessMessage(message || 'Post created successfully!')
+              
+              // Add new post to local state immediately with proper structure
+              if (post) {
+                const newPost = {
+                  ...post,
+                  author: post.author || currentUser,
+                  ForumComments: post.ForumComments || [],
+                  likes: post.likes || [],
+                  views: post.views || 0,
+                  createdAt: post.createdAt || new Date().toISOString(),
+                  updatedAt: post.updatedAt || new Date().toISOString()
+                }
+                setPosts(prev => [newPost, ...prev])
               }
-            } catch (error) {
-              console.error('Error creating post:', error)
-            }
-          }}
-          onClose={() => setShowCreateModal(false)}
-        />
+              
+              // Also refresh to ensure consistency
+              setTimeout(() => fetchPosts(), 500)
+              setTimeout(() => setSuccessMessage(''), 3000)
+            }}
+            onCancel={() => setShowCreateModal(false)}
+          />
+        </div>
       )}
 
       {/* Edit Post Form */}
