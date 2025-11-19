@@ -14,7 +14,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #000000;
+  color: #FFFFFF;
   border-radius: 6px;
 }
 
@@ -70,7 +70,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   text-align: left;
-  color: #000000;
+  color: #FFFFFF;
 }
 
 .language-option:hover {
