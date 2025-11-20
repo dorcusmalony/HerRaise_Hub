@@ -2,28 +2,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import CreatePostForm from '../../components/Forum/CreatePostForm'
-import CreatePostModal from '../../components/Forum/CreatePostModal'
 import PostCard from '../../components/Forum/PostCard'
 import Pagination from '../../components/pagination/Pagination'
-import CommentItem from '../../components/Forum/CommentItem'
 import { FORUM_CATEGORIES } from '../../components/Forum/CategorySelector'
-import LikeButton from '../../components/LikeButton/LikeButton'
 import styles from './forum.module.css'
-
-const getAuthorColor = (name) => {
-  const colors = [
-    '#e74c3c', '#3498db', '#9b59b6', '#e67e22', 
-    '#1abc9c', '#f39c12', '#2ecc71', '#34495e',
-    '#e91e63', '#9c27b0', '#673ab7', '#3f51b5',
-    '#2196f3', '#00bcd4', '#009688', '#4caf50',
-    '#8bc34a', '#cddc39', '#ffc107', '#ff9800'
-  ]
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return colors[Math.abs(hash) % colors.length]
-}
 
 export default function CategoryPage() {
   const { categoryId } = useParams()
@@ -53,22 +35,14 @@ export default function CategoryPage() {
         setCurrentUser(user)
       } catch (e) {
         console.error('Failed to parse user data:', e)
-        setCurrentUser(null)
       }
-    } else {
-      setCurrentUser(null)
     }
   }, [])
 
   const fetchPosts = useCallback(async () => {
     const token = localStorage.getItem('token')
-    
-    if (!token) {
-      console.warn('No token found, user might need to login')
-      setLoading(false)
-      return
-    }
-    
+    if (!token) return
+
     try {
       const response = await fetch(`${API}/api/forum/posts?category=${categoryId}&page=${page}&sort=${sort}&limit=20`, {
         headers: {
@@ -79,16 +53,12 @@ export default function CategoryPage() {
       
       if (response.ok) {
         const data = await response.json()
-        const posts = data.posts || data.data?.posts || data || []
-        setPosts(Array.isArray(posts) ? posts : [])
+        const postsData = data.posts || data.data?.posts || []
+        setPosts(Array.isArray(postsData) ? postsData : [])
         setTotalPages(data.pagination?.totalPages || 1)
-      } else {
-        console.error('Failed to fetch posts:', response.status)
-        setPosts([])
       }
     } catch (error) {
       console.error('Error fetching posts:', error)
-      setPosts([])
     } finally {
       setLoading(false)
     }
@@ -100,16 +70,10 @@ export default function CategoryPage() {
     } else {
       navigate('/forum')
     }
-  }, [fetchPosts, categoryId, category, navigate, page, sort])
-
-  const handleUpdatePost = (updatedPost) => {
-    setPosts(prev => prev.map(p => p.id === updatedPost.id ? updatedPost : p))
-    setEditingPost(null)
-  }
+  }, [categoryId, category, page, sort])
 
   const handleDeletePost = async (postId) => {
-    if (!window.confirm('Are you sure you want to delete this post?')) return
-
+    if (!window.confirm('Delete this post?')) return
     const token = localStorage.getItem('token')
     
     try {
@@ -124,14 +88,6 @@ export default function CategoryPage() {
     } catch (error) {
       console.error('Error deleting post:', error)
     }
-  }
-
-  const handlePostLike = (postId, likeData) => {
-    setPosts(prev => prev.map(post => 
-      post.id === postId 
-        ? { ...post, ...likeData }
-        : post
-    ))
   }
 
   if (loading) {
@@ -164,10 +120,7 @@ export default function CategoryPage() {
       )}
 
       <div className={styles.categoryHeader}>
-        <button 
-          onClick={() => navigate('/forum')}
-          className={styles.backBtn}
-        >
+        <button onClick={() => navigate('/forum')} className={styles.backBtn}>
           ← All Categories
         </button>
         <h2 className={styles.categoryTitle}>
@@ -179,10 +132,7 @@ export default function CategoryPage() {
             <option value="popular">Most Popular</option>
             <option value="most-liked">Most Liked</option>
           </select>
-          <button 
-            onClick={() => setShowCreateModal(true)}
-            className={styles.createPostBtn}
-          >
+          <button onClick={() => setShowCreateModal(true)} className={styles.createPostBtn}>
             + New Post
           </button>
         </div>
@@ -197,24 +147,11 @@ export default function CategoryPage() {
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <CreatePostForm
               initialCategory={categoryId}
-              onSuccess={(post, message) => {
+              onSuccess={() => {
                 setShowCreateModal(false)
-                setSuccessMessage(message || 'Post created successfully!')
-                
-                if (post) {
-                  const newPost = {
-                    ...post,
-                    author: post.author || currentUser,
-                    ForumComments: post.ForumComments || [],
-                    likes: post.likes || [],
-                    views: post.views || 0,
-                    createdAt: post.createdAt || new Date().toISOString(),
-                    updatedAt: post.updatedAt || new Date().toISOString()
-                  }
-                  setPosts(prev => [newPost, ...prev])
-                }
-                
+                setSuccessMessage('Post created successfully!')
                 setTimeout(() => setSuccessMessage(''), 3000)
+                setTimeout(() => fetchPosts(), 500)
               }}
               onCancel={() => setShowCreateModal(false)}
             />
@@ -228,10 +165,11 @@ export default function CategoryPage() {
             <CreatePostForm
               editPost={editingPost}
               initialCategory={categoryId}
-              onSuccess={(post) => {
-                handleUpdatePost(post)
+              onSuccess={() => {
+                setEditingPost(null)
                 setSuccessMessage('Post updated successfully!')
                 setTimeout(() => setSuccessMessage(''), 3000)
+                setTimeout(() => fetchPosts(), 500)
               }}
               onCancel={() => setEditingPost(null)}
             />
@@ -244,10 +182,7 @@ export default function CategoryPage() {
           <div className="text-center py-5">
             <h4>No posts yet in this category</h4>
             <p className="text-muted">Be the first to start a discussion!</p>
-            <button 
-              onClick={() => setShowCreateModal(true)}
-              className={styles.createPostBtn}
-            >
+            <button onClick={() => setShowCreateModal(true)} className={styles.createPostBtn}>
               Create First Post
             </button>
           </div>
@@ -258,7 +193,7 @@ export default function CategoryPage() {
                 <PostCard
                   key={post.id}
                   post={post}
-                  onUpdate={handlePostLike}
+                  onUpdate={() => fetchPosts()}
                   currentUser={currentUser}
                   onEdit={setEditingPost}
                   onDelete={handleDeletePost}
@@ -274,7 +209,6 @@ export default function CategoryPage() {
           </>
         )
       )}
-
     </div>
   )
 }

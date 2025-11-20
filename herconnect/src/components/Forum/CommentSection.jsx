@@ -28,7 +28,6 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
       if (response.ok) {
         const data = await response.json()
         
-        // Add comment immediately to local state
         if (data.comment) {
           const newCommentObj = {
             ...data.comment,
@@ -43,7 +42,6 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
         setReplyTo(null)
         setShowCommentForm(false)
         
-        // Create notification for comment or reply
         if (replyTo) {
           const parentComment = localComments.find(c => c.id === replyTo)
           if (parentComment && currentUser?.id !== parentComment.author?.id) {
@@ -74,7 +72,6 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
       if (response.ok) {
         const data = await response.json()
         
-        // Update local state immediately
         setLocalComments(localComments.map(c => 
           c.id === commentId 
             ? { ...c, likes: data.likes || c.likes }
@@ -171,7 +168,6 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
               </button>
             </div>
             
-            {/* Replies */}
             {localComments.filter(c => c.parentCommentId === comment.id).map(reply => (
               <div key={reply.id} className={styles.reply}>
                 <div className={styles.commentHeader}>
