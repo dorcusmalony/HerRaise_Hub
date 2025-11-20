@@ -6,13 +6,15 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
   const [newComment, setNewComment] = useState('')
   const [replyTo, setReplyTo] = useState(null)
   const [showCommentForm, setShowCommentForm] = useState(false)
+  const [localComments, setLocalComments] = useState(comments)
+  const API = import.meta.env.VITE_API_URL || ''
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!newComment.trim()) return
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/forum/posts/${postId}/comments`, {
+      const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -25,19 +27,29 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
       })
       if (response.ok) {
         const data = await response.json()
+        
+        // Add comment immediately to local state
+        if (data.comment) {
+          const newCommentObj = {
+            ...data.comment,
+            author: data.comment.author || currentUser,
+            likes: data.comment.likes || [],
+            createdAt: data.comment.createdAt || new Date().toISOString()
+          }
+          setLocalComments([...localComments, newCommentObj])
+        }
+        
         setNewComment('')
         setReplyTo(null)
         setShowCommentForm(false)
         
         // Create notification for comment or reply
         if (replyTo) {
-          // Find the parent comment author
-          const parentComment = comments.find(c => c.id === replyTo)
+          const parentComment = localComments.find(c => c.id === replyTo)
           if (parentComment && currentUser?.id !== parentComment.author?.id) {
             notificationAPI.createReplyNotification(replyTo, parentComment.author?.id, data.comment?.id)
           }
         } else {
-          // Regular comment - notify post author
           if (currentUser?.id !== postAuthorId) {
             notificationAPI.createCommentNotification(postId, postAuthorId, data.comment?.id)
           }
@@ -52,7 +64,7 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
 
   const handleLikeComment = async (commentId) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/forum/comments/${commentId}/like`, {
+      const response = await fetch(`${API}/api/forum/comments/${commentId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -62,8 +74,14 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
       if (response.ok) {
         const data = await response.json()
         
-        // Create notification for comment like (not own comment)
-        const comment = comments.find(c => c.id === commentId)
+        // Update local state immediately
+        setLocalComments(localComments.map(c => 
+          c.id === commentId 
+            ? { ...c, likes: data.likes || c.likes }
+            : c
+        ))
+        
+        const comment = localComments.find(c => c.id === commentId)
         if (comment && currentUser?.id !== comment.author?.id && data.liked) {
           notificationAPI.createCommentLikeNotification(commentId, comment.author?.id)
         }
@@ -121,7 +139,7 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
       )}
 
       <div className={styles.commentsList}>
-        {comments.filter(c => !c.parentCommentId).map(comment => (
+        {localComments.filter(c => !c.parentCommentId).map(comment => (
           <div key={comment.id} className={styles.comment}>
             <div className={styles.commentHeader}>
               <img 
@@ -154,7 +172,7 @@ export default function CommentSection({ postId, comments, onUpdate, currentUser
             </div>
             
             {/* Replies */}
-            {comments.filter(c => c.parentCommentId === comment.id).map(reply => (
+            {localComments.filter(c => c.parentCommentId === comment.id).map(reply => (
               <div key={reply.id} className={styles.reply}>
                 <div className={styles.commentHeader}>
                   <img 
