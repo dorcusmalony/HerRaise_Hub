@@ -5,7 +5,7 @@ import { FORUM_CATEGORIES } from './CategorySelector'
 import forumAPI from '../../services/forumAPI'
 import styles from './CreatePostForm.module.css'
 
-export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'project', initialCategory = '', initialSubcategory = '', isShareZone = false }) {
+export default function CreatePostForm({ onSuccess, onCancel, editPost = null, initialType = 'discussion', initialCategory = '', initialSubcategory = '', isShareZone = false }) {
   const navigate = useNavigate()
   const { t } = useLanguage()
   const API_URL = import.meta.env.VITE_API_URL || ''
@@ -49,11 +49,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         content: formData.content,
         type: formData.type || 'discussion',
         category: formData.category || initialCategory,
-        subcategory: formData.subcategory || initialSubcategory,
-        publishedFrom: (formData.category || initialCategory) ? FORUM_CATEGORIES[formData.category || initialCategory]?.name : null,
-        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-        attachments: formData.attachments
-
+        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
       }
       
       console.log('📤 Final post data:', postData)
@@ -122,6 +118,20 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         )}
 
 
+
+        {/* Post Type Selection */}
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} style={{color: 'white'}}>{t('Post Type *')}</label>
+          <select
+            value={formData.type}
+            onChange={(e) => setFormData({...formData, type: e.target.value})}
+            className={styles.formSelect}
+          >
+            <option value="discussion">💬 Discussion</option>
+            <option value="question">❓ Question</option>
+            <option value="announcement">📢 Announcement</option>
+          </select>
+        </div>
 
         {/* Category Selection - Hidden when pre-selected */}
         {!initialCategory && (

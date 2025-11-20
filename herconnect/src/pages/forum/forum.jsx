@@ -30,8 +30,8 @@ export default function Forum() {
   const API = import.meta.env.VITE_API_URL || ''
   
   // Debug: Check API URL on Vercel
-  console.log('🔗 Forum API URL:', API)
-  console.log('🌍 Environment:', import.meta.env.MODE)
+  console.log(' Forum API URL:', API)
+  console.log(' Environment:', import.meta.env.MODE)
   
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -54,55 +54,55 @@ export default function Forum() {
     const userData = localStorage.getItem('user')
     const token = localStorage.getItem('token')
     
-    console.log('🔍 Auth Debug - Token exists:', !!token)
-    console.log('🔍 Auth Debug - User data exists:', !!userData)
+    console.log(' Auth Debug - Token exists:', !!token)
+    console.log(' Auth Debug - User data exists:', !!userData)
     
     if (userData && token) {
       try {
         const user = JSON.parse(userData)
         setCurrentUser(user)
-        console.log('👤 Current user loaded:', user)
+        console.log(' Current user loaded:', user)
         
         // Validate token is not expired
         try {
           const tokenPayload = JSON.parse(atob(token.split('.')[1]))
           const isExpired = tokenPayload.exp * 1000 < Date.now()
-          console.log('🔍 Token expired:', isExpired)
+          console.log(' Token expired:', isExpired)
           
           if (isExpired) {
-            console.warn('⚠️ Token expired, clearing auth data')
+            console.warn(' Token expired, clearing auth data')
             localStorage.removeItem('token')
             localStorage.removeItem('user')
             setCurrentUser(null)
           }
         } catch (tokenError) {
-          console.warn('⚠️ Invalid token format:', tokenError)
+          console.warn(' Invalid token format:', tokenError)
         }
       } catch (parseError) {
-        console.error('❌ Failed to parse user data:', parseError)
+        console.error(' Failed to parse user data:', parseError)
         localStorage.removeItem('user')
         setCurrentUser(null)
       }
     } else {
-      console.log('⚠️ Missing auth data - Token:', !!token, 'User:', !!userData)
+      console.log(' Missing auth data - Token:', !!token, 'User:', !!userData)
       setCurrentUser(null)
     }
     
     // Debug: Log environment variables
-    console.log('🔧 All env vars:', import.meta.env)
+    console.log(' All env vars:', import.meta.env)
   }, [])
 
   const fetchPosts = useCallback(async () => {
     const token = localStorage.getItem('token')
     
     if (!token) {
-      console.warn('⚠️ No token found, user might need to login')
+      console.warn(' No token found, user might need to login')
       setLoading(false)
       return
     }
     
     try {
-      console.log('📡 Fetching posts with token:', token.substring(0, 20) + '...')
+      console.log(' Fetching posts with token:', token.substring(0, 20) + '...')
       
       const params = {
         filter,
@@ -114,16 +114,16 @@ export default function Forum() {
       }
       
       const data = await forumAPI.getPosts(params)
-      console.log('📊 Raw API response:', data)
+      console.log(' Raw API response:', data)
       
       const posts = data.posts || data.data?.posts || data || []
-      console.log('📊 Posts array:', posts)
+      console.log(' Posts array:', posts)
       setPosts(Array.isArray(posts) ? posts : [])
-      console.log('✅ Posts loaded successfully:', Array.isArray(posts) ? posts.length : 0)
+      console.log(' Posts loaded successfully:', Array.isArray(posts) ? posts.length : 0)
     } catch (error) {
-      console.error('❌ Error fetching posts:', error)
+      console.error(' Error fetching posts:', error)
       if (error.message?.includes('401')) {
-        console.warn('⚠️ Unauthorized - token might be invalid')
+        console.warn(' Unauthorized - token might be invalid')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         setCurrentUser(null)
@@ -187,7 +187,7 @@ export default function Forum() {
     if (!text?.trim()) return
 
     if (pendingRequests.has(`comment-${postId}`)) {
-      console.log('🔄 Comment request already pending for post:', postId)
+      console.log(' Comment request already pending for post:', postId)
       return
     }
 
@@ -232,14 +232,14 @@ export default function Forum() {
         setSuccessMessage(result.message || t('Comment posted successfully!'))
         setTimeout(() => setSuccessMessage(''), 3000)
       } else if (response.status === 409) {
-        console.log('⚠️ Duplicate comment request detected, ignoring')
+        console.log(' Duplicate comment request detected, ignoring')
       } else {
         const errorData = await response.json().catch(() => ({ message: 'Unknown error' }))
-        console.error('❌ Comment failed:', response.status, errorData)
+        console.error(' Comment failed:', response.status, errorData)
         alert(errorData.message || 'Failed to post comment')
       }
     } catch (error) {
-      console.error('❌ Comment error:', error)
+      console.error(' Comment error:', error)
       alert('Network error posting comment')
     } finally {
       setPendingRequests(prev => {
@@ -254,21 +254,21 @@ export default function Forum() {
     const token = localStorage.getItem('token')
     const post = posts.find(p => p.ForumComments?.some(c => c.id === parentCommentId))
     
-    console.log('🔄 Reply Debug:', { parentCommentId, replyText, post: post?.id })
+    console.log(' Reply Debug:', { parentCommentId, replyText, post: post?.id })
     
     if (!post) {
-      console.error('❌ Post not found for parent comment:', parentCommentId)
+      console.error('  comment not posted:', parentCommentId)
       return
     }
 
     if (!token) {
-      console.error('❌ No token found')
+      console.error(' No token found')
       alert('Please login to reply')
       return
     }
 
     try {
-      console.log('📤 Sending reply to:', `${API}/api/forum/posts/${post.id}/comments`)
+      console.log(' Sending reply to:', `${API}/api/forum/posts/${post.id}/comments`)
       
       const response = await fetch(`${API}/api/forum/posts/${post.id}/comments`, {
         method: 'POST',
@@ -282,11 +282,11 @@ export default function Forum() {
         })
       })
 
-      console.log('📥 Reply response:', response.status, response.statusText)
+      console.log(' Reply response:', response.status, response.statusText)
 
       if (response.ok) {
         const result = await response.json()
-        console.log('✅ Reply posted:', result)
+        console.log(' Reply posted:', result)
         
         // Add reply to local state immediately with proper structure
         if (result.comment) {
@@ -311,18 +311,18 @@ export default function Forum() {
         setTimeout(() => fetchPosts(), 500)
       } else {
         const errorText = await response.text()
-        console.error('❌ Reply failed:', response.status, errorText)
+        console.error(' Reply failed:', response.status, errorText)
         alert(`Failed to post reply: ${response.status}`)
       }
     } catch (error) {
-      console.error('❌ Reply error:', error)
+      console.error(' Reply error:', error)
       alert('Network error posting reply')
     }
   }
 
   const handleUpdateComment = async (commentId, newContent) => {
     const token = localStorage.getItem('token')
-    console.log('🔧 Updating comment:', { commentId, API, newContent })
+    console.log(' Updating comment:', { commentId, API, newContent })
     
     try {
       const response = await fetch(`${API}/api/forum/comments/${commentId}`, {
@@ -334,7 +334,7 @@ export default function Forum() {
         body: JSON.stringify({ content: newContent })
       })
 
-      console.log('📝 Update response:', response.status, response.statusText)
+      console.log(' Update response:', response.status, response.statusText)
       
       if (response.ok) {
         fetchPosts()
@@ -342,7 +342,7 @@ export default function Forum() {
       }
       
       const errorData = await response.text()
-      console.error('❌ Update failed:', errorData)
+      console.error(' Update failed:', errorData)
       return false
     } catch (error) {
       console.error('Error updating comment:', error)
@@ -379,7 +379,7 @@ export default function Forum() {
         fetchPosts()
       } else {
         const errorData = await response.text()
-        console.error('❌ Delete failed:', errorData)
+        console.error(' Delete failed:', errorData)
         alert(t('Failed to delete comment. Please try again.'))
       }
     } catch (error) {
@@ -390,10 +390,10 @@ export default function Forum() {
 
   const getPostTypeIcon = (type) => {
     const icons = {
-      question: '❓',
-      discussion: '🗣️'
+      question: '',
+      discussion: ''
     }
-    return icons[type] || '💬'
+    return icons[type] || ''
   }
 
   if (loading) {
@@ -546,15 +546,15 @@ export default function Forum() {
                       updatedAt: post.updatedAt || new Date().toISOString()
                     }
                     
-                    console.log('🆕 Processed new post:', newPost)
+                    console.log('Processed new post:', newPost)
                     setPosts(prev => {
-                      console.log('📝 Previous posts count:', prev.length)
+                      console.log(' Previous posts count:', prev.length)
                       const updated = [newPost, ...prev]
-                      console.log('📝 Updated posts count:', updated.length)
+                      console.log(' Updated posts count:', updated.length)
                       return updated
                     })
                   } else {
-                    console.warn('⚠️ No post data received from API')
+                    console.warn(' No post data received from API')
                   }
                   
                   // Also refresh to ensure consistency
@@ -679,7 +679,7 @@ export default function Forum() {
                         className={styles.mediaGallery}
                         onClick={(e) => {
                           e.stopPropagation()
-                          console.log('🎬 Media gallery clicked, preventing bubbling')
+                          console.log(' Media gallery clicked, preventing bubbling')
                         }}
                       >
                         {post.attachments.map((file, index) => {
@@ -708,7 +708,7 @@ export default function Forum() {
                               className={styles.mediaItem}
                               onClick={(e) => {
                                 e.stopPropagation()
-                                console.log('🎬 Media item clicked, preventing redirect')
+                                console.log(' Media item clicked, preventing redirect')
                               }}
                             >
                               {fileType === 'image' && (
@@ -771,32 +771,32 @@ export default function Forum() {
                                     onClick={(e) => {
                                       e.stopPropagation()
                                       e.preventDefault()
-                                      console.log('🎥 Video clicked, preventing redirect for:', fileName)
+                                      console.log(' Video clicked, preventing redirect for:', fileName)
                                       // Force focus on video element
                                       e.target.focus()
                                     }}
                                     onPlay={(e) => {
                                       e.stopPropagation()
-                                      console.log('🎥 Video started playing')
+                                      console.log(' Video started playing')
                                     }}
                                     onPause={(e) => {
                                       e.stopPropagation()
-                                      console.log('🎥 Video paused')
+                                      console.log(' Video paused')
                                     }}
                                     onLoadStart={(e) => {
                                       e.stopPropagation()
-                                      console.log('🎥 Video loading started')
+                                      console.log(' Video loading started')
                                     }}
                                     onError={(e) => {
                                       e.stopPropagation()
-                                      console.error('🎥 Video error:', e.target.error)
-                                      console.error('🎥 Video URL:', fileUrl)
+                                      console.error(' Video error:', e.target.error)
+                                      console.error(' Video URL:', fileUrl)
                                     }}
                                     onLoadedData={(_e) => {
-                                      console.log('🎥 Video loaded successfully:', fileName)
+                                      console.log(' Video loaded successfully:', fileName)
                                     }}
                                     onCanPlay={(_e) => {
-                                      console.log('🎥 Video ready to play:', fileName)
+                                      console.log(' Video ready to play:', fileName)
                                     }}
                                   />
                                   <div 
