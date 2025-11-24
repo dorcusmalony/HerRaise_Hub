@@ -3,6 +3,7 @@ import { useLanguage } from '../../hooks/useLanguage'
 import CommentItem from '../../components/Forum/CommentItem'
 import ShareZoneTable from '../../components/ShareZone/ShareZoneTable'
 import CommentsModal from '../../components/ShareZone/CommentsModal'
+import ExternalLinkInput from '../../components/ShareZone/ExternalLinkInput'
 import './sharezone.css'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
@@ -16,9 +17,10 @@ export default function Content() {
     title: '',
     content: '',
     category: 'projects',
-    externalLink: ''
+    externalLink: '',
+    externalLinks: []
   })
-  const [shareType, setShareType] = useState('file') // 'file' or 'link'
+  const [shareType, setShareType] = useState('file')
   const [selectedFile, setSelectedFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState('')
@@ -28,7 +30,6 @@ export default function Content() {
   const [showForm, setShowForm] = useState(false)
   const [editingPostId, setEditingPostId] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
-
 
   const contentTypes = [
     { value: 'project', label: 'Project', icon: '' },
@@ -49,7 +50,21 @@ export default function Content() {
       
       if (response.ok) {
         const data = await response.json()
-        setContents(data.posts || [])
+        const posts = (data.posts || []).map(post => {
+          let externalLinks = []
+          
+          if (post.externalLinks && Array.isArray(post.externalLinks) && post.externalLinks.length > 0) {
+            externalLinks = post.externalLinks.filter(link => link && link.url)
+          } else if (post.externalLink && typeof post.externalLink === 'string') {
+            externalLinks = [{ url: post.externalLink, name: 'View Link', type: 'external' }]
+          }
+          
+          return {
+            ...post,
+            externalLinks
+          }
+        })
+        setContents(posts)
       }
     } catch (error) {
       console.error('Error fetching contents:', error)
@@ -66,7 +81,6 @@ export default function Content() {
     }
   }, [])
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (showForm) {
       document.body.classList.add('modal-open')
@@ -74,7 +88,6 @@ export default function Content() {
       document.body.classList.remove('modal-open')
     }
     
-    // Cleanup on unmount
     return () => {
       document.body.classList.remove('modal-open')
     }
@@ -88,7 +101,7 @@ export default function Content() {
   }
 
   const validateFile = (file) => {
-    const maxSize = 100 * 1024 * 1024 // 100MB
+    const maxSize = 100 * 1024 * 1024
     if (file.size > maxSize) {
       setError(t('File too large. Maximum size is 100MB'))
       return false
@@ -105,7 +118,6 @@ export default function Content() {
     setError('')
     setSelectedFile(file)
 
-    // Show preview for images
     if (file.type.startsWith('image/')) {
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -130,6 +142,11 @@ export default function Content() {
       return
     }
 
+    if (shareType === 'links' && formData.externalLinks.length === 0) {
+      setError(t('Please add at least one external link'))
+      return
+    }
+
     if (shareType === 'file' && !selectedFile && !isEditing) {
       setError(t('Please select a file to upload'))
       return
@@ -141,20 +158,27 @@ export default function Content() {
     try {
       const token = localStorage.getItem('token')
       
-      if (shareType === 'link') {
-        // Send JSON for external links
+      if (shareType === 'link' || shareType === 'links') {
+        const payload = {
+          title: formData.title,
+          content: formData.content,
+          category: formData.category
+        }
+        
+        if (shareType === 'link') {
+          payload.externalLink = formData.externalLink
+        } else {
+          payload.externalLinks = formData.externalLinks
+          payload.linkType = 'external'
+        }
+        
         const response = await fetch(isEditing ? `${API_URL}/api/sharezone/${editingPostId}` : `${API_URL}/api/sharezone`, {
           method: isEditing ? 'PUT' : 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            title: formData.title,
-            content: formData.content,
-            category: formData.category,
-            externalLink: formData.externalLink
-          })
+          body: JSON.stringify(payload)
         })
         
         if (response.ok) {
@@ -168,8 +192,7 @@ export default function Content() {
             setContents(prev => [updatedPost, ...prev])
           }
           
-          // Reset form
-          setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
+          setFormData({ title: '', content: '', category: 'projects', externalLink: '', externalLinks: [] })
           setShareType('file')
           setShowForm(false)
           setIsEditing(false)
@@ -179,7 +202,6 @@ export default function Content() {
           setError(errorData.error || errorData.message || (isEditing ? t('Update failed') : t('Upload failed')))
         }
       } else {
-        // Send FormData for file uploads
         const submitData = new FormData()
         
         submitData.append('title', formData.title)
@@ -212,8 +234,7 @@ export default function Content() {
             setContents(prev => [updatedPost, ...prev])
           }
           
-          // Reset form
-          setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
+          setFormData({ title: '', content: '', category: 'projects', externalLink: '', externalLinks: [] })
           setSelectedFile(null)
           setPreview(null)
           setShareType('file')
@@ -221,7 +242,6 @@ export default function Content() {
           setIsEditing(false)
           setEditingPostId(null)
           
-          // Reset file input
           const fileInput = document.querySelector('input[type="file"]')
           if (fileInput) fileInput.value = ''
         } else {
@@ -372,18 +392,19 @@ export default function Content() {
         title: content.title,
         content: content.content || '',
         category: content.category,
-        externalLink: content.externalLink || ''
+        externalLink: content.externalLink || '',
+        externalLinks: content.externalLinks || []
       })
       setEditingPostId(postId)
       setIsEditing(true)
       setShowForm(true)
       
-      // Set share type based on existing content
-      if (content.externalLink) {
+      if (content.externalLinks && content.externalLinks.length > 0) {
+        setShareType('links')
+      } else if (content.externalLink) {
         setShareType('link')
       } else {
         setShareType('file')
-        // Show existing file info if available
         if (content.fileUrl) {
           setPreview(content.fileUrl.includes('image') ? content.fileUrl : null)
         }
@@ -393,7 +414,6 @@ export default function Content() {
 
   return (
     <div className="content-page">
-      {/* ShareZone Banner */}
       <div className="content-banner">
         <div className="banner-content">
           <div className="header-text">
@@ -464,7 +484,6 @@ export default function Content() {
           />
         )}
 
-        {/* Comments Modal */}
         {Object.keys(expandedComments).some(key => expandedComments[key]) && (
           <CommentsModal
             content={contents.find(c => expandedComments[c._id])}
@@ -481,13 +500,12 @@ export default function Content() {
         )}
       </div>
 
-      {/* Share Form Modal */}
       {showForm && (
         <div className="modal-overlay" onClick={() => {
           setShowForm(false)
           setIsEditing(false)
           setEditingPostId(null)
-          setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
+          setFormData({ title: '', content: '', category: 'projects', externalLink: '', externalLinks: [] })
           setSelectedFile(null)
           setPreview(null)
           setShareType('file')
@@ -502,7 +520,7 @@ export default function Content() {
                   setShowForm(false)
                   setIsEditing(false)
                   setEditingPostId(null)
-                  setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
+                  setFormData({ title: '', content: '', category: 'projects', externalLink: '', externalLinks: [] })
                   setSelectedFile(null)
                   setPreview(null)
                   setShareType('file')
@@ -580,7 +598,20 @@ export default function Content() {
                         onChange={() => setShareType('link')}
                       />
                       <label className="form-check-label" htmlFor="shareLink">
-                        {t('External Link')}
+                        {t('Single Link')}
+                      </label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="shareType"
+                        id="shareLinks"
+                        checked={shareType === 'links'}
+                        onChange={() => setShareType('links')}
+                      />
+                      <label className="form-check-label" htmlFor="shareLinks">
+                        {t('Multiple Links')}
                       </label>
                     </div>
                   </div>
@@ -599,6 +630,14 @@ export default function Content() {
                       required={shareType === 'link'}
                     />
                     <small className="text-muted">{t('Share links from Google Docs, Drive, OneDrive, Dropbox, etc.')}</small>
+                  </div>
+                ) : shareType === 'links' ? (
+                  <div className="mb-3">
+                    <label className="form-label">{t('External Links *')}</label>
+                    <ExternalLinkInput 
+                      onLinksChange={(links) => setFormData({...formData, externalLinks: links})}
+                      initialLinks={formData.externalLinks}
+                    />
                   </div>
                 ) : (
                   <div className="mb-3">
@@ -647,7 +686,7 @@ export default function Content() {
                       setShowForm(false)
                       setIsEditing(false)
                       setEditingPostId(null)
-                      setFormData({ title: '', content: '', category: 'projects', externalLink: '' })
+                      setFormData({ title: '', content: '', category: 'projects', externalLink: '', externalLinks: [] })
                       setSelectedFile(null)
                       setPreview(null)
                       setShareType('file')

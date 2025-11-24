@@ -47,7 +47,7 @@ export default function RegistrationSuccess({ userEmail }) {
         <div className={styles.emailReminder}>
           <p><strong>Didn't receive the verification email?</strong></p>
           <ul>
-            <li> Check your <strong>spam/junk folder</strong></li>
+            <li> Check your <strong>spam</strong></li>
             <li> Wait a few minutes - emails can take time to arrive</li>
             <li> Make sure you entered the correct email address</li>
             <li> Try registering again if the email is wrong</li>

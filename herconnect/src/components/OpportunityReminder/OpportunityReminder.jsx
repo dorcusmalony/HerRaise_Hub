@@ -38,7 +38,7 @@ export default function OpportunityReminder({ reminders, onClose }) {
     <div className={styles.overlay}>
       <div className={styles.popup}>
         <div className={styles.header}>
-          <h3>⏰ Deadline Reminders</h3>
+          <h3> Deadline Reminders</h3>
           <button onClick={onClose} className={styles.closeBtn}>×</button>
         </div>
         
@@ -54,7 +54,7 @@ export default function OpportunityReminder({ reminders, onClose }) {
                   <h4>{opp.title}</h4>
                   <p>{opp.organization} • {opp.type}</p>
                   <div className={styles.deadline}>
-                    {opp.isUrgent ? '🚨' : '⏰'} {opp.daysRemaining} days remaining
+                    {opp.isUrgent ? '' : ''} {opp.daysRemaining} days remaining
                   </div>
                 </div>
                 

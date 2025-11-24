@@ -228,5 +228,6 @@
   
   .description {
     -webkit-line-clamp: 4;
+    line-clamp: 4;
   }
 }
