@@ -16,7 +16,6 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
     type: editPost?.type || initialType,
     category: editPost?.category || initialCategory,
     subcategory: editPost?.subcategory || initialSubcategory,
-    tags: editPost?.tags?.join(', ') || '',
     attachments: editPost?.attachments || []
   })
 
@@ -48,8 +47,7 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
         title: formData.title,
         content: formData.content,
         type: formData.type || 'discussion',
-        category: formData.category || initialCategory,
-        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+        category: formData.category || initialCategory
       }
       
       console.log('📤 Final post data:', postData)
@@ -213,23 +211,6 @@ export default function CreatePostForm({ onSuccess, onCancel, editPost = null, i
             {formData.content.length} {t('characters')}
           </div>
         </div>
-
-        {/* Tags */}
-        <div className={styles.formGroup}>
-          <label className={styles.formLabel} style={{color: 'white'}}>{t('Tags (comma separated)')}</label>
-          <input
-            type="text"
-            value={formData.tags}
-            onChange={(e) => setFormData({...formData, tags: e.target.value})}
-            placeholder={t('e.g., technology, education, leadership')}
-            className={styles.formInput}
-          />
-          <div className={styles.formHint} style={{color: 'white'}}>
-            {t('Add relevant tags to help others find your post')}
-          </div>
-        </div>
-
-
 
         {/* Buttons */}
         <div className={styles.formActions}>

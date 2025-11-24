@@ -54,7 +54,7 @@ export default function UrgentOpportunities() {
   return (
     <div className="urgent-section">
       <div className="urgent-header">
-        <h3 className="urgent-title">🔥 Urgent Deadlines</h3>
+        <h3 className="urgent-title"> Urgent Deadlines</h3>
         <span className="urgent-count">{urgent.length} expiring soon</span>
       </div>
       

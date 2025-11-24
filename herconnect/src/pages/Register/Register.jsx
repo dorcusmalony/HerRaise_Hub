@@ -3,6 +3,7 @@
 import { useTranslation } from 'react-i18next'
 import ImageUpload from '../../components/ImageUpload/ImageUpload.jsx'
 import RegistrationSuccess from '../../components/RegistrationSuccess/RegistrationSuccess.jsx'
+import ParentalConsent from '../../components/ParentalConsent.jsx'
 import '../../styles/BootstrapVars.module.css'
 import styles from './Register.module.css'
 
@@ -31,6 +32,9 @@ export default function Register(){
 	const [showSuccess, setShowSuccess] = useState(false)
 	const [userEmail, setUserEmail] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
+	const [showParentalConsent, setShowParentalConsent] = useState(false)
+	const [parentalConsentGiven, setParentalConsentGiven] = useState(false)
+	const [guardianName, setGuardianName] = useState('')
 
 	const handleChange = (e) => {
 		const { name, value } = e.target
@@ -46,6 +50,18 @@ export default function Register(){
 	}
 
 
+
+	const calculateAge = (dob) => {
+		if (!dob) return 0
+		const today = new Date()
+		const birthDate = new Date(dob)
+		let age = today.getFullYear() - birthDate.getFullYear()
+		const monthDiff = today.getMonth() - birthDate.getMonth()
+		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+			age--
+		}
+		return age
+	}
 
 	const validateEmail = (email) => {
 		// Remove mailto: prefix if present
@@ -102,12 +118,26 @@ export default function Register(){
 			dateOfBirth: form.dateOfBirth || '',
 			interests: form.interests ? form.interests.split(',').map(s => s.trim()).filter(Boolean) : [],
 			educationLevel: form.educationLevel || '',
-			profilePicture: form.profilePicture || '' // Include profile picture
+			profilePicture: form.profilePicture || '',
+			guardianName: guardianName || ''
 		}
+	}
+
+	const handleParentalConsent = (guardian) => {
+		setGuardianName(guardian || '')
+		setParentalConsentGiven(true)
+		setShowParentalConsent(false)
 	}
 
 	const submitToServer = async (role) => {
 		if (!validate(role)) return
+		
+		const age = calculateAge(form.dateOfBirth)
+		if (age < 18 && !parentalConsentGiven) {
+			setShowParentalConsent(true)
+			return
+		}
+		
 		const payload = buildPayload(role)
 		const API = import.meta.env.VITE_API_URL || ''
 		
@@ -189,6 +219,16 @@ export default function Register(){
 		return <RegistrationSuccess userEmail={userEmail} />
 	}
 
+	if (showParentalConsent) {
+		return (
+			<ParentalConsent
+				dateOfBirth={form.dateOfBirth}
+				onConsent={handleParentalConsent}
+				onCancel={() => setShowParentalConsent(false)}
+			/>
+		)
+	}
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.card}>
@@ -267,6 +307,17 @@ export default function Register(){
 
 
 
+
+				<div className="mb-2">
+					<label className="form-label">{t('Date of Birth')}</label>
+					<input 
+						type="date" 
+						name="dateOfBirth" 
+						value={form.dateOfBirth} 
+						onChange={handleChange} 
+						className="form-control"
+					/>
+				</div>
 
 				<div className="mb-3">
 					<label className="form-label">{t('Education level')}</label>

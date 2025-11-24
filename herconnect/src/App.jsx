@@ -17,6 +17,7 @@ import Dashboard from './pages/dashboard/dashboard.jsx'
 import Opportunities from './pages/Opportunities/Opportunities.jsx'
 import Content from './pages/Sharezone/sharezone.jsx'
 import SafetyReport from './pages/SafetyReport/SafetyReport'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 import SafetyButton from './components/SafetyButton/SafetyButton'
 import { LanguageProvider } from './contexts/LanguageContext'
 import { NotificationProvider } from './contexts/NotificationContext'
@@ -33,6 +34,10 @@ import './styles/notifications.css'
 import NotificationToast from './components/NotificationToast/NotificationToast'
 import PushNotificationSetup from './components/PushNotificationSetup/PushNotificationSetup'
 import DeadlineReminder from './components/DeadlineReminder/DeadlineReminder'
+import ApplicationReminderPopup from './components/ApplicationReminderPopup'
+import ParentalConsentBanner from './components/ParentalConsentBanner'
+import PrivacyPolicyModal from './components/PrivacyPolicyModal'
+import { useLoginReminders } from './hooks/useLoginReminders'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -41,6 +46,8 @@ import { useState } from 'react'
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null)
   const [pendingReminders, setPendingReminders] = useState(null)
+  const [showConsentBanner, setShowConsentBanner] = useState(false)
+  const { notifications, dismissNotification } = useLoginReminders()
   
   // Load current user and check for pending reminders
   useEffect(() => {
@@ -52,6 +59,10 @@ export default function App() {
       try {
         const user = JSON.parse(userData)
         setCurrentUser(user)
+        
+        if (user.isMinor) {
+          setShowConsentBanner(true)
+        }
         
         if (reminders) {
           const reminderData = JSON.parse(reminders)
@@ -243,6 +254,20 @@ export default function App() {
           <NotificationToast />
           <PushNotificationSetup />
           <DeadlineReminder pendingReminders={pendingReminders} />
+          {notifications.map((notif, idx) => (
+            <ApplicationReminderPopup
+              key={idx}
+              notification={notif}
+              onDismiss={() => dismissNotification(idx)}
+            />
+          ))}
+          {showConsentBanner && currentUser?.isMinor && (
+            <ParentalConsentBanner
+              user={currentUser}
+              onAcknowledge={() => setShowConsentBanner(false)}
+            />
+          )}
+          <PrivacyPolicyModal />
           <ToastContainer />
           <SafetyButton />
 
@@ -263,6 +288,7 @@ export default function App() {
               <Route path="/opportunities" element={<Opportunities />} />
               <Route path="/sharezone" element={<Content />} />
               <Route path="/safety-report" element={<SafetyReport />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             </Routes>
           </main>
           <Footer />

@@ -21,6 +21,7 @@ const getAuthorColor = (name) => {
 export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete }) {
   const { t } = useLanguage()
   const [showComments, setShowComments] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const cardColor = getAuthorColor(post.author?.name || 'User')
   
   const canEdit = currentUser?.id === post.author?.id || currentUser?.role === 'admin'
@@ -122,8 +123,16 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
       <div className={styles.postContent}>
         <h3 className={styles.postTitle}>{t(post.title) || post.title}</h3>
         <p className={styles.postText}>
-          {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
+          {isExpanded ? post.content : post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
         </p>
+        {post.content.length > 200 && (
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={styles.seeMoreBtn}
+          >
+            {isExpanded ? t('See Less') || 'See Less' : t('See More') || 'See More'}
+          </button>
+        )}
         {post.publishedFrom && (
           <span className={styles.categoryTag}>{post.publishedFrom}</span>
         )}
@@ -134,7 +143,7 @@ export default function PostCard({ post, onUpdate, currentUser, onEdit, onDelete
           onClick={handleLike} 
           className={`${styles.actionBtn} ${isLiked ? styles.liked : ''}`}
         >
-          {isLiked ? '❤️' : '🤍'} {likeCount}
+          {isLiked ? '❤️' : '❤️'} {likeCount}
         </button>
         <button 
           onClick={() => setShowComments(!showComments)}

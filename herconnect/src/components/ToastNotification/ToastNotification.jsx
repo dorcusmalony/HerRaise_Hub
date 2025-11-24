@@ -15,11 +15,11 @@ export default function ToastNotification({ message, type = 'success', duration 
 
   const getIcon = () => {
     switch (type) {
-      case 'success': return '✅'
-      case 'error': return '❌'
-      case 'warning': return '⚠️'
-      case 'info': return 'ℹ️'
-      default: return '✅'
+      case 'success': return ''
+      case 'error': return ''
+      case 'warning': return ''
+      case 'info': return ''
+      default: return ''
     }
   }
 

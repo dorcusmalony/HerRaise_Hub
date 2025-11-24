@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getSocket } from '../../services/socketService'
 import { toast } from 'react-toastify'
+import { useApplicationReminders } from '../../hooks/useApplicationReminders'
+import { useLanguage } from '../../hooks/useLanguage'
 import styles from './Opportunities.module.css'
 import './purple-buttons.css'
 
@@ -10,6 +12,7 @@ const API_URL = import.meta.env.VITE_API_URL || ''
   
 
 export default function Opportunities() {
+  const { t } = useLanguage()
   const [opportunities, setOpportunities] = useState([])
   const [likedOpportunities, setLikedOpportunities] = useState([])
   const [loading, setLoading] = useState(true)
@@ -19,6 +22,7 @@ export default function Opportunities() {
   const [search, setSearch] = useState('')
   const [bookmarked, setBookmarked] = useState(false)
   const [showNewOpportunityBanner, setShowNewOpportunityBanner] = useState(false)
+  const { reminders } = useApplicationReminders()
 
 
 
@@ -272,13 +276,12 @@ export default function Opportunities() {
 
 
 
-
   return (
     <div className={styles.dashboardContainer}>
       {/* Dashboard Header */}
       <div className={styles.dashboardHeader}>
-        <h1 className={styles.dashboardTitle}>Opportunities Dashboard</h1>
-        <p className={styles.dashboardSubtitle}>Discover and track your opportunities</p>
+        <h1 className={styles.dashboardTitle}>{t('opportunities_dashboard')}</h1>
+        <p className={styles.dashboardSubtitle}>{t('discover_track')}</p>
       </div>
 
       <div className={styles.dashboardLayout}>
@@ -286,7 +289,7 @@ export default function Opportunities() {
         <div className={styles.mainContent}>
           {showNewOpportunityBanner && (
             <div className={styles.newOpportunityBanner}>
-              New opportunities have been added! Check them out below.
+              {t('new_opportunities')}
             </div>
           )}
 
@@ -296,31 +299,31 @@ export default function Opportunities() {
                 className={`${styles.filterBtn} ${filter === 'all' ? styles.active : ''}`}
                 onClick={() => setFilter('all')}
               >
-                All
+                {t('all')}
               </button>
               <button 
                 className={`${styles.filterBtn} ${filter === 'scholarship' ? styles.active : ''}`}
                 onClick={() => setFilter('scholarship')}
               >
-                Scholarships
+                {t('scholarships')}
               </button>
               <button 
                 className={`${styles.filterBtn} ${filter === 'internship' ? styles.active : ''}`}
                 onClick={() => setFilter('internship')}
               >
-                Internships
+                {t('internships')}
               </button>
               <button 
                 className={`${styles.filterBtn} ${filter === 'conference' ? styles.active : ''}`}
                 onClick={() => setFilter('conference')}
               >
-                Conferences
+                {t('conferences')}
               </button>
               <button 
                 className={`${styles.filterBtn} ${filter === 'competition' ? styles.active : ''}`}
                 onClick={() => setFilter('competition')}
               >
-                Competitions
+                {t('competitions')}
               </button>
             </div>
             
@@ -330,7 +333,7 @@ export default function Opportunities() {
                 className={styles.searchInput}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search opportunities..."
+                placeholder={t('search_opportunities')}
               />
               <button 
                 className={`${styles.bookmarkButton} ${bookmarked ? styles.active : ''}`}
@@ -344,7 +347,7 @@ export default function Opportunities() {
           {loading && (
             <div className={styles.loadingState}>
               <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
+                <span className="visually-hidden">{t('loading')}</span>
               </div>
             </div>
           )}
@@ -358,7 +361,7 @@ export default function Opportunities() {
                   onClick={() => handleCardClick(opportunity.id)}
                 >
                   {opportunity.isFeatured && (
-                    <div className={styles.featuredBadge}>Featured</div>
+                    <div className={styles.featuredBadge}>{t('featured')}</div>
                   )}
                   
                   <button 
@@ -382,7 +385,7 @@ export default function Opportunities() {
 
                     <div className={styles.cardFooter}>
                       <span className={styles.cardDeadline}>
-                        Deadline: {new Date(opportunity.applicationDeadline).toLocaleDateString()}
+                        {t('deadline')}: {new Date(opportunity.applicationDeadline).toLocaleDateString()}
                       </span>
                       <button 
                         onClick={(e) => {
@@ -391,7 +394,7 @@ export default function Opportunities() {
                         }}
                         className={styles.applyBtn}
                       >
-                        Apply Now
+                        {t('apply_now')}
                       </button>
                     </div>
                   </div>
@@ -401,17 +404,95 @@ export default function Opportunities() {
           )}
         </div>
 
-        {/* Sidebar - Liked Opportunities */}
+        {/* Sidebar - Reminders & Liked Opportunities */}
         <div className={styles.sidebar}>
+          {reminders.length > 0 && (
+            <div style={{
+              background: '#fff3e0',
+              border: '2px solid #ff9800',
+              borderRadius: '8px',
+              padding: '12px',
+              marginBottom: '16px'
+            }}>
+              <h4 style={{
+                color: '#e65100',
+                fontSize: '14px',
+                fontWeight: '600',
+                margin: '0 0 8px 0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}>
+                📝 {t('incomplete_applications_header')}
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {reminders.map(reminder => (
+                  <div key={reminder.applicationId} style={{
+                    background: 'white',
+                    padding: '8px',
+                    borderRadius: '4px',
+                    borderLeft: '3px solid #ff9800'
+                  }}>
+                    <p style={{
+                      margin: '0 0 4px 0',
+                      fontSize: '13px',
+                      fontWeight: '500',
+                      color: '#333'
+                    }}>
+                      {reminder.opportunityTitle}
+                    </p>
+                    <p style={{
+                      margin: '0 0 4px 0',
+                      fontSize: '12px',
+                      color: '#666'
+                    }}>
+                      {reminder.organization}
+                    </p>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}>
+                      <span style={{
+                        fontSize: '12px',
+                        color: reminder.daysRemaining <= 3 ? '#d32f2f' : '#ff9800',
+                        fontWeight: '600'
+                      }}>
+                        ⏰ {reminder.daysRemaining} {t('days_left')}
+                      </span>
+                      <button
+                        onClick={() => {
+                          const element = document.querySelector(`[data-app-id="${reminder.applicationId}"]`)
+                          element?.scrollIntoView({ behavior: 'smooth' })
+                        }}
+                        style={{
+                          background: '#ff9800',
+                          color: 'white',
+                          border: 'none',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {t('continue')}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className={styles.sidebarHeader}>
-            <h3>Opportunities You Liked</h3>
+            <h3>{t('opportunities_liked')}</h3>
           </div>
           
           {sidebarLoading ? (
-            <div className={styles.loading}>Loading...</div>
+            <div className={styles.loading}>{t('loading')}</div>
           ) : likedOpportunities.length === 0 ? (
             <div className={styles.emptyState}>
-              <p>No opportunities liked yet. Click on opportunity cards to add them here!</p>
+              <p>{t('no_opportunities')}</p>
             </div>
           ) : (
             <div className={styles.opportunityList}>
@@ -425,29 +506,29 @@ export default function Opportunities() {
                     <h4 className={styles.opportunityName}>{opportunity.title}</h4>
                     <p className={styles.organizationName}>{opportunity.organization}</p>
                     <div className={styles.applicationStatus}>
-                      <span>Application: </span>
+                      <span>{t('application')}: </span>
                       <span className={`${styles.statusText} ${status === 'completed' ? styles.completed : styles.pending}`}>
-                        {status === 'completed' ? 'Completed' : 'Pending'}
+                        {status === 'completed' ? t('completed') : t('pending')}
                       </span>
                     </div>
                     <div className={styles.completionQuestion}>
-                      <p>Have you completed this opportunity?</p>
+                      <p>{t('have_completed')}</p>
                       <div className={styles.yesNoButtons}>
                         <button 
                           className={styles.noBtn}
                           onClick={() => handleCompletionAnswer(opportunity.id, false)}
                           disabled={opportunityStatuses[opportunity.id]}
                         >
-                          No
+                          {t('no')}
                         </button>
                         <button 
                           className={styles.yesBtn}
                           onClick={() => handleCompletionAnswer(opportunity.id, true)}
                           disabled={opportunityStatuses[opportunity.id]}
                         >
-                          {opportunityStatuses[opportunity.id] === 'completing' ? 'Completing...' :
-                           opportunityStatuses[opportunity.id] === 'completed' ? '✅ Completed!' :
-                           opportunityStatuses[opportunity.id] === 'error' ? 'Error' : 'Yes'}
+                          {opportunityStatuses[opportunity.id] === 'completing' ? t('completing') :
+                           opportunityStatuses[opportunity.id] === 'completed' ? '✅ ' + t('completed') :
+                           opportunityStatuses[opportunity.id] === 'error' ? 'Error' : t('yes')}
                         </button>
                       </div>
                     </div>

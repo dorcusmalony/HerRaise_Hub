@@ -62,6 +62,7 @@ export default function Footer(){
               <li><a href="/resources" className={styles.link}>{t('resources')}</a></li>
               <li><a href="/reports" className={styles.link}>{t('reports')}</a></li>
               <li><a href="/about" className={styles.link}>{t('about')}</a></li>
+              <li><a href="/privacy-policy" className={styles.link}>Privacy Policy</a></li>
               {isLoggedIn ? (
                 <li><button type="button" onClick={handleLogout} className={styles.logoutButton}>{t('log_out')}</button></li>
               ) : (

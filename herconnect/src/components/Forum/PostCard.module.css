@@ -149,7 +149,27 @@
 .postText {
   color: #4b5563;
   line-height: 1.6;
+  margin-bottom: 0.5rem;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.seeMoreBtn {
+  background: none;
+  border: none;
+  color: #e84393;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
   margin-bottom: 0.75rem;
+  display: inline-block;
+}
+
+.seeMoreBtn:hover {
+  color: #d63384;
+  text-decoration: underline;
 }
 
 .categoryTag {
@@ -159,6 +179,8 @@
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 500;
+  display: inline-block;
+  margin-top: 0.5rem;
 }
 
 .postActions {

@@ -62,6 +62,16 @@ export default function ResourcePage() {
         rating: 4.8
       },
       { 
+        title: 'How to Break Through Fear and Become a Leader', 
+        desc: 'Valerie Montgomery Rice shares insights on overcoming fear and stepping into leadership roles.', 
+        type: 'Video', 
+        category: 'leadership',
+        icon: '',
+        link: 'https://youtu.be/5uTDzBwwyho?si=rULBAxanzEoFBxwB',
+        downloadCount: '3.2k',
+        rating: 4.9
+      },
+      { 
         title: 'Networking Strategies', 
         desc: 'Build meaningful professional relationships and expand your network.', 
         type: 'Article', 
@@ -114,6 +124,16 @@ export default function ResourcePage() {
         link: '#',
         downloadCount: '2.9k',
         rating: 4.7
+      },
+      { 
+        title: 'Digital Privacy & Safety', 
+        desc: 'Learn how to protect yourself online and maintain your digital privacy.', 
+        type: 'Video', 
+        category: 'personal',
+        icon: '',
+        link: 'https://youtu.be/5uTDzBwwyho?si=ts2HA8kJhBhcuZ3d',
+        downloadCount: '1.2k',
+        rating: 4.8
       }
     ]
   }

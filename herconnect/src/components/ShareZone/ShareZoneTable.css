@@ -173,6 +173,13 @@
   text-align: center;
 }
 
+.external-links-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .file-link {
   display: inline-flex;
   align-items: center;
@@ -185,6 +192,10 @@
   font-size: 0.8rem;
   font-weight: 500;
   transition: all 0.2s;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .file-link:hover {

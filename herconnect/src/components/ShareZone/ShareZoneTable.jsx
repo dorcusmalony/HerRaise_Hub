@@ -169,6 +169,21 @@ const ShareZoneTable = ({ contents, currentUser, onCommentToggle, onDeletePost, 
                       >
                         {t('View File')}
                       </a>
+                    ) : content.externalLinks && content.externalLinks.length > 0 ? (
+                      <div className="external-links-cell">
+                        {content.externalLinks.map((link, idx) => (
+                          <a 
+                            key={idx}
+                            href={link.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="file-link external-link"
+                            title={link.name}
+                          >
+                            {link.name}
+                          </a>
+                        ))}
+                      </div>
                     ) : content.externalLink ? (
                       <a 
                         href={content.externalLink} 
