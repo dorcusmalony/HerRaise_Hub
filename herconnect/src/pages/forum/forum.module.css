@@ -76,13 +76,16 @@
 
 .headerContent {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  flex-direction: column;
+  text-align: center;
   gap: 2rem;
 }
 
 .headerText {
   flex: 1;
+  text-align: center;
 }
 
 .forumTitle {

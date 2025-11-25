@@ -15,11 +15,11 @@ export default function Home() {
   return (
     <div className={styles.container}>
       {/* Hero Section */}
-      <section className={styles.hero}>
+      <section className={styles.hero} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
         <h1 className={styles.heroTitle}>
           {t('HerRaise Hub')} {t('Empowering the Next Generation of Women Leaders')}
         </h1>
-        <p className={`${styles.heroSubtitle} text-white mb-4`} style={{ maxWidth: '700px' }}>
+        <p className={`${styles.heroSubtitle} text-white mb-4`} style={{ maxWidth: '700px', margin: '0 auto 2rem' }}>
           {t('HerRaise Hub is a women led initiative dedicated to mentoring and empowering girls through education, confidence-building, and storytelling. We believe that every girl deserves the chance to rise above societal pressures, to dream boldly, and to take accountability for shaping her own future.')}
         </p>
         <Link to="/register" className={styles.ctaButton}>
