@@ -166,7 +166,7 @@ export default function App() {
           // Show custom toast for opportunities
           const toastElement = (
             <div className="opportunity-toast">
-              <div className="toast-icon">🎯</div>
+              <div className="toast-icon"></div>
               <div className="toast-content">
                 <h4>{title}</h4>
                 <p>{message}</p>
