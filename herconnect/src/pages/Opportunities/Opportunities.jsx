@@ -512,7 +512,7 @@ export default function Opportunities() {
                       </span>
                     </div>
                     <div className={styles.completionQuestion}>
-                      <p>{t('have_completed')}</p>
+                      <p>Have you completed this application?</p>
                       <div className={styles.yesNoButtons}>
                         <button 
                           className={styles.noBtn}
