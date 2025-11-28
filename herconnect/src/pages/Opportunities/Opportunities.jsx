@@ -280,8 +280,8 @@ export default function Opportunities() {
     <div className={styles.dashboardContainer}>
       {/* Dashboard Header */}
       <div className={styles.dashboardHeader}>
-        <h1 className={styles.dashboardTitle}>{t('opportunities_dashboard')}</h1>
-        <p className={styles.dashboardSubtitle}>{t('discover_track')}</p>
+        <h1 className={styles.dashboardTitle}>OPPORTUNITIES DASHBOARD</h1>
+        <p className={styles.dashboardSubtitle}>Discover and <span style={{color: '#8B6F47', fontWeight: '600'}}>TRACK</span> opportunities that match your goals</p>
       </div>
 
       <div className={styles.dashboardLayout}>
@@ -289,7 +289,7 @@ export default function Opportunities() {
         <div className={styles.mainContent}>
           {showNewOpportunityBanner && (
             <div className={styles.newOpportunityBanner}>
-              {t('new_opportunities')}
+              {t('New Opportunities')}
             </div>
           )}
 
@@ -333,7 +333,7 @@ export default function Opportunities() {
                 className={styles.searchInput}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder={t('search_opportunities')}
+                placeholder={t('search opportunities')}
               />
               <button 
                 className={`${styles.bookmarkButton} ${bookmarked ? styles.active : ''}`}
@@ -394,7 +394,7 @@ export default function Opportunities() {
                         }}
                         className={styles.applyBtn}
                       >
-                        {t('apply_now')}
+                        {t('apply now')}
                       </button>
                     </div>
                   </div>
@@ -423,7 +423,7 @@ export default function Opportunities() {
                 alignItems: 'center',
                 gap: '6px'
               }}>
-                📝 {t('incomplete_applications_header')}
+                 {t('incomplete_applications_header')}
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {reminders.map(reminder => (
@@ -458,7 +458,7 @@ export default function Opportunities() {
                         color: reminder.daysRemaining <= 3 ? '#d32f2f' : '#ff9800',
                         fontWeight: '600'
                       }}>
-                        ⏰ {reminder.daysRemaining} {t('days_left')}
+                         {reminder.daysRemaining} {t('days_left')}
                       </span>
                       <button
                         onClick={() => {
@@ -485,14 +485,15 @@ export default function Opportunities() {
           )}
 
           <div className={styles.sidebarHeader}>
-            <h3>{t('opportunities_liked')}</h3>
+            <h3>OPPORTUNITIES TO TRACK</h3>
+            <p style={{fontSize: '0.85rem', color: '#666', marginTop: '0.5rem', fontWeight: '400'}}>Reserve the opportunities you love to keep track of them by clicking on the cards of the opportunities you are qualified and have interest in to be a professional one</p>
           </div>
           
           {sidebarLoading ? (
             <div className={styles.loading}>{t('loading')}</div>
           ) : likedOpportunities.length === 0 ? (
             <div className={styles.emptyState}>
-              <p>{t('no_opportunities')}</p>
+              <p>{t('ON Opportunities Yet')}</p>
             </div>
           ) : (
             <div className={styles.opportunityList}>
@@ -527,7 +528,7 @@ export default function Opportunities() {
                           disabled={opportunityStatuses[opportunity.id]}
                         >
                           {opportunityStatuses[opportunity.id] === 'completing' ? t('completing') :
-                           opportunityStatuses[opportunity.id] === 'completed' ? '✅ ' + t('completed') :
+                           opportunityStatuses[opportunity.id] === 'completed' ? ' ' + t('completed') :
                            opportunityStatuses[opportunity.id] === 'error' ? 'Error' : t('yes')}
                         </button>
                       </div>
